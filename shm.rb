@@ -9,9 +9,10 @@ url = 'https://www.st.ryukoku.ac.jp/~kjm/security/memo/'
 url = './index.html' if debug ### 何度もアクセスすると悪いので
 ttl = '60' ### cron の設定に合わせて分単位で指定
 out = 'shm.rss'
+preview = 'shm.html'
  
-open(url) do |html|
-  doc = Nokogiri::HTML(html) ### 最悪でも new するのかな
+open(url) do |origin|
+  doc = Nokogiri::HTML(origin) ### 最悪でも new するのかな
  
   ### 相対パスを絶対パスに。格好いい方法ないのかな
   doc.css('a[href^="/~kjm/"]').each do |anc|
@@ -26,7 +27,15 @@ open(url) do |html|
  
     ### 「追いかけてみるテストです」のあたりにしてみた
     xml.channel.description = doc.css('div.NORMAL').first.children
- 
+
+    html = <<~EOH
+      <html>
+        <body>
+          <h1>Previewing RSS of #{xml.channel.title}</h1>
+          <div id="link"><a href="#{xml.channel.link}">origin</a></div>
+          <div id="description">description: #{xml.channel.description}</div>
+    EOH
+
     doc.css('a.NU').each do |link|
       next if link.parent.name == "h2" ### その中にまた a.NU がある
  
@@ -51,12 +60,25 @@ open(url) do |html|
         puts "	Date: #{i.date}"
         puts "" ### description は長いから出力しない
       end
+
+      html << <<~EOH
+        <details>
+          <summary>#{i.title}</summary>
+          <div><a href="#{i.link}">#{i.date}</a></div>
+          #{i.description}
+        </details>
+      EOH
     end
  
     xml.channel.ttl = ttl
+    html << "</body></html>"
   end
  
   File.open(out, 'w') do |f|
     f.write(rss.to_s)
+  end
+
+  File.open(preview, 'w') do |f|
+    f.write(html)
   end
 end
