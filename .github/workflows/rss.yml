@@ -2,7 +2,7 @@ name: Deploy generated RSS to Pages
 
 on:
   schedule:
-    - cron: '47 */2 * * *'
+    - cron: '47 * * * *'
 
   # Runs on pushes targeting the default branch
   # push:
