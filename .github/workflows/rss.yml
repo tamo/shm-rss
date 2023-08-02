@@ -35,6 +35,8 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '2.7'
+      - name: Install Nokogiri
+        run: gem install nokogiri
       - name: Make RSS
         run: ruby ./shm.rb
       - name: Setup Pages
