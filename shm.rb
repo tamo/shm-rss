@@ -12,7 +12,7 @@ out = 'shm.rss'
 preview = 'shm.html'
 html = '<html><body>'
  
-open(url) do |origin|
+URI.open(url) do |origin|
   doc = Nokogiri::HTML(origin) ### 最悪でも new するのかな
  
   ### 相対パスを絶対パスに。格好いい方法ないのかな
