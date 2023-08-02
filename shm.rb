@@ -5,7 +5,7 @@ require 'rss'
  
 debug = true if ARGV[0] == '-d'
  
-url = 'http://www.st.ryukoku.ac.jp/~kjm/security/memo/'
+url = 'https://www.st.ryukoku.ac.jp/~kjm/security/memo/'
 url = './index.html' if debug ### 何度もアクセスすると悪いので
 ttl = '60' ### cron の設定に合わせて分単位で指定
 out = 'shm.rss'
@@ -15,7 +15,7 @@ open(url) do |html|
  
   ### 相対パスを絶対パスに。格好いい方法ないのかな
   doc.css('a[href^="/~kjm/"]').each do |anc|
-    anc['href'] = 'http://www.st.ryukoku.ac.jp' + anc['href']
+    anc['href'] = 'https://www.st.ryukoku.ac.jp' + anc['href']
     puts "prefixed: #{anc['href']}" if debug
   end
  
