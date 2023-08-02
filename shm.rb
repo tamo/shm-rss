@@ -10,6 +10,7 @@ url = './index.html' if debug ### 何度もアクセスすると悪いので
 ttl = '60' ### cron の設定に合わせて分単位で指定
 out = 'shm.rss'
 preview = 'shm.html'
+html = '<html><body>'
  
 open(url) do |origin|
   doc = Nokogiri::HTML(origin) ### 最悪でも new するのかな
@@ -28,12 +29,10 @@ open(url) do |origin|
     ### 「追いかけてみるテストです」のあたりにしてみた
     xml.channel.description = doc.css('div.NORMAL').first.children
 
-    html = <<~EOH
-      <html>
-        <body>
-          <h1>Previewing RSS of #{xml.channel.title}</h1>
-          <div id="link"><a href="#{xml.channel.link}">origin</a></div>
-          <div id="description">description: #{xml.channel.description}</div>
+    html << <<~EOH
+      <h1>Previewing RSS of #{xml.channel.title}</h1>
+      <div id="link"><a href="#{xml.channel.link}">origin</a></div>
+      <div id="description">description: #{xml.channel.description}</div>
     EOH
 
     doc.css('a.NU').each do |link|
