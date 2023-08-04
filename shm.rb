@@ -58,18 +58,20 @@ URI.open(url) do |origin|
       ### "》" の次が空 span で、その次がリンクかな
       i.title = link.next.next.content
       i.link = link['href']
+      desc_parsed = true
       if link.parent.name == 'p' ### 大部分の一行もの
         i.description = link.parent.parent.children
       elsif link.parent.name == 'h3' ### 「いろいろ」とか「追記」
         i.description = link.parent.next.next
       else
         i.description = '(HTML のパースに失敗しました)'
+        desc_parsed = false
       end
       ### アンカーから日付だけ取得するハック
       i.date = Time.parse(/#([0-9]{8})/.match(link['href'])[1])
 
       html << <<~EOH
-        <details>
+        <details #{"open=true" unless desc_parsed}>
           <summary>#{i.title}</summary>
           <div class="date">
             <a href="#{i.link}">#{i.date}</a>
