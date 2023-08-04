@@ -13,6 +13,7 @@ html = <<~EOH
     <head>
       <meta charset="utf-8" />
       <title>Previewing RSS of #{url}</title>
+      <link rel="alternate" type="application/rss+xml" href="#{out}" title="RSS" />
       <style>
         blockquote {
           border-style: solid;
@@ -42,7 +43,8 @@ URI.open(url) do |origin|
     xml.channel.description = doc.css('div.NORMAL').first.children
 
     html << <<~EOH
-      <h1>Previewing RSS of <a href="#{xml.channel.link}">#{xml.channel.title}</a></h1>
+      <h1>Previewing <a href="#{out}">RSS</a> of <a href="#{xml.channel.link}">#{xml.channel.title}</a></h1>
+      <h2><a href="#{out}">Get the RSS</a></h2>
       <hr />
       <h3>description</h3>
       <blockquote id="channel_description">#{xml.channel.description}</blockquote>
