@@ -22,6 +22,9 @@ html = <<~EOH
         div.date {
           font-size: x-small;
         }
+        details[open] summary {
+          background-color: red;
+        }
       </style>
     </head>
     <body>
