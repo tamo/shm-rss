@@ -7,6 +7,7 @@ url = 'https://www.st.ryukoku.ac.jp/~kjm/security/memo/'
 ttl = '60' ### cron の設定に合わせて分単位で指定
 out = 'shm.rss'
 preview = 'shm.html'
+project = 'https://github.com/tamo/shm-rss/'
 html = <<~EOH
   <!doctype html>
   <html lang="ja">
@@ -51,6 +52,7 @@ URI.open(url) do |origin|
       <hr />
       <h3>description</h3>
       <blockquote id="channel_description">#{xml.channel.description}</blockquote>
+      <p><a href="#{project}">RSS 生成プロジェクトはこちら</a></p>
       <hr />
     EOH
 
