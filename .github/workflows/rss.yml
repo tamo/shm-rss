@@ -1,8 +1,22 @@
 name: Deploy generated RSS to Pages
 
+run-name: cron "${{ github.event.schedule }}"
+
+# UTC
 on:
   schedule:
-    - cron: '47 * * * *'
+    - cron: '47 2 * * 1-5'
+    - cron: '47 4 * * 1-5'
+    - cron: '47 5 * * 1-5'
+    - cron: '47 6 * * 1-5'
+    - cron: '47 7 * * 1-5'
+    - cron: '47 8 * * 1-5'
+    - cron: '47 9 * * 1-5'
+    - cron: '47 10 * * 1-5'
+    - cron: '47 11 * * 1-5'
+    - cron: '47 13 * * 1-5'
+    - cron: '47 18 * * 1-5'
+    - cron: '47 4,10 * * 0,6'
 
   # Runs on pushes targeting the default branch
   # push:
