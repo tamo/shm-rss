@@ -1,3 +1,7 @@
+shm.rss
+shm.html
+.ruby-version
+
 *.gem
 *.rbc
 /.config
