@@ -1,6 +1,7 @@
 #!/usr/bin/ruby
 require 'nokogiri'
 require 'open-uri'
+require 'uri'
 require 'rss'
 
 url = 'https://www.st.ryukoku.ac.jp/~kjm/security/memo/'
@@ -34,9 +35,10 @@ EOH
 URI.open(url) do |origin|
   doc = Nokogiri::HTML(origin) ### 最悪でも new するのかな
 
-  ### 相対パスを絶対パスに。格好いい方法ないのかな
-  doc.css('a[href^="/~kjm/"]').each do |anc|
-    anc['href'] = 'https://www.st.ryukoku.ac.jp' + anc['href']
+  ### 相対パスを絶対パスに
+  uri = URI.parse(url)
+  doc.css('a[href^="/"]').each do |anc|
+    anc['href'] = uri.merge(anc['href']).to_s
   end
 
   rss = RSS::Maker.make('2.0') do |xml|
