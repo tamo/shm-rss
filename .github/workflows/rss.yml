@@ -57,6 +57,10 @@ jobs:
         run: gem install nokogiri
       - name: Make RSS
         run: ruby ./shm.rb && mkdir _site && cp shm.rss _site && cp shm.html _site/index.html
+      - name: Compare
+        run: |
+          mkdir prev
+          curl -s https://tamo.github.io/shm-rss/shm.rss | diff -u - shm.rss && false
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Upload artifact
