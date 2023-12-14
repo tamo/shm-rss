@@ -45,26 +45,29 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.2'
-      - name: Install Nokogiri
-        run: gem install nokogiri
+      - run: gem install nokogiri
+
       - name: Make RSS
         run: ruby ./shm.rb && mkdir _site && cp shm.rss _site && cp shm.html _site/index.html
-      - name: Compare
+
+      - id: diff
+        continue-on-error: true
         run: |
           mkdir prev
-          curl -s https://tamo.github.io/shm-rss/shm.rss | diff -u - shm.rss && false
-      - name: Setup Pages
+          curl -s https://tamo.github.io/shm-rss/shm.rss | diff -u - shm.rss
+
+      - if: steps.diff.conclusion == 'failure'
         uses: actions/configure-pages@v4
-      - name: Upload artifact
+      - if: steps.diff.conclusion == 'failure'
         uses: actions/upload-pages-artifact@v2
-      - name: Deploy to GitHub Pages
+      - if: steps.diff.conclusion == 'failure'
         id: deployment
         uses: actions/deploy-pages@v3
