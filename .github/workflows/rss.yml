@@ -58,16 +58,16 @@ jobs:
       - name: Make RSS
         run: ruby ./shm.rb && mkdir _site && cp shm.rss _site && cp shm.html _site/index.html
 
-      - id: diff
-        continue-on-error: true
+      - name: Compare
         run: |
           mkdir prev
-          curl -s https://tamo.github.io/shm-rss/shm.rss | diff -u - shm.rss
+          curl -s https://tamo.github.io/shm-rss/shm.rss | diff -u - shm.rss || \
+          echo "founddiff=true" >> ${GITHUB_ENV}
 
-      - if: steps.diff.conclusion == 'failure'
+      - if: env.founddiff == 'true'
         uses: actions/configure-pages@v4
-      - if: steps.diff.conclusion == 'failure'
+      - if: env.founddiff == 'true'
         uses: actions/upload-pages-artifact@v2
-      - if: steps.diff.conclusion == 'failure'
+      - if: env.founddiff == 'true'
         id: deployment
         uses: actions/deploy-pages@v3
