@@ -5,21 +5,20 @@ run-name: cron "${{ github.event.schedule }}"
 # UTC (09:47-03:47 JST weekdays)
 on:
   schedule:
-    - cron: '47 0 * * 1-5'
-    - cron: '47 1 * * 1-5'
-    - cron: '47 2 * * 1-5'
-    - cron: '47 3 * * 1-5'
-    - cron: '47 4 * * 1-5'
-    - cron: '47 5 * * 1-5'
-    - cron: '47 6 * * 1-5'
-    - cron: '47 7 * * 1-5'
-    - cron: '47 8 * * 1-5'
-    - cron: '47 9 * * 1-5'
-    - cron: '47 10 * * 1-5'
-    - cron: '47 11 * * 1-5'
-    - cron: '47 12 * * 1-5'
-    - cron: '47 18 * * 1-5'
-    - cron: '47 4,10 * * 0,6'
+    - cron: '47 0 * * *'
+    - cron: '47 1 * * *'
+    - cron: '47 2 * * *'
+    - cron: '47 3 * * *'
+    - cron: '47 4 * * *'
+    - cron: '47 5 * * *'
+    - cron: '47 6 * * *'
+    - cron: '47 7 * * *'
+    - cron: '47 8 * * *'
+    - cron: '47 9 * * *'
+    - cron: '47 10 * * *'
+    - cron: '47 11 * * *'
+    - cron: '47 12 * * *'
+    - cron: '47 18 * * *'
 
   # Runs on pushes targeting the default branch
   # push:
