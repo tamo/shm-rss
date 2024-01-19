@@ -2,7 +2,7 @@ name: Deploy generated RSS to Pages
 
 run-name: cron "${{ github.event.schedule }}"
 
-# UTC (09:47-03:47 JST weekdays)
+# UTC (09:47-21:47, 03:47 JST)
 on:
   schedule:
     - cron: '47 0 * * *'
