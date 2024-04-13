@@ -5,7 +5,7 @@ import {
     DOMParser,
     type Document,
     type Element,
-} from 'https://deno.land/x/deno_dom/deno-dom-wasm.ts';
+} from 'jsr:@b-fuze/deno-dom@0.1'; // 'https://deno.land/x/deno_dom/deno-dom-wasm.ts';
 
 import { Feed } from 'https://jspm.dev/feed';
 
