@@ -14,6 +14,7 @@ import { Feed } from 'https://jspm.dev/feed';
 // refresh が true ならそれらの前に kv を全部消してから始める
 
 const myname = 'shm';
+// const selflink = 'https://shm-rss.deno.dev/'; // validator を黙らせたければ
 const refresh = false;
 const ttl = 60;
 const storedays = 31;
@@ -162,6 +163,7 @@ async function handler(_req: Request): Promise<Response> {
             description: await kvval('description'),
             updated: new Date(parseInt(await kvval('updated'))),
             ttl: ttl,
+            // feed: selflink,
         });
 
         type FeedItem = Omit<Item, 'date'> & {
