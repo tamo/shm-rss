@@ -121,7 +121,7 @@ async function handler(_req: Request): Promise<Response> {
             if (!parent) return new Error('no parent');
             if (parent.tagName == 'H2') return new Error(); // その中にまた a.NU がある
 
-            const ititle = elem.nextSibling?.nextSibling?.textContent; // "》" の次が textnode で、その次がアンカー
+            const ititle = elem.nextElementSibling?.textContent;
             if (!ititle) return new Error('no title');
 
             const ihref = elem.getAttribute('href');
@@ -140,12 +140,13 @@ async function handler(_req: Request): Promise<Response> {
 
             function parent2desc(p: Element, bars: number): string {
                 if (bars == 2 && p.tagName == 'P') { // 大部分の一行もの
-                    if (p.parentElement) {
+                    if (p.parentElement?.tagName == 'LI') {
                         return p.parentElement.innerHTML;
                     }
                 } else if (bars == 1 && p.tagName == 'H3') { // 「いろいろ」とか「追記」
-                    if (p.nextSibling?.nextSibling) {
-                        return (p.nextSibling.nextSibling as Element).innerHTML;
+                    const nextElement = p.nextElementSibling;
+                    if (nextElement?.tagName == 'DIV' && nextElement.className == 'BODY') {
+                        return nextElement.innerHTML;
                     }
                 }
                 console.log('parent error', p, bars);
