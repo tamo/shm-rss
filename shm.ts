@@ -126,8 +126,8 @@ async function handler(_req: Request): Promise<Response> {
 
             const ihref = elem.getAttribute('href');
             if (!ihref) return new Error('no href');
-            const imatches = ihref.match(/^.*#([0-9]{4})([0-9]{2})([0-9]{2})(_*)(.*)$/);
-            if (!imatches || imatches.length < 5) return new Error('invalid href');
+            const imatches = ihref.match(/^.*#([0-9]{4})([0-9]{2})([0-9]{2})(_+)(.+)$/);
+            if (!imatches) return new Error('invalid href');
             const idate = `${imatches[1]}-${imatches[2]}-${imatches[3]}`; // アンカーから日付だけ取得する
             const ibars = imatches[4].length; // アンダーバーの数で記事の種類を判別
 
