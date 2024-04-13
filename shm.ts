@@ -84,7 +84,7 @@ async function handler(_req: Request): Promise<Response> {
         for (const elem of (document.querySelectorAll('a.NU') as Iterable<Element>)) {
             const item: Item | Error = elem2item(elem);
             if (item instanceof Error) {
-                if (item.message) console.log(item.message, elem);
+                if (item.message) console.log(item.message, elem.outerHTML);
                 continue;
             }
 
