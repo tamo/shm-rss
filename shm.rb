@@ -62,7 +62,7 @@ URI.open(url) do |origin|
       next if link.parent.name == "h2" ### その中にまた a.NU がある
 
       i = xml.items.new_item
-      ### "》" の次が空 span で、その次がリンクかな
+      ### "》" の次が textnode で、その次がリンクかな
       i.title = link.next.next.content
       i.link = link['href']
       desc_parsed = true
