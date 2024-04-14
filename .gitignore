@@ -1,6 +1,7 @@
 shm.rss
 shm.html
 .ruby-version
+shm.kv*
 
 *.gem
 *.rbc
