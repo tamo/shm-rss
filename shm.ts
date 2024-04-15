@@ -35,7 +35,7 @@ type FeedItem = Omit<Item, 'date'> & {
 type FeedObj = {
     rss2: () => string,
     addItem: (item: FeedItem) => void,
-    lastfetch: number,
+    lastfetch?: number,
 }
 
 if (import.meta.main) { // test の場合は実行しない
@@ -69,7 +69,7 @@ if (import.meta.main) { // test の場合は実行しない
         try {
             const ttlms = ttl * 60 * 1000; // ミリ秒
             const now = Date.now();
-            if (now - cachedfeed.lastfetch > ttlms) {
+            if (now - (cachedfeed.lastfetch ?? 0) > ttlms) {
                 if (
                     cachedfeed.lastfetch // cache がないだけじゃなくて本当に時間が経っている
                     || now - ((await denokv.get<number>([myname, 'lastfetch'])).value ?? 0) > ttlms
