@@ -34,7 +34,9 @@ Deno.test(
     await t.step("kv2feed (rss)", async () => {
       const rss = (await shm.kv2feed(denokv)).rss2();
       Deno.writeTextFileSync("./testdata/20240414.rss", rss); // デバッグ用
-      const expectedrss = Deno.readTextFileSync("./testdata/20240414.expected.rss");
+      const expectedrss = Deno.readTextFileSync(
+        "./testdata/20240414.expected.rss",
+      );
       assertEquals(rss, expectedrss);
       Deno.removeSync("./testdata/20240414.rss"); // 失敗時には残る
     });
