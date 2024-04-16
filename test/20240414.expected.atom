@@ -1,0 +1,1924 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>セキュリティホール memo</title>
+        <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/</link>
+        <description>
+&lt;p&gt;
+&lt;a href="http://www.ky.xaxon.ne.jp/%7Edeerpark/security/NewsWatch.html"&gt;Security Watch&lt;/a&gt; さんが店じまいされてしまったので、
+個人で追いかけてみるテストです。
+備忘録として書いておくつもりなので、
+Security Watch さんのような詳細なものではありません。
+基本的なターゲットは UNIX、Windows、Mac OS (priority 順) とします。
+また、このページの内容はどのページにも増して無保証であることを宣言しておきます。全ての情報が集まっているわけもありません。
+&lt;/p&gt;
+&lt;p&gt;
+ここに載せる情報については、可能な限り 1 次情報源へのリンクを作成しておきます。
+各自で 1 次情報源の内容を確認してください。
+このページの内容をくれぐれも鵜飲みにしないように。
+間違いを発見された方、記載されていない情報をご存知の方、ぜひ&lt;a href="mailto:kjm@rins.ryukoku.ac.jp"&gt;おしえてください&lt;/a&gt;。よろしくお願いいたします。
+&lt;/p&gt;
+&lt;p&gt;
+このページの情報を利用される前に、&lt;a href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/desc.html"&gt;注意書き&lt;/a&gt;をお読みください。
+&lt;/p&gt;
+</description>
+        <lastBuildDate>Fri, 12 Apr 2024 11:10:50 GMT</lastBuildDate>
+        <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
+        <generator>https://github.com/jpmonette/feed</generator>
+        <ttl>60</ttl>
+        <atom:link href="https://shm-rss.deno.dev/" rel="self" type="application/rss+xml"/>
+        <item>
+            <title><![CDATA[Microsoftの元開発者がWindows11に苦言。「スタートメニューは滑稽なほどひどい」]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__win11menu</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__win11menu</guid>
+            <pubDate>Fri, 12 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__win11menu">》</a>
+<a name="20240412__win11menu" href="https://www.nichepcgamer.com/archives/forrmer-microsoft-developer-complains-about-windows11.html">Microsoftの元開発者がWindows11に苦言。「スタートメニューは滑稽なほどひどい」</a>
+      (ニッチなPCゲーマーの環境構築Z, 4/12)
+      </p>
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[Apple EU圏内で代替アプリストア利用可能に]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__appstore</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__appstore</guid>
+            <pubDate>Fri, 12 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__appstore">》</a>
+<a name="20240412__appstore" href="https://blog.kaspersky.co.jp/ios-alternative-app-stores-and-browsers-security/36089/">Apple EU圏内で代替アプリストア利用可能に</a>
+      (Kaspersky, 3/28)
+      </p>
+      <blockquote cite="https://blog.kaspersky.co.jp/ios-alternative-app-stores-and-browsers-security/36089/">
+      重要なのは、Appleが無秩序な状態を防ごうとしていることです。アプリのマーケットプレイスを登録するには、開発者は審査を通過し、100万ユーロのスタンドバイ信用状を提出する必要があります。同一のアプリの異なるバージョンをApp Storeと代替ストアの両方にアップロードすることは禁止されています。開発者がどのストアでもアプリを公開したい場合は、同一のものでなければなりません。最後に、すべてのアプリはAppleの「公証」を取得する必要があります。このプロセスとmacOSの公証の同一性が証明された場合、Appleは手動でレビューするのではなく、マルウェアの自動スキャンを実行し、特定の技術的推奨事項への準拠をチェックすることになるでしょう。
+      </blockquote>
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[ランサムウェア攻撃事案から見る、ファーストレスポンダー同士の情報共有が必要な理由]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__ransom</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__ransom</guid>
+            <pubDate>Fri, 12 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__ransom">》</a>
+<a name="20240412__ransom" href="https://blogs.jpcert.or.jp/ja/2024/03/ransom_incident_and_infosharing.html">ランサムウェア攻撃事案から見る、ファーストレスポンダー同士の情報共有が必要な理由</a>
+      (JPCERT/CC, 3/26)
+      </p>
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[制御システムセキュリティカンファレンス 2024 開催レポート]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__ics</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__ics</guid>
+            <pubDate>Fri, 12 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__ics">》</a>
+<a name="20240412__ics" href="https://blogs.jpcert.or.jp/ja/2024/03/ics-conference2024.html">制御システムセキュリティカンファレンス 2024 開催レポート</a>
+      (JPCERT/CC, 3/14)
+      </p>
+
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[「制御系SIRTの機能を備えるための手引き」（CSIRTマテリアル補完資料）]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__sirt</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__sirt</guid>
+            <pubDate>Fri, 12 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__sirt">》</a>
+<a name="20240412__sirt" href="https://www.jpcert.or.jp/ics/sirt-for-ics_guide.html">「制御系SIRTの機能を備えるための手引き」（CSIRTマテリアル補完資料）</a>
+      (JPCERT/CC, 3/27)
+      </p>
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[「大谷選手は被害者」と米連邦検察　口座ひも付けの電話番号・メールアドレスが水原氏に変更されていた]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__mizuhara</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__mizuhara</guid>
+            <pubDate>Fri, 12 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__mizuhara">》</a>
+<a name="20240412__mizuhara" href="https://www.itmedia.co.jp/news/articles/2404/12/news124.html">「大谷選手は被害者」と米連邦検察　口座ひも付けの電話番号・メールアドレスが水原氏に変更されていた</a>
+      (ITmedia, 4/12)。腹黒通訳が言語障壁をさんざん悪用と。
+      悪意ある proxy の恐さよ。
+      </p>
+      <blockquote cite="https://www.itmedia.co.jp/news/articles/2404/12/news124.html">
+      　口座は18年に開設しており、水原氏は英語が話せない大谷選手とアリゾナ州の銀行支店に同行。年俸を受け取るための口座開設を手伝っており、口座に関する詳細設定も通訳していた。「開設した口座にアクセスできた」（エストラーダ連邦検事）という水原氏は、日本語が話せない大谷選手の会計士や財務顧問などに対し、大谷選手の意向であるかのように、この口座にアクセスしないように伝えたとされる。<br>
+
+      　宣誓供述書によると、水原氏は21年9月に違法なスポーツブックでギャンブルを始め、数カ月後には多額の損失を出し始めたという。この間、大谷選手の銀行口座の連絡先情報が変更され、その口座が水原氏の電話番号と水原氏につながる匿名のメールアドレスにリンクされたとされる。これは、二段階認証などの本人確認も水原氏に届いていたものと考えられる。<br>
+
+      　また水原氏は、銀行に大谷選手であると偽って電話をかけ、行員をだまして大谷選手の銀行口座から違法賭博行為の関係者への電信送金を指示したという。なお、ギャンブルで勝った時の賞金は、大谷選手の口座ではなく水原氏自身の口座に送金していたとされている。
+      </blockquote>
+      <p>
+      　元ねた:
+      <a href="https://www.justice.gov/usao-cdca/pr/japanese-language-translator-charged-complaint-illegally-transferring-more-16-million">Japanese-Language Translator Charged in Complaint with Illegally Transferring More Than $16 Million from Baseball Player’s Account</a>
+      (justice.gov, 4/11)。justice.gov からプレスリリースが出るような案件なんだなあ。
+      DeepL 訳:
+      </p>
+      <blockquote cite="https://www.justice.gov/usao-cdca/pr/japanese-language-translator-charged-complaint-illegally-transferring-more-16-million">
+      水原一平容疑者（39歳、ニューポートビーチ在住）は、銀行詐欺で起訴されており、最高刑は連邦刑務所30年の重罪である。<br>
+      (中略)<br>
+      先週の警察とのインタビューで、大谷は水原の電信送金の許可を否定した。大谷は自分の携帯電話を警察当局に提供したが、警察当局は、大谷が水原の違法賭博行為や借金の支払いに気づいていた、あるいは関与していたことを示唆する証拠はないと判断した。
+      </blockquote>
+      <p>
+      　当該携帯電話は当然フォレンジック解析されたのだろうが、その結果はシロと。 
+      </p>
+
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[ロシア企業からの支払い、中国が精査厳格化か　電子部品に影響]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__ru</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__ru</guid>
+            <pubDate>Fri, 12 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__ru">》</a>
+<a name="20240412__ru" href="https://jp.reuters.com/markets/japan/funds/BD22BJRJTRNHJLG23EGNGDGDZA-2024-04-12/">ロシア企業からの支払い、中国が精査厳格化か　電子部品に影響</a>
+      (ロイター, 4/12)
+      </p>
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[Apple の脅威の通知と金銭目当てのスパイウェアへの対策について]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__mercenary</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__mercenary</guid>
+            <pubDate>Fri, 12 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__mercenary">》</a>
+<a name="20240412__mercenary" href="https://support.apple.com/ja-jp/102174">Apple の脅威の通知と金銭目当てのスパイウェアへの対策について</a>
+      (Apple, 4/10)。誤訳がひどい。
+      </p>
+      <blockquote cite="https://support.apple.com/ja-jp/102174">
+      市民社会組織、テクノロジー企業、ジャーナリストによる公的報告や研究によると、このように莫大なコストをかけ複雑で個人を標的とした攻撃は、歴史的に国家主体と結び付けられてきました (NSO Group 社の Pegasus のように、国家主体に代わって金銭目的のスパイウェアを開発する民間企業も含む)。
+      
+      </blockquote>
+      <p>
+      　Pegasus は「金銭目的の」スパイウェアじゃないし、そもそも「金銭目的のスパイウェア」って何だ?
+      </p>
+      <p>
+      　なんじゃこりゃと思って英語版を見ると、
+      <a href="https://support.apple.com/en-us/102174">About Apple threat notifications and protecting against mercenary spyware</a>
+      (Apple, 4/10) である。金銭目的のスパイウェアじゃなくて mercenary spyware = 傭兵スパイウェア。
+      Apple の翻訳チームは何をやっているんだ。
+      これでも見て勉強してくれ:
+      <a href="https://www.youtube.com/watch?v=OZZbh67c6qc&amp;t=77s">Mercenary spyware: Defending against what's next Ι 2023</a>
+      (incubator for Media Education &amp; Development / YouTube) 
+      </p>
+      <p>
+      　この誤訳は昨日今日はじまったものではない模様:
+      </p>
+      <ul>
+	<li><p>
+	    <a href="https://www.apple.com/jp/newsroom/2022/07/apple-expands-commitment-to-protect-users-from-mercenary-spyware/">Apple、金銭目当ての高度な標的型スパイウェアからユーザーを保護するための業界をリードする取り組みを拡大</a>
+	    (Apple, 2022.07.06)
+	    </p>
+	</li><li><p>
+	    <a href="https://www.apple.com/newsroom/2022/07/apple-expands-commitment-to-protect-users-from-mercenary-spyware/">Apple expands industry-leading commitment to protect users from highly targeted mercenary spyware </a>
+	    (Apple, 2022.07.06)
+	    </p>
+
+      </li></ul>
+      <p>
+      　関連:
+      </p>
+      <ul>
+	<li><p>
+	    <a href="https://thewire.in/rights/apple-india-state-sponsored-spyware">Apple Warns Top Indian Opposition Leaders, Journalists About ‘State-Sponsored’ Attack on Phone</a>
+	    (THE WIRE, 2023.10.31)
+	    </p>
+	</li><li><p>
+	    <a href="https://economictimes.indiatimes.com/tech/technology/exclusive-apple-warns-users-of-mercenary-spyware-attack-india-91-other-countries-impacted/articleshow/109210976.cms">Exclusive: Apple warns users of "mercenary spyware" attack; India, 91 other countries impacted</a>
+	    (Economic Times, 4/12)
+	    
+	    </p>
+	</li><li><p>
+	    <a href="https://www.forbes.com/sites/siladityaray/2024/04/11/apple-warns-users-in-92-countries-they-may-have-been-targeted-by-mercenary-spyware-attacks/">Apple Warns Users In 92 Countries They May Have Been Targeted By Mercenary Spyware Attacks</a>
+	    (Forbes, 4/11)
+	    </p>
+
+      </li></ul>
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[「工場システムにおけるサイバー・フィジカル・セキュリティ対策ガイドライン【別冊：スマート化を進める上でのポイント】」を策定しました]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__cyber</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__cyber</guid>
+            <pubDate>Fri, 12 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__cyber">》</a>
+<a name="20240412__cyber" href="https://www.meti.go.jp/press/2024/04/20240404002/20240404002.html">「工場システムにおけるサイバー・フィジカル・セキュリティ対策ガイドライン【別冊：スマート化を進める上でのポイント】」を策定しました</a>
+      (経産省, 4/4)
+      </p>
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[ChromeやEdgeに市松模様が表示される不具合を回避する方法。GeForce環境で発生する異常表示 ［Update 2: 現状についてMicrosoftがコメント］]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__ichimatsu</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__ichimatsu</guid>
+            <pubDate>Fri, 12 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__ichimatsu">》</a>
+<a name="20240412__ichimatsu" href="https://www.nichepcgamer.com/archives/how-to-fix-the-checkerboard-pattern-displayed-in-chrome-and-edge-on-windows-pcs-with-geforce.html">ChromeやEdgeに市松模様が表示される不具合を回避する方法。GeForce環境で発生する異常表示 ［Update 2: 現状についてMicrosoftがコメント］</a>
+      (ニッチなPCゲーマーの環境構築Z, 4/11)
+      
+      </p>
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[Intel、Wi-Fiドライバ23.40.0を公開。ブルースクリーンエラー(BSoD)の不具合を再度修正]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__intelwifi</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__intelwifi</guid>
+            <pubDate>Fri, 12 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__intelwifi">》</a>
+<a name="20240412__intelwifi" href="https://www.nichepcgamer.com/archives/intel-wifi-driver-23-40-0.html">Intel、Wi-Fiドライバ23.40.0を公開。ブルースクリーンエラー(BSoD)の不具合を再度修正</a>
+      (ニッチなPCゲーマーの環境構築Z, 4/11)
+      </p>
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[値上げラッシュ?]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__neage</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__neage</guid>
+            <pubDate>Fri, 12 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__neage">》</a>
+<a name="20240412__neage">値上げラッシュ?</a>
+      </p>
+      <ul>
+	<li><p>
+	    <a href="https://www.nichepcgamer.com/archives/wd-will-reportedly-raise-hdd-prices-in-q2-2024.html">Western Digital、HDDを値上げ</a>
+	    (ニッチなPCゲーマーの環境構築Z, 4/10)。5〜10%?
+	    </p>
+	</li><li><p>
+	    <a href="https://www.nichepcgamer.com/archives/graphics-card-manufacturers-have-raised-prices-for-the-geforce-rtx-4000-series-and-others-in-april-2024.html">GeForce RTX 4000シリーズ等の仕切り価格が値上げ</a>
+	    (ニッチなPCゲーマーの環境構築Z, 4/9)
+	    </p>
+	</li><li><p>
+	    <a href="https://www.nichepcgamer.com/archives/micron-will-raise-memory-and-ssd-prices-by-more-than-25percent-in-q2-2024.html">Micron、メモリとSSD価格を大幅に値上げ。2024年第2四半期中に</a>
+	    (ニッチなPCゲーマーの環境構築Z, 4/9)。25% 以上?!
+	    </p>
+
+      </li></ul>
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[プルデンシャル生命保険で個人情報不正持ち出し　元社員が転職先で営業活動に利用]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__prudential</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__prudential</guid>
+            <pubDate>Fri, 12 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__prudential">》</a>
+<a name="20240412__prudential" href="https://www.itmedia.co.jp/news/articles/2404/11/news106.html">プルデンシャル生命保険で個人情報不正持ち出し　元社員が転職先で営業活動に利用</a>
+      (ITmedia, 4/11)、
+      <a href="https://www.prudential.co.jp/news/pdf/841/20240409.pdf">当社元社員によるお客さまの個人情報の漏えいに関するお詫びとお知らせ</a>
+      (プルデンシャル生命保険, 4/9)
+      </p>
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[iPhoneやApple Watchを襲う「MFA爆弾」相次ぐ　パスワードリセット通知を大量送付、乗っ取りを狙う]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__mfa</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__mfa</guid>
+            <pubDate>Fri, 12 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412__mfa">》</a>
+<a name="20240412__mfa" href="https://www.itmedia.co.jp/news/articles/2404/12/news043.html">iPhoneやApple Watchを襲う「MFA爆弾」相次ぐ　パスワードリセット通知を大量送付、乗っ取りを狙う</a>
+      (ITmedia, 4/12)。MFA = 多要素認証。
+      </p>
+      <blockquote cite="https://www.itmedia.co.jp/news/articles/2404/12/news043.html">
+      攻撃者の狙いは、ワンタイムパスワードを含むApple IDのリセットコードをユーザーの端末に送信させ、そのコードを提供させることにある。攻撃者がこれを使えばパスワードをリセットしてそのユーザーのアカウントから本人を締め出すことができ、遠隔操作でそのユーザーのApple端末を全て消去することも可能になる。
+      </blockquote>
+
+]]></description>
+        </item>
+        <item>
+            <title><![CDATA[
+JVNVU#99012560
+複数のHTTP/2実装におけるCONTINUATIONフレームの取り扱い不備
+]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412_http2</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412_http2</guid>
+            <pubDate>Fri, 12 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[
+<p>
+　あぁ、これ一連のものだったのですね。
+詳細: <a href="https://nowotarski.info/http2-continuation-flood-technical-details/">HTTP/2 CONTINUATION Flood: Technical Details</a>
+(nowotarski.info, 2024.04.03)
+</p>
+]]></description>
+        </item>
+        <item>
+            <title><![CDATA[
+Chrome Stable Channel Update for Desktop
+]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412_chrome</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412_chrome</guid>
+            <pubDate>Fri, 12 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[
+<p>
+　Chrome 123.0.6312.122/.123 (Windows) 123.0.6312.122/.123/.124 (Mac)  123.0.6312.122 (Linux)
+公開。3 件のセキュリティ修正を含む。関連:
+</p>
+<ul>
+  <li><p>
+      <a href="https://chromereleases.googleblog.com/2024/04/chrome-for-android-update_10.html">
+      Chrome for Android Update </a>
+      (Google, 2024.04.10)。Chrome 123 (123.0.6312.118) for Android。
+      </p>
+
+</li></ul>
+]]></description>
+        </item>
+        <item>
+            <title><![CDATA[【単独取材】ジャニーズ解体のその後……SMILE-UP. 東山社長、BBCの多数の質問に答える]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240411__johnny</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240411__johnny</guid>
+            <pubDate>Thu, 11 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240411__johnny">》</a>
+<a name="20240411__johnny" href="https://www.bbc.com/japanese/articles/cqqwpnrpryzo">【単独取材】ジャニーズ解体のその後……SMILE-UP. 東山社長、BBCの多数の質問に答える</a>
+      (BBC, 3/30)
+      </p>
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[Horizon (Post Office scandal) 方面]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240411__horizon</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240411__horizon</guid>
+            <pubDate>Thu, 11 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240411__horizon">》</a>
+<a name="20240411__horizon">Horizon (Post Office scandal) 方面</a>
+      </p>
+      <ul>
+	<li><p>
+	    <a href="https://www.computerweekly.com/feature/Post-Office-Horizon-scandal-explained-everything-you-need-to-know">Post Office Horizon scandal explained: Everything you need to know</a>
+	    (ComputerWeekly, 4/11)
+	    </p>
+	</li><li><p>
+	    <a href="https://www.bbc.com/news/business-56718036">Post Office scandal explained: What the Horizon saga is all about</a>
+	    (BBC, 4/10)
+	    </p>
+	</li><li><p>
+	    <a href="https://www.bbc.com/news/live/uk-68775287?src_origin=BBCS_BBC">Post Office cases 'greatest criminal justice scandal', inquiry told</a>
+	    (BBC, 4/10)
+	    </p>
+
+      </li></ul>
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[Toward greater transparency: Adopting the CWE standard for Microsoft CVEs]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240411__msrc</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240411__msrc</guid>
+            <pubDate>Thu, 11 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240411__msrc">》</a>
+<a name="20240411__msrc" href="https://msrc.microsoft.com/blog/2024/04/toward-greater-transparency-adopting-the-cwe-standard-for-microsoft-cves/">Toward greater transparency: Adopting the CWE standard for Microsoft CVEs</a>
+      (MSRC, 4/8)
+      </p>
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[TOMOYO/AKARI/CaitSith プロジェクトを SourceForge.net へ引っ越しました]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240411__tomoyo</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240411__tomoyo</guid>
+            <pubDate>Thu, 11 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240411__tomoyo">》</a>
+<a name="20240411__tomoyo" href="http://kumaneko-sakura.sblo.jp/article/190839180.html">TOMOYO/AKARI/CaitSith プロジェクトを SourceForge.net へ引っ越しました</a>
+      (熊猫さくらのブログ, 4/1)
+      </p>
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[さくらインターネットのASNで重大なマルウェア活動を確認　HYAS Infosec調査]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240411__sakura</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240411__sakura</guid>
+            <pubDate>Thu, 11 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240411__sakura">》</a>
+<a name="20240411__sakura" href="https://www.itmedia.co.jp/enterprise/articles/2404/04/news050.html">さくらインターネットのASNで重大なマルウェア活動を確認　HYAS Infosec調査</a>
+      (ITmedia, 4/4)。
+      <a href="https://www.hyas.com/blog/hyas-threat-intel-report-april-1-2024">HYAS Threat Intel Report April 1 2024</a>
+      (HYAS, 4/1) で Summary of Top ASNs and Malware Origins として挙げられている 4 つの AS に
+      さくらが含まれているという話。
+      </p>
+      <ul>
+	<li>AS9318 - SK Broadband Co Ltd (South Korea)
+	</li><li>AS8968 - BT Italia S.p.A. (Italy)
+	</li><li>AS216309 - TNSECURITY (UK)
+	</li><li>AS7684 - Sakura Internet Inc. (Japan)
+      </li></ul>
+      <p>
+      　HYAS Report では AS216309 については詳細な記述があるが、
+      AS7684 については簡便に記されているだけ。
+      </p>
+      <p>
+      　AS7684 が特出しされていることに関して、何を見ると検証できるんだろう。たとえばこういうの?
+      </p>
+      <ul>
+	<li><p>
+	    <a href="https://radar.cloudflare.com/as7684">Overview for AS7684 SAKURA-A</a>
+	    (cloudflare radar)
+	    </p>
+	</li><li><p>
+	    <a href="https://radar.cloudflare.com/as131965">Overview for AS131965 XSERVER</a>
+	    (cloudflare radar)
+	    </p>
+	</li><li><p>
+	    <a href="https://radar.cloudflare.com/as4713">Overview for AS4713 OCN</a>
+	    (cloudflare radar)
+	    </p>
+
+	</li><li><p>
+	    <a href="https://radar.cloudflare.com/as2497">Overview for AS2497 IIJ</a>
+	    (cloudflare radar)
+	    </p>
+	</li><li><p>
+	    <a href="https://radar.cloudflare.com/as2527">Overview for AS2527 So-net</a>
+	    (cloudflare radar)
+	    </p>
+
+	</li><li><p>
+	    <a href="https://radar.cloudflare.com/as9605">Overview for AS9605 docomo</a>
+	    (cloudflare radar)
+	    </p>
+	</li><li><p>
+	    <a href="https://radar.cloudflare.com/as2907">Overview for AS2907 SINET-AS</a>
+	    (cloudflare radar)
+	    </p>
+      </li></ul>
+      <p>
+      　spam だとこんな感じなのだけど。
+      </p>
+      <ul>
+	<li><p>
+	    <a href="https://cleantalk.org/blacklists/as7684">AS7684 SAKURA Internet Inc.</a>
+	    (CleanTalk)
+	    </p>
+	</li><li><p>
+	    <a href="https://cleantalk.org/blacklists/as131965">AS131965 Xserver Inc.</a>
+	    (CleanTalk)
+	    </p>
+	</li><li><p>
+	    <a href="https://cleantalk.org/blacklists/as4713">AS4713 NTT Communications Corporation</a>
+	    (CleanTalk)。「SPAM active IP addresses」という、さくらや Xserver には存在しない項が登場している。
+	    </p>
+
+	</li><li><p>
+	    <a href="https://cleantalk.org/blacklists/as2497">AS2497 Internet Initiative Japan Inc.</a>
+	    (CleanTalk)
+	    </p>
+
+	</li><li><p>
+	    <a href="https://cleantalk.org/blacklists/as2527">AS2527 Sony Network Communications Inc.</a>
+	    (CleanTalk)。「SPAM active IP addresses」あり。
+	    
+	    </p>
+
+	</li><li><p>
+	    <a href="https://cleantalk.org/blacklists/as9605">AS9605 NTT DOCOMO, INC.</a>
+	    (CleanTalk)。「SPAM active IP addresses」あり。
+	    </p>
+
+	</li><li><p>
+	    <a href="https://cleantalk.org/blacklists/as2907">AS2907 Research Organization of Information and Systems, National Institute of Informatics</a>
+	    (CleanTalk)
+	    </p>
+
+      </li></ul>
+
+
+]]></description>
+        </item>
+        <item>
+            <title><![CDATA[
+2024 年 4 月のセキュリティ更新プログラム (月例) 
+]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240411_microsoft</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240411_microsoft</guid>
+            <pubDate>Thu, 11 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[
+<p>
+　Microsoft 2024.04 patch 出ました。
+149  MS CVE + 6 non-MS CVE (Intel x 1, lenovo x 2, Crome x 3)。
+<b>CVE 番号が太字</b>なのは critical (最大深刻度: 緊急) 扱い。
+
+</p>
+
+<blockquote cite="https://msrc.microsoft.com/update-guide/releaseNote/2024-Apr">
+
+<ul>
+  <li>.NET と Visual Studio  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-21409">CVE-2024-21409</a>
+  </li><li>Azure  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-29993">CVE-2024-29993</a>
+  </li><li>Azure AI 検索  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-29063">CVE-2024-29063</a>
+  </li><li>Azure Arc  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28917">CVE-2024-28917</a>
+  </li><li>Azure Compute Gallery  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-21424">CVE-2024-21424</a>
+  </li><li>Azure Migrate  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26193">CVE-2024-26193</a>
+  </li><li>Azure Monitor  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-29989">CVE-2024-29989</a>
+  </li><li>Azure Private 5G Core  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-20685">CVE-2024-20685</a>
+  </li><li>Azure SDK  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-29992">CVE-2024-29992</a>
+  </li><li>Intel  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2022-0001">CVE-2022-0001</a>
+  </li><li>Microsoft Azure Kubernetes Service  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-29990">CVE-2024-29990</a>
+  </li><li>Microsoft Brokering File System  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26213">CVE-2024-26213</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28904">CVE-2024-28904</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28905">CVE-2024-28905</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28907">CVE-2024-28907</a>
+  </li><li>Microsoft Defender for IoT  <b><a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-21322">CVE-2024-21322</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-21323">CVE-2024-21323</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-21324">CVE-2024-21324</a></b>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-29053">CVE-2024-29053</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-29054">CVE-2024-29054</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-29055">CVE-2024-29055</a>
+  </li><li>Microsoft Edge (Chromium ベース)  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-29049">CVE-2024-29049</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-29981">CVE-2024-29981</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-3156">CVE-2024-3156</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-3158">CVE-2024-3158</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-3159">CVE-2024-3159</a>
+  </li><li>Microsoft Office Excel  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26257">CVE-2024-26257</a>
+  </li><li>Microsoft Office Outlook  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-20670">CVE-2024-20670</a>
+  </li><li>Microsoft Office SharePoint  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26251">CVE-2024-26251</a>
+  </li><li>Microsoft WDAC ODBC ドライバー  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26214">CVE-2024-26214</a>
+  </li><li>Microsoft インストール サービス  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26158">CVE-2024-26158</a>
+  </li><li>SQL Server  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28906">CVE-2024-28906</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28908">CVE-2024-28908</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28909">CVE-2024-28909</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28910">CVE-2024-28910</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28911">CVE-2024-28911</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28912">CVE-2024-28912</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28913">CVE-2024-28913</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28914">CVE-2024-28914</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28915">CVE-2024-28915</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28926">CVE-2024-28926</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28927">CVE-2024-28927</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28929">CVE-2024-28929</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28930">CVE-2024-28930</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28931">CVE-2024-28931</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28932">CVE-2024-28932</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28933">CVE-2024-28933</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28934">CVE-2024-28934</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28935">CVE-2024-28935</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28936">CVE-2024-28936</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28937">CVE-2024-28937</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28938">CVE-2024-28938</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28939">CVE-2024-28939</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28940">CVE-2024-28940</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28941">CVE-2024-28941</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28942">CVE-2024-28942</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28943">CVE-2024-28943</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28944">CVE-2024-28944</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28945">CVE-2024-28945</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-29043">CVE-2024-29043</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-29044">CVE-2024-29044</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-29045">CVE-2024-29045</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-29046">CVE-2024-29046</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-29047">CVE-2024-29047</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-29048">CVE-2024-29048</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-29982">CVE-2024-29982</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-29983">CVE-2024-29983</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-29984">CVE-2024-29984</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-29985">CVE-2024-29985</a>
+  </li><li>SQL 用 Microsoft WDAC OLE DB プロバイダー  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26210">CVE-2024-26210</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26244">CVE-2024-26244</a>
+  </li><li>Windows BitLocker  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-20665">CVE-2024-20665</a>
+  </li><li>Windows Cryptographic サービス  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26228">CVE-2024-26228</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-29050">CVE-2024-29050</a>
+  </li><li>Windows Defender Credential Guard  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26237">CVE-2024-26237</a>
+  </li><li>Windows DHCP サーバー  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26195">CVE-2024-26195</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26202">CVE-2024-26202</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26212">CVE-2024-26212</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26215">CVE-2024-26215</a>
+  </li><li>Windows DWM Core ライブラリ  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26172">CVE-2024-26172</a>
+  </li><li>Windows HTTP.sys  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26219">CVE-2024-26219</a>
+  </li><li>Windows Kerberos  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26183">CVE-2024-26183</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26248">CVE-2024-26248</a>
+  </li><li>Windows Remote Access Connection Manager  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26207">CVE-2024-26207</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26211">CVE-2024-26211</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26217">CVE-2024-26217</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26230">CVE-2024-26230</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26239">CVE-2024-26239</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26255">CVE-2024-26255</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28900">CVE-2024-28900</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28901">CVE-2024-28901</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28902">CVE-2024-28902</a>
+  </li><li>Windows Storage  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-29052">CVE-2024-29052</a>
+  </li><li>Windows Telephony Server  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26242">CVE-2024-26242</a>
+  </li><li>Windows Update Stack  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26235">CVE-2024-26235</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26236">CVE-2024-26236</a>
+  </li><li>Windows USB プリント ドライバー  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26243">CVE-2024-26243</a>
+  </li><li>Windows Virtual Machine Bus  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26254">CVE-2024-26254</a>
+  </li><li>Windows Win32K - ICOMP  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26241">CVE-2024-26241</a>
+  </li><li>Windows インターネット接続の共有 (ICS)  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26252">CVE-2024-26252</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26253">CVE-2024-26253</a>
+  </li><li>Windows カーネル  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-20693">CVE-2024-20693</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26218">CVE-2024-26218</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26229">CVE-2024-26229</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26245">CVE-2024-26245</a>
+  </li><li>Windows セキュア ブート  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-20669">CVE-2024-20669</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-20688">CVE-2024-20688</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-20689">CVE-2024-20689</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-23593">CVE-2024-23593</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-23594">CVE-2024-23594</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26168">CVE-2024-26168</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26171">CVE-2024-26171</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26175">CVE-2024-26175</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26180">CVE-2024-26180</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26189">CVE-2024-26189</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26194">CVE-2024-26194</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26240">CVE-2024-26240</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26250">CVE-2024-26250</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28896">CVE-2024-28896</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28897">CVE-2024-28897</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28898">CVE-2024-28898</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28903">CVE-2024-28903</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28919">CVE-2024-28919</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28920">CVE-2024-28920</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28921">CVE-2024-28921</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28922">CVE-2024-28922</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28923">CVE-2024-28923</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28924">CVE-2024-28924</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-28925">CVE-2024-28925</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-29061">CVE-2024-29061</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-29062">CVE-2024-29062</a>
+  </li><li>Windows ファイル サーバー リソース管理サービス  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26216">CVE-2024-26216</a>
+  </li><li>Windows プロキシ ドライバー  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26234">CVE-2024-26234</a>
+  </li><li>Windows メッセージ キュー  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26208">CVE-2024-26208</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26232">CVE-2024-26232</a>
+  </li><li>Windows モバイル ホットスポット  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26220">CVE-2024-26220</a>
+  </li><li>Windows リモート プロシージャ コール  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-20678">CVE-2024-20678</a>
+  </li><li>Windows ルーティングとリモート アクセス サービス (RRAS)  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26179">CVE-2024-26179</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26200">CVE-2024-26200</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26205">CVE-2024-26205</a>
+  </li><li>Windows ローカル セキュリティ機関サブシステム サービス (LSASS)  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26209">CVE-2024-26209</a>
+  </li><li>Windows 圧縮フォルダー  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26256">CVE-2024-26256</a>
+  </li><li>Windows 認証方法  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-21447">CVE-2024-21447</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-29056">CVE-2024-29056</a>
+  </li><li>Windows 分散ファイル システム (DFS)  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26226">CVE-2024-26226</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-29066">CVE-2024-29066</a>
+  </li><li>インターネット ショートカット ファイル  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-29988">CVE-2024-29988</a>
+  </li><li>ロール: DNS サーバー  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26221">CVE-2024-26221</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26222">CVE-2024-26222</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26223">CVE-2024-26223</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26224">CVE-2024-26224</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26227">CVE-2024-26227</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26231">CVE-2024-26231</a>  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-26233">CVE-2024-26233</a>
+  </li><li>ロール: Windows Hyper-V  <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2024-29064">CVE-2024-29064</a>
+</li></ul>
+
+
+</blockquote>
+<p>
+　0-day はこちら:
+</p>
+<ul>
+  <li><p>
+      <a href="https://msrc.microsoft.com/update-guide/vulnerability/CVE-2024-26234">プロキシ ドライバ スプーフィングの脆弱性 
+      CVE-2024-26234</a>
+      (Microsoft, 2024.04.09)
+      </p>
+</li></ul>
+<p>
+　patch を当てただけでは適用されない件:
+</p>
+<ul>
+  <li><p>
+      <a href="https://support.microsoft.com/ja-jp/topic/kb5025885-cve-2023-24932-%E3%81%AB%E9%96%A2%E9%80%A3%E4%BB%98%E3%81%91%E3%82%89%E3%82%8C%E3%81%A6%E3%81%84%E3%82%8B%E3%82%BB%E3%82%AD%E3%83%A5%E3%82%A2-%E3%83%96%E3%83%BC%E3%83%88%E3%81%AE%E5%A4%89%E6%9B%B4%E3%81%AB%E5%AF%BE%E3%81%99%E3%82%8B-windows-%E3%83%96%E3%83%BC%E3%83%88-%E3%83%9E%E3%83%8D%E3%83%BC%E3%82%B8%E3%83%A3%E3%83%BC%E5%A4%B1%E5%8A%B9%E3%82%92%E7%AE%A1%E7%90%86%E3%81%99%E3%82%8B%E6%96%B9%E6%B3%95-41a975df-beb2-40c1-99a3-b3ff139f832d">KB5025885: CVE-2023-24932 に関連付けられているセキュア ブートの変更に対する Windows ブート マネージャー失効を管理する方法</a>
+      (Microsoft)。現在は 3 番目の展開フェーズ。
+      </p>
+      <blockquote cite="https://support.microsoft.com/ja-jp/topic/kb5025885-cve-2023-24932-%E3%81%AB%E9%96%A2%E9%80%A3%E4%BB%98%E3%81%91%E3%82%89%E3%82%8C%E3%81%A6%E3%81%84%E3%82%8B%E3%82%BB%E3%82%AD%E3%83%A5%E3%82%A2-%E3%83%96%E3%83%BC%E3%83%88%E3%81%AE%E5%A4%89%E6%9B%B4%E3%81%AB%E5%AF%BE%E3%81%99%E3%82%8B-windows-%E3%83%96%E3%83%BC%E3%83%88-%E3%83%9E%E3%83%8D%E3%83%BC%E3%82%B8%E3%83%A3%E3%83%BC%E5%A4%B1%E5%8A%B9%E3%82%92%E7%AE%A1%E7%90%86%E3%81%99%E3%82%8B%E6%96%B9%E6%B3%95-41a975df-beb2-40c1-99a3-b3ff139f832d">
+      2024 年 4 月 9 日以降 - 3 番目の展開フェーズ:<br>
+      脆弱なブート マネージャーをブロックするための新しい軽減策。 これらの新しい軽減策では、メディアを更新する必要があります。
+      </blockquote>
+      <p>
+      強制適用されるのは 2024.10.08。
+      </p>
+
+  </li><li><p>
+      <a href="https://support.microsoft.com/ja-jp/topic/kb5037754-cve-2024-26248-%E3%81%8A%E3%82%88%E3%81%B3-cve-2024-29056-%E3%81%AB%E9%96%A2%E9%80%A3%E3%81%99%E3%82%8B-pac-%E6%A4%9C%E8%A8%BC%E3%81%AE%E5%A4%89%E6%9B%B4%E3%82%92%E7%AE%A1%E7%90%86%E3%81%99%E3%82%8B%E6%96%B9%E6%B3%95-6e661d4f-799a-4217-b948-be0a1943fef1">KB5037754: CVE-2024-26248 および CVE-2024-29056 に関連する PAC 検証の変更を管理する方法</a>
+      (Microsoft)。
+      <a href="https://support.microsoft.com/en-us/topic/kb5037754-how-to-manage-pac-validation-changes-related-to-cve-2024-26248-and-cve-2024-29056-6e661d4f-799a-4217-b948-be0a1943fef1">英語版</a>の方がわかりやすい。
+      </p>
+      <blockquote>
+      <ul>
+	<li>April 9, 2024: Initial Deployment Phase – Compatibility Mode
+	</li><li>October 15, 2024: Enforced by Default Phase
+	</li><li>April 8, 2025: Enforcement Phase
+      </li></ul>
+      </blockquote>
+      <p>
+      2024.04.09 (現在) は初期展開フェーズで
+      HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa\Kerberos\Parameters の
+      PacSignatureValidationLevel = 2、
+      CrossDomainFilteringLevel = 2。
+      この状態では脆弱性対策機能は有効にはならない。
+      PacSignatureValidationLevel = 3、
+      CrossDomainFilteringLevel = 4 に変更すると有効になる。
+      </p>
+      <p>
+      2024.10.15 にデフォルト適用フェーズとなり
+      PacSignatureValidationLevel = 3、
+      CrossDomainFilteringLevel = 4 に変更されるが、
+      管理者が PacSignatureValidationLevel = 2、
+      CrossDomainFilteringLevel = 2 に戻すことも可能。
+      </p>
+      <p>
+      2025.04.08 に強制適用フェーズとなり、このレジストリ設定への対応機能が削除され、
+      脆弱性対策機能を回避できなくなる。
+      </p>
+
+  </li><li><p>
+      <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2022-0001">CVE-2022-0001</a> (Microsoft, 2024.04.09)。
+      CVE-2022-0001 は Branch History Injection (BHI) の件だが、
+      新たな攻撃 Native Branch History Injection (Native BHI)
+      (CVE-2024-2201)
+      の登場にあわせて<a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2022-0001">この文書</a>が作成された模様。
+      CVE-2024-2201 は eBPF を通さないので Native ということみたい。
+      CVE-2024-2201 の詳細は
+      <a href="https://www.vusec.net/projects/native-bhi/">Inspecting the Residual Attack Surface of Cross-privilege Spectre v2</a>
+      (vusec.net) 
+      を参照。
+      </p>
+      <p>
+      適用するにはレジストリ設定が必要。
+      <a href="https://portal.msrc.microsoft.com/ja-JP/security-guidance/advisory/CVE-2022-0001">CVE-2022-0001</a> を参照。
+      </p>
+
+
+</li></ul>
+
+<h4 class="TSUIKI">2024.04.12 追記:</h4>
+<p>
+　不具合情報:
+</p>
+<ul>
+  <li><p>
+      <a href="https://www.nichepcgamer.com/archives/windows11-windows-update-2024-4-kb5036893.html">【Windows11】 WindowsUpdate 2024年4月 不具合情報 - セキュリティ更新プログラム KB5036893</a>
+      (ニッチなPCゲーマーの環境構築Z, 2024.04.10)
+      </p>
+  </li><li><p>
+      <a href="https://www.nichepcgamer.com/archives/windows10-windows-update-2024-4-kb5036892.html">【Windows10】 WindowsUpdate 2024年4月 不具合情報 - セキュリティ更新プログラム KB5036892</a>
+      (ニッチなPCゲーマーの環境構築Z, 2024.04.10)
+      </p>
+
+</li></ul>
+<p>
+　今のところ、大物は無いみたい。
+</p>
+
+
+]]></description>
+        </item>
+        <item>
+            <title><![CDATA[GPIO番号に互換性がない？　「Raspberry Pi 5」と前モデルを比較してみた]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240410__raspi</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240410__raspi</guid>
+            <pubDate>Wed, 10 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240410__raspi">》</a>
+<a name="20240410__raspi" href="https://xtech.nikkei.com/atcl/nxt/column/18/01109/040700054/">GPIO番号に互換性がない？　「Raspberry Pi 5」と前モデルを比較してみた</a>
+      (日経 xTECH, 4/10)
+      </p>
+      <blockquote cite="https://xtech.nikkei.com/atcl/nxt/column/18/01109/040700054/?P=3">
+      /sys/class/gpio配下のファイルを操作してGPIOを制御するインターフェースは「GPIO sysfs」インターフェースと呼ばれている。実はこの慣れ親しまれてきたGPIO sysfsインターフェースは廃止予定となっており、GPIOはキャラクターデバイスとしてアクセスすることが推奨されている。
+      (中略) 旧来のGPIO sysfsインターフェースの利用が混乱のもとになっているということだ。混乱を避けるためにも、可能なら今後はGPIO sysfsインターフェースの利用を避けたほうが良いだろう。
+      </blockquote>
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[The Black Market That Delivers Elon Musk’s Starlink to U.S. Foes]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240410__starlink</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240410__starlink</guid>
+            <pubDate>Wed, 10 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240410__starlink">》</a>
+<a name="20240410__starlink" href="https://www.wsj.com/business/telecom/starlink-musk-ukraine-russia-sudan-satellite-communications-technology-f4fc79d9">The Black Market That Delivers Elon Musk’s Starlink to U.S. Foes</a>
+      (Wall Street Journal, 4/9)
+      DeepL 訳:
+      </p>
+      <blockquote cite="https://www.wsj.com/business/telecom/starlink-musk-ukraine-russia-sudan-satellite-communications-technology-f4fc79d9?mod=hp_lead_pos8">
+      ジャーナル紙の調査によると、アフリカ、東南アジア、アラブ首長国連邦での裏取引によって、Starlinkハードウェアの影のサプライチェーンが存在し、何千台もの白いピザ箱サイズのデバイスが、アメリカの敵対勢力や告発された戦争犯罪者の手に渡っている。これらのエンドユーザーの多くは、Starlinkが許可されている国で販売店がハードウェアを登録した後、Starlinkのローム機能を使って衛星に接続する。
+      </blockquote>
+      <p>
+      　えっ?! そんな手順で利用できちゃうの?!
+      </p>
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[OpenSSL version 3.3.0 published]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240410__openssl</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240410__openssl</guid>
+            <pubDate>Wed, 10 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240410__openssl">》</a>
+<a name="20240410__openssl" href="https://mta.openssl.org/pipermail/openssl-announce/2024-April/000300.html">OpenSSL version 3.3.0 published</a>
+       (OpenSSL, 2024.04.09)。 iida さん情報ありがとうございます。
+      
+      </p>
+
+]]></description>
+        </item>
+        <item>
+            <title><![CDATA[
+いろいろ (2024.04.10)
+]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240410_various</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240410_various</guid>
+            <pubDate>Wed, 10 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[
+<div class="NORMAL2">
+
+
+<h4>X.Org X server / Xwayland</h4>
+
+<div class="BOX INDENT-2EM">
+<ul>
+  <li><p>
+      <a href="https://seclists.org/oss-sec/2024/q2/22">Fwd: X.Org Security Advisory: Issues in X.Org X server prior to 21.1.12 and Xwayland prior to 23.2.5</a>
+      (oss-sec ML, 2024.04.03)
+      </p>
+</li></ul>
+</div>
+
+
+
+<h4>Envoy</h4>
+
+<div class="BOX INDENT-2EM">
+<ul>
+  <li><p>
+      <a href="https://seclists.org/oss-sec/2024/q2/37">Envoy security releases [1.29.3, 1.28.2, 1.27.4, 1.26.8] are now available</a>
+      (oss-sec ML, 2024.04.05)。Envoy は
+      <a href="https://www.envoyproxy.io/docs/envoy/v1.29.3/intro/what_is_envoy">L7 proxy and communication bus</a> だそうです。
+      </p>
+</li></ul>
+</div>
+
+
+
+<h4>Rust </h4>
+
+<div class="BOX INDENT-2EM">
+<ul>
+  <li><p>
+      <a href="https://seclists.org/oss-sec/2024/q2/63">CVE-2024-24576: Rust 1.77.1 and earlier did not properly escape arguments of batch files on Windows</a>
+      (oss-sec ML, 2024.04.09)
+      </p>
+</li></ul>
+</div>
+
+
+
+
+<h4>Go</h4>
+
+<div class="BOX INDENT-2EM">
+<ul>
+  <li><p>
+      <a href="https://seclists.org/oss-sec/2024/q2/38">Go 1.22.2 and 1.21.9 (CVE-2023-45288 HTTP/2 CONTINUATION issue)</a>
+      (oss-sec ML, 2024.04.05)
+      </p>
+</li></ul>
+</div>
+
+
+
+<h4>NEC Aterm</h4>
+
+<div class="BOX INDENT-2EM">
+<ul>
+  <li><p>
+      <a href="https://internet.watch.impress.co.jp/docs/news/1582716.html">「Aterm」シリーズのWi-Fiルーターなど59製品に複数の脆弱性。対策や買い替えの検討を</a>
+      (Internet Watch, 2024.04.09)
+      </p>
+      <blockquote cite="https://internet.watch.impress.co.jp/docs/news/1582716.html">
+      次の2製品については、悪意ある第三者が製品にアクセスした場合に、telnet経由で任意のコマンドが実行される可能性、および、任意のコマンドが実行されたり、装置名などの装置情報が読み取られる可能性があるとして、管理者パスワードの変更と、Wi-Fiネットワーク側のセキュリティ強化を行うようにとしている。
+      <ul>
+	<li>WG1810HP(JE)
+	</li><li>WG1810HP(MF)
+      </li></ul>
+      次の8製品については、サポートが終了しているため、買い替えの検討を推奨している。
+      <ul>
+	<li>WM3400RN
+	</li><li>WM3450RN
+	</li><li>WM3500R
+	</li><li>WM3600R
+	</li><li>WM3800R
+	</li><li>WR8166N
+	</li><li>MR01LN
+	</li><li>MR02LN
+      </li></ul>
+      </blockquote>
+      
+</li></ul>
+</div>
+
+
+<h4>OpenSSL</h4>
+
+<div class="BOX INDENT-2EM">
+<ul>
+  <li><p>
+      <a href="https://www.openssl.org/news/secadv/20240408.txt">OpenSSL Security Advisory [8th April 2024]
+      Unbounded memory growth with session handling in TLSv1.3 (CVE-2024-2511)</a>
+      (OpenSSL, 2024.04.08)。
+      OpenSSL 3.2 / 3.1 / 3.0 / 1.1.1 に影響、1.0.2 には影響なし。
+      Severity: Low なので、次リリース時に修正。
+      </p>
+      <p>
+      iida さん情報ありがとうございます。
+      </p>
+
+</li></ul>
+</div>
+
+
+
+</div> <!-- class="NORMAL2" -->
+]]></description>
+        </item>
+        <item>
+            <title><![CDATA[Microsoft、中国のAIによる選挙操作を具体例で再警告]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240409__chinaai</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240409__chinaai</guid>
+            <pubDate>Tue, 09 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240409__chinaai">》</a>
+<a name="20240409__chinaai" href="https://www.itmedia.co.jp/news/articles/2404/07/news049.html">Microsoft、中国のAIによる選挙操作を具体例で再警告</a>
+      (ITmedia, 4/7)
+      </p>
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[署名「画像生成AIからクリエイターを守ろう」が賛同1万件間近に　「AI生成物のみ非親告罪に」などを主張]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240409__ai</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240409__ai</guid>
+            <pubDate>Tue, 09 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240409__ai">》</a>
+<a name="20240409__ai" href="https://www.itmedia.co.jp/aiplus/articles/2404/08/news176.html">署名「画像生成AIからクリエイターを守ろう」が賛同1万件間近に　「AI生成物のみ非親告罪に」などを主張</a>
+      (ITmedia, 4/8)
+      </p>
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[IPA、情報セキュリティを学べる合宿開催　小学生～大学院生対象、参加費は無料]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240409__sc2024</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240409__sc2024</guid>
+            <pubDate>Tue, 09 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240409__sc2024">》</a>
+<a name="20240409__sc2024" href="https://www.itmedia.co.jp/news/articles/2404/08/news177.html">IPA、情報セキュリティを学べる合宿開催　小学生～大学院生対象、参加費は無料</a>
+         (ITmedia, 4/8)。「<a href="https://www.ipa.go.jp/jinzai/security-camp/2024/camp/index.html">セキュリティ・キャンプ2024　全国大会／ネクスト／ジュニア</a>」。
+      
+      </p>
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[Visa/Masterカードの決済停止、成人アニメ老舗ブランドの公式サイトも]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240409__card</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240409__card</guid>
+            <pubDate>Tue, 09 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240409__card">》</a>
+<a name="20240409__card" href="https://www.itmedia.co.jp/news/articles/2404/08/news150.html">Visa/Masterカードの決済停止、成人アニメ老舗ブランドの公式サイトも</a>
+      (ITmedia, 4/8)。PinkPineapple。
+      こちらも JCB 推奨となっている。
+      </p>
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[Windows、外部ツールを使った標準Webブラウザの変更をドライバで阻止か]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240409__winstdbr</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240409__winstdbr</guid>
+            <pubDate>Tue, 09 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240409__winstdbr">》</a>
+<a name="20240409__winstdbr" href="https://pc.watch.impress.co.jp/docs/news/1582506.html">Windows、外部ツールを使った標準Webブラウザの変更をドライバで阻止か</a>
+      (PC Watch, 4/8)
+      </p>
+      <blockquote cite="https://pc.watch.impress.co.jp/docs/news/1582506.html">
+      デフォルトWebブラウザの変更に対応するレジストリキーに書き込みを行なうとアクセスが拒否され、regedit、reg.exe、PowerShellでも変更ができない (中略)
+      Windows上のドライバを調べたところ、プロパティに「UserChoice Protection Driver」と記載のある「USPD.sys」というドライバが見つかった。これを逆アセンブルしたところ、レジストリキーの変更に関するホワイトリストとブラックリストにあたるものが含まれていた。2月の更新で導入されたもので、http、httpsのプロトコルのほかにも、.pdfの関連付けの変更もブロックしていたという。 
+      
+      </blockquote>
+      <p>
+      　UCPD.sys (上記 USPD.sys は誤記) はもちろん Microsoft 製。 
+      </p>
+
+      <p>
+      　元記事はこちら: <a href="https://kolbi.cz/blog/2024/04/03/userchoice-protection-driver-ucpd-sys/">UserChoice Protection Driver – UCPD.sys</a>
+      (THE KOLBICZ BLOG, 4/3)
+      </p>
+      <blockquote cite="https://kolbi.cz/blog/2024/04/03/userchoice-protection-driver-ucpd-sys/">
+      Microsoft also updated the driver during my tests (from 2.0 to 2.1) and extended the deny list of executables. this means, they can change the behavior almost on the fly and add new tricks or block additional extensions/protocols!
+      </blockquote>
+
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[Windows 10の組織向け有償延長サポート、導入方法や料金が発表]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240409__win10esu</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240409__win10esu</guid>
+            <pubDate>Tue, 09 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240409__win10esu">》</a>
+<a name="20240409__win10esu" href="https://pc.watch.impress.co.jp/docs/news/1582053.html">Windows 10の組織向け有償延長サポート、導入方法や料金が発表</a>
+      (PC Watch, 4/5)。Windows 10 ESU の件。
+      </p>
+      <blockquote cite="https://pc.watch.impress.co.jp/docs/news/1582053.html">
+      従来の5-by-5アクティベーションキー(初年度で1デバイスあたり61ドル)、Windows 365サブスクリプションでのアクティベーション(初年度分はWindows 365利用料に含まれる)に加え、クラウドベースのアクティベーションの3種類が選べる。 
+      </blockquote>
+      <p>
+      　円安のおかげで、ずいぶん高くなりそうですなあ……。
+      </p>
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[Windows 10で「Sysprep」コマンドが完了しない問題、ようやく解決へ　
+
+      2023年11月末リリースの「KB5032278」以降で発生 ]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240409__sysprep</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240409__sysprep</guid>
+            <pubDate>Tue, 09 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240409__sysprep">》</a>
+<a name="20240409__sysprep" href="https://forest.watch.impress.co.jp/docs/news/1582368.html">Windows 10で「Sysprep」コマンドが完了しない問題、ようやく解決へ　
+
+      2023年11月末リリースの「KB5032278」以降で発生 </a>
+      (窓の杜, 4/8)
+      </p>
+
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[通園バスの安全装置設置100%達成見込み　こども家庭庁が公表]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240409__sougeibus</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240409__sougeibus</guid>
+            <pubDate>Tue, 09 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240409__sougeibus">》</a>
+<a name="20240409__sougeibus" href="https://newsdig.tbs.co.jp/articles/-/1097744?display=1">通園バスの安全装置設置100%達成見込み　こども家庭庁が公表</a>
+      (TBS, 4/5)。
+      置き去り防止支援装置の件。
+      2023.04 義務化・経過措置1年なので、当然といえば当然なのですが。
+      </p>
+      <ul>
+	<li><p>
+	    <a href="https://www.cfa.go.jp/policies/child-safety/effort/anzen_kanri/kekka">送迎用バスに対する安全装置の装備状況の調査結果について</a>
+	    (こども家庭庁)
+	    </p>
+	</li><li><p>
+	    <a href="https://www.cfa.go.jp/policies/child-safety/list">送迎用バスの置き去り防止を支援する安全装置のリストについて</a>
+	    (こども家庭庁)。いろんな会社が出しています、が……
+	    </p>
+      </li></ul>
+      <p>
+      　設置100%見込みはいいのですが、その装置本当に仕様を満足しているのですか問題というのがあるようで。
+      </p>
+      <ul>
+	<li><p>
+	    <a href="https://www.netdenjd.com/articles/-/280528">三菱ふそう、幼児置き去り防止装置の開発中断　ガイドラインへの適合難しく　自動車メーカーも温度条件がネック</a>
+	    (日刊自動車新聞, 2023.02.15)。自動車メーカーがさじを投げるような厳しい仕様。
+	    ってどういうこと?
+	    </p>
+	</li><li><p>
+	    <a href="https://www.mlit.go.jp/report/press/content/001579452.pdf">送迎用バスの置き去り防止を支援する安全装置の
+	    ガイドライン</a>
+	    (国土交通省, 2022.12.20)
+	    </p>
+	    <blockquote cite="https://www.mlit.go.jp/report/press/content/001579452.pdf">
+	    4.9. 置き去り防止を支援する装置は、－30℃～65℃（ダッシュボード等の直射日光の当
+	    たる位置に取り付けるものにあっては、－30℃～85℃）の温度条件下において正常
+	    に作動するものでなければならない。
+	    </blockquote>
+	    <p>
+	    動作時温度 -30℃～65℃。
+	    </p>
+
+	</li><li><p>
+	    <a href="https://www.netdenjd.com/articles/-/287289">幼児置き去り防止装置、認定品の一部でガイドラインを満たさない部品を使用　製品テストは「問題なし」だが　メーカー頼りの側面も</a>
+	    (日刊自動車新聞, 2023.07.05)。
+	    </p>
+	    <blockquote cite="https://www.netdenjd.com/articles/-/287289">
+	    話題になった製品（メーカーをＡ社とする）に使われていた、ある部品の使用可能な温度範囲は「マイナス１０度～同５０度」。この部品は大手メーカー製の汎用品で、性能は同社のＨＰでも公表している。Ａ社のＨＰに掲載されている製品写真の中に、この部品が確認できる。一見してガイドラインを満たしていない部品があったため、疑問に思った関係者が多かったのだ。<br>
+
+	    日刊自動車新聞が政府側に取材すると、「そういう部品があっても、商品全体として稼働テストをして問題がなければそれでいい」ということだった。Ａ社もこうした見解に基づき、自社で稼働テストを実施。無事に作動が確認できたため、文書を提出して政府も認定した。Ａ社側は、政府が定めたルールに違反はしていないことが分かる。
+	    </blockquote>
+	    <p>
+	    ふつうに考えたら、駄目でしょそれじゃ。
+	    保温装置を付加するとかしてあるなら別かもだけど、多分そうじゃないのだろうし。
+	    </p>
+	    <blockquote cite="https://www.netdenjd.com/articles/-/287289">
+	    〈記者の目〉<br>
+	    政府のガイドラインで、必要な試験の条件を定めるべきだった。
+	    </blockquote>
+	    <p>
+	    ですよねえ。
+	    </p>
+
+	</li><li><p>
+	    <a href="https://www.netdenjd.com/articles/-/287322">幼児置き去り防止装置のガイドライン　東京大学・畑村洋太郎名誉教授「基準が不明瞭　政府側の問題」</a>
+	    (日刊自動車新聞, 2023.07.05)。失敗学の畑村先生に取材。
+	    </p>
+	    <blockquote cite="https://www.netdenjd.com/articles/-/287322">
+	    幼児置き去り防止装置の基準について、２０２２年末に政府はきちんとガイドラインの基準をまとめた。この装置はいろんな部品を使うが、採用する部品全部についてガイドラインの基準をクリアするのが条件だということを文書に盛り込むなど明確にするべきだった。
+	    </blockquote>
+	    <blockquote cite="https://www.netdenjd.com/articles/-/287322">
+	    今回は、幼児置き去り防止装置を造った会社が、検査データを文書でまとめて、国土交通省所管法人が「原則書面審査」で審査した。合格すると政府認定として内閣府（現在はこども家庭庁）のホームページに掲載される。安全性を考えると、書面審査だけではなく、第三者が実証実験を行うのが望ましい。造った人が検査（テスト）をしても意味がない。
+	    </blockquote>
+
+
+      </li></ul>
+
+]]></description>
+        </item>
+        <item>
+            <title><![CDATA[[gnutls-help] gnutls 3.8.5]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240408__gnutls</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240408__gnutls</guid>
+            <pubDate>Mon, 08 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240408__gnutls">》</a>
+<a name="20240408__gnutls" href="https://lists.gnupg.org/pipermail/gnutls-help/2024-April/004846.html">[gnutls-help] gnutls 3.8.5</a>
+      (GNU, 4/4)。セキュリティ修正は無いようです。iida さん情報ありがとうございます。
+      </p>
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[HOYA、大規模システム障害の原因がサイバー攻撃であることを認める (4/4)]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240408__hoya</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240408__hoya</guid>
+            <pubDate>Mon, 08 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240408__hoya">》</a>
+<a name="20240408__hoya">HOYA、大規模システム障害の原因がサイバー攻撃であることを認める (4/4)</a>
+      </p>
+      <ul>
+	<li><p>
+	    <a href="https://ssl4.eir-parts.net/doc/7741/tdnet/2418410/00.pdf">当社グループにおけるシステム障害について</a>
+	    (HOYA, 4/4)
+	    </p>
+	    <blockquote cite="https://ssl4.eir-parts.net/doc/7741/tdnet/2418410/00.pdf">
+	    外部の専門家を交えた調査の結果によれば、本件は第
+	    三者による当社サーバーへの不正アクセスに起因する可能性が高いとみられています。
+	    (中略) 当社が保有する機密情報や個⼈情報の外部流出の可能性について調査を進めて
+	    いますが、解析には相当の日数を要する見込みです。
+	    </blockquote>
+
+	</li><li><p>
+	    <a href="https://jbpress.ismedia.jp/articles/-/80342">HOYAがサイバー攻撃で3度目の被害、「犯人」はダークウェブで犯行を公表</a>
+	    (山田 敏弘 / JBpress, 4/6)
+	    </p>
+	    <blockquote cite="https://jbpress.ismedia.jp/articles/-/80342">
+	    今回の攻撃は、ランサムウェア攻撃だと考えられる。というのも、「Hunters International」というサイバー犯罪グループが、「HOYA Corporation」への攻撃に関わっていることを関係者向けに明らかにしていたからだ。(中略)
+	    今回のHOYAへのサイバー攻撃も、Hunters Internationalがランサムウェアを開発し、それを使ったアフィリエイトが攻撃の実働部隊になっているようだ。
+	    </blockquote>
+
+      </li></ul>
+      
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[ネット犯罪の通報は88万件超で前回調査から増加、米IC3が最新版レポートを公開]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240408__ic3</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240408__ic3</guid>
+            <pubDate>Mon, 08 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240408__ic3">》</a>
+<a name="20240408__ic3" href="https://internet.watch.impress.co.jp/docs/column/security/1580952.html">ネット犯罪の通報は88万件超で前回調査から増加、米IC3が最新版レポートを公開</a>
+      (Internet Watch, 4/4)
+      </p>
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[セクシー田中さん方面]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240408__tanakasan</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240408__tanakasan</guid>
+            <pubDate>Mon, 08 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240408__tanakasan">》</a>
+<a name="20240408__tanakasan">セクシー田中さん方面</a>
+      </p>
+
+      <ul>
+	<li><p>
+	    <a href="https://www.tokyo-np.co.jp/article/315562">「セクシー田中さん」芦原さん急死問題　エンタメに詳しい弁護士　原作者とドラマ制作側の会議を </a>
+	    (東京, 3/16)
+	    </p>
+	</li><li><p>
+	    日本テレビ定例社長会見 (3/25)
+	    </p>
+	    <ul>
+	      <li><p>
+		  <a href="https://www.ntv.co.jp/info/press/pdf/press197.pdf">２０２４年３月２５日 日本テレビ 定例記者会見
+		  《 要旨 》</a>
+		  (日テレ, 3/25)
+		  </p>
+
+	      </li><li><p>
+		  <a href="https://mainichi.jp/articles/20240325/spp/sp0/006/038000c">日テレ「セクシー田中さん」調査に言及「ヒアリング進めている」結果公表は「GW明けが目安」</a>
+		  (スポニチ / 毎日, 3/25)
+		  </p>
+	    </li></ul>
+
+	</li><li><p>
+	    <a href="https://mainichi.jp/articles/20240329/ddm/004/070/007000c"> 論点　
+	    「セクシー田中さん」問題</a>
+	    (毎日, 3/29)。里中満智子、福井健策、田淵俊彦。
+	    </p>
+	</li><li><p>
+	    <a href="https://www.tokyo-np.co.jp/article/319248">「セクシー田中さん」問題、東村アキコさんはどう見た？　原作者が「どうぞお好きに」ではダメな理由 </a>
+	    (東京, 4/6)
+	    </p>
+
+	    <blockquote cite="https://www.tokyo-np.co.jp/article/319248">
+	     　韓国で漫画「私のことを憶（おぼ）えていますか」をドラマ化した際、韓国から脚本家が4人来て4時間缶詰めにされた。原作にびっしり付箋が付いており、せりふの1行1行を「この時のこのキャラクターの気持ちは？」「どういう背景事情があるのか」など、自分でも思い出すのに苦労するくらい突っ込みがすごかった。<br>
+	    　「好きにやっていいですよ」と言うと、韓国の脚本家から「何を言ってるんですか！」と怒られ、「先生そんなんじゃ駄目です。先生の世界観、思いをしっかり反映したいんです」と徹底的に意見を聞かれた。韓国は、それだけ原作へのリスペクトがあり、原作者の意向をいかに忠実に映画やドラマに反映するかへの思いも強かった。<br>
+	    　映画やドラマに対する人や時間やお金のかけ方が日本と違う。韓国では、脚本はまず4話まで先に作り、そこから例えばネットフリックスなのか、テレビなのか、映画なのかが決まり、座組や役者を決めていく。<br>
+	    　日本だと視聴率を取るために先に役者を決めていたりする。だから何に重きを置くのかの意識が全然違う、韓国のドラマや映画への取り組みを肌で知り、私ももう少し本気で映画やドラマに向き合ってみようと考えるようになった。韓国の現場を見て、真面目にガチンコで関わらないと良いものはできないと学んだ。<br>
+	    　韓国の人は、寝る間を惜しんでひるむことなく、原作者に向かってくる。学んだことが大きかった。 
+	    
+	    </blockquote>
+
+	    <p>
+	    こういうのが日本でもふつうになってほしいなあ。
+	    </p>
+
+	    
+
+      </li></ul>
+      <p>
+      　「日テレ×小学館、チーフプロデューサーは「セクシー田中さん」三上絵里子」のドラマ「たーたん」は制作中止。代替ドラマの主役は“困ったらジャニーズ”。 
+      </p>
+      <ul>
+	<li><p>
+	    <a href="https://bunshun.jp/articles/-/69101">ムロツヨシ主演の日テレドラマ「たーたん」が制作中止　プロデューサーが「今はできない。別の企画をやりましょう」《「セクシー田中さん」チーム“再タッグ”だったが…》</a>
+	    (文春オンライン, 2/21)
+	    </p>
+	    <blockquote cite="https://bunshun.jp/articles/-/69101?page=2">
+	    　急転直下、放送自体がなくなってしまった「たーたん」だが、実はその裏では、ドラマ版の脚本をめぐり、「セクシー田中さん」の前轍を踏みかねない“未遂事件”があった——。<br>
+
+	    「原作のストーリーを脚本で“改変”していたことが分かったのです」（前出・ドラマ制作スタッフ）
+	    </blockquote>
+	    
+	</li><li><p>
+	    <a href="https://bunshun.jp/articles/-/69133">《説明会音声入手》日テレドラマ「たーたん」スタッフに伝えられた“制作中止の理由”と、プロデューサーが滲ませていた“不信感”「普通じゃない状況のことを出版社の小学館さんに言われて」「悔しい気持ちでいっぱいで」</a>
+	    (文春オンライン, 2/22)
+	    </p>
+	</li><li><p>
+	    <a href="https://bunshun.jp/articles/-/69510">「俳優陣はそのまま」だったが…4月スタート《日本テレビ「たーたん」代替ドラマ》からムロツヨシが出演を辞退していた！</a>
+	    (文春オンライン, 3/12)
+	    </p>
+	</li><li><p>
+	    <a href="https://www.cyzo.com/2024/03/post_364664_entry.html">【たーたん騒動】スト森本慎太郎主演の急ごしらえで思い出す「西内まりやの月9」</a>
+	    (日刊サイゾー, 3/22)
+	    </p>
+	</li><li><p>
+	    <a href="https://mainichi.jp/articles/20240325/spp/sp0/006/027000c">日テレ　SixTONES森本ドラマ主演　旧ジャニ起用「改革に進捗」セクシー田中さん問題で調整枠で…</a>
+	    (スポニチ / 毎日, 3/25)
+	    </p>
+
+	</li><li><p>
+	    <a href="https://weekly-jitsuwa.jp/archives/135008">テレビ業界の“困ったらジャニーズ”体質は変わらず　ムロツヨシ緊急降板『たーたん』の代役がSixTONES森本慎太郎『街並み照らすヤツら』に決定</a>
+	    (週刊実話WEB, 3/26)
+	    </p>
+
+      </li></ul>
+
+      
+      
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[リニア計画　静岡以外も「延び延び」でした　JR東海、山梨県駅完成が「2031年の見通し」初告白 ]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240408__jrc</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240408__jrc</guid>
+            <pubDate>Mon, 08 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240408__jrc">》</a>
+<a name="20240408__jrc" href="https://www.tokyo-np.co.jp/article/319566">リニア計画　静岡以外も「延び延び」でした　JR東海、山梨県駅完成が「2031年の見通し」初告白 </a>
+      (東京, 4/6)。事ここに至ってようやく認めたと。
+      </p>
+      <blockquote cite="https://www.tokyo-np.co.jp/article/319566">
+       　27年開業を前提としたまちづくりが進む中での工期見直し。もっと早く公表はできなかったのか。リニアを取材するジャーナリストの樫田秀樹氏は「工期が遅れれば、工費は膨張する。JRはとっくの昔に把握していたはずなのに、ずっと『静岡のせいだ』と言い続けてきた」と批判する。<br>
+      　他にも未契約・未着工の工区、沿線住民が起こした差し止め訴訟、トラブルによる工事中断などの不安要素があるとし「先送りが重なれば、整備を終えた新駅周辺の民間投資に悪影響を及ぼす。閑古鳥が鳴く事態になるのでは」と懸念する。 
+      </blockquote>
+      <p>
+      　中間駅周辺自治体に大打撃の可能性。関連:
+      </p>
+      <ul>
+	<li><p>
+	    <a href="https://wpb.shueisha.co.jp/news/society/2024/03/28/122706/">開業は早くても10年遅れの2037年!?　リニア新幹線建設の悲惨な現状!!</a>
+	    (樫田秀樹 /
+	    週プレNEWS, 3/28)。用地買収未了とな?!
+	    </p>
+	    <blockquote cite="https://wpb.shueisha.co.jp/news/society/2024/03/28/122706/">
+	    例えば、神奈川県相模原市に建設予定の「リニア車両基地」は工期11年の計画だが、用地買収が未完で未着工だ。今年着工しても完成は35年。加えて、鉄道施設は完成後も電気調整試験や車両の走行実験に約2年をかけるから（本稿ではこの工程を便宜上「工期A」と呼ぶ）、開業は37年。実に10年遅れとなる。
+	    
+	    </blockquote>
+	    
+	</li><li><p>
+	    <a href="https://anond.hatelabo.jp/20240330213108">リニアトンネル工事の公式進捗は品川124m、愛知40cm </a>
+	    (はてな匿名ダイアリー, 3/30)。すさまじい。
+	    </p>
+
+	</li><li><p>
+	    <a href="https://www.tokyo-np.co.jp/article/319345">「リニア」の遅れは静岡だけのせい？　ほかの工区でも後ずれする工事、未解決の問題を考えた </a>
+	    (東京, 4/5)
+	    </p>
+
+      </li></ul>
+
+      
+]]></description>
+        </item>
+        <item>
+            <title><![CDATA[“逆ギレ”辞意表明の静岡県・川勝知事「6月辞職」の狡猾…敵対自民に「後継」渡さない魂胆]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240405__kawakatsu</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240405__kawakatsu</guid>
+            <pubDate>Fri, 05 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240405__kawakatsu">》</a>
+<a name="20240405__kawakatsu" href="https://www.nikkan-gendai.com/articles/view/news/338467">“逆ギレ”辞意表明の静岡県・川勝知事「6月辞職」の狡猾…敵対自民に「後継」渡さない魂胆</a>
+      (日刊ゲンダイ, 4/4)。
+      まあ、<a href="https://www.youtube.com/watch?v=qXh-pxvevwI">これ</a>
+      を見る限りでは逆ギレに見えますけどね。
+      </p>
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[米陸軍のタイフォン･システム、訓練目的で一時的に日本へ移送される可能性]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240405__typhon</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240405__typhon</guid>
+            <pubDate>Fri, 05 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240405__typhon">》</a>
+<a name="20240405__typhon" href="https://grandfleet.info/japan-related/us-armys-typhon-system-may-be-temporarily-transferred-to-japan-for-training-purposes/">米陸軍のタイフォン･システム、訓練目的で一時的に日本へ移送される可能性</a>
+       (航空万能論 GF, 4/4)。アドバルーンかましてきましたね。
+      </p>
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[デンマーク海軍のフリゲート艦、派遣された紅海の作戦中に欠陥が露呈]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240405__danish</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240405__danish</guid>
+            <pubDate>Fri, 05 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240405__danish">》</a>
+<a name="20240405__danish" href="https://grandfleet.info/european-region/danish-navy-frigate-discovered-to-be-defective-during-red-sea-operations/">デンマーク海軍のフリゲート艦、派遣された紅海の作戦中に欠陥が露呈</a>
+      (航空万能論 GF, 4/3)。すさまじい。
+      </p>
+      <blockquote cite="https://grandfleet.info/european-region/danish-navy-frigate-discovered-to-be-defective-during-red-sea-operations/">
+      イーヴァ･ヴィトフェルトは3月9日に15機の敵無人機を検出、直ぐに迎撃を試みたもののThales製レーダー（APAR）とTerma製戦闘管理システム（C-FLEX）の間で問題が生じ、乗組員は問題を解決しようと30分ほど格闘したがESSMを発射することができず、同艦の指揮官はESSMを諦めて76mm砲での迎撃に切り替えた。<br>
+
+      しかし76mm砲で使用された砲弾も30年以上前のもので発砲した直後に爆発
+      </blockquote>
+      <p>
+      　ちょっと待って……。その 76mm、一度も実弾を撃ったことなかったの?
+      </p>
+
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[韓国のHanwha、米軍プログラムの元請け参加が可能なAustal買収に動く]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240405__hanwha</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240405__hanwha</guid>
+            <pubDate>Fri, 05 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240405__hanwha">》</a>
+<a name="20240405__hanwha" href="https://grandfleet.info/indo-pacific-related/hanwha-moves-to-acquire-austal-allowing-it-to-participate-as-prime-contractor-in-us-military-programs/">韓国のHanwha、米軍プログラムの元請け参加が可能なAustal買収に動く</a>
+      (航空万能論 GF, 4/3)
+      </p>
+      <blockquote cite="https://grandfleet.info/indo-pacific-related/hanwha-moves-to-acquire-austal-allowing-it-to-participate-as-prime-contractor-in-us-military-programs/">
+      Hanwha Oceaはフィリー造船所の買収に動いていたため「米国内での商業船舶建造に投資する」と解釈されていたが、いきなり「国防総省のプログラムに元請けとして参加する資格をもつAustal買収」に動いたため、これが実現するとスピアヘッド級遠征高速輸送艦の建造、バージニア級原潜のコンポーネント製造、ヘリテージ級カッター建造に関わるAustal USAもHanwhaの所有になり、アジア市場で韓国勢のOPVと競合することが多かったAustalのOPVもHanwhaのものになる。
+      </blockquote>
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[OpenBSD 7.5 Release Notes]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240405__openbsd</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240405__openbsd</guid>
+            <pubDate>Fri, 05 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240405__openbsd">》</a>
+<a name="20240405__openbsd" href="https://www.openbsd.org/75.html">OpenBSD 7.5 Release Notes</a>
+      (OpenBSD, 4/5)
+      </p>
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[DLsite、Visa・Mastercardのクレカ利用を一時停止　期間については「回答を控える」【追記あり】]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240405__dlsite</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240405__dlsite</guid>
+            <pubDate>Fri, 05 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240405__dlsite">》</a>
+<a name="20240405__dlsite" href="https://www.itmedia.co.jp/news/articles/2404/03/news179.html">DLsite、Visa・Mastercardのクレカ利用を一時停止　期間については「回答を控える」【追記あり】</a>
+      (ITmedia, 4/3)。あら結局 Visa / Master / Amex いずれも駄目になったのですか。
+      JCB だけ ok ですよと。
+      こんなこともあろうかと、
+      JCB なカードを 1 つは用意しないと駄目ですか。
+      </p>
+
+]]></description>
+        </item>
+        <item>
+            <title><![CDATA[
+いろいろ (2024.04.05)
+]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240405_various</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240405_various</guid>
+            <pubDate>Fri, 05 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[
+<div class="NORMAL2">
+
+<h4>Apache HTTPd</h4>
+
+<div class="BOX INDENT-2EM">
+<ul>
+  <li><p>
+      <a href="https://downloads.apache.org/httpd/CHANGES_2.4.59">Changes with Apache 2.4.59</a>
+      (apache.org, 2024.04.04)。3 件のセキュリティ修正
+      (HTTP/2 DoS <a href="https://nvd.nist.gov/vuln/detail/CVE-2024-27316">CVE-2024-27316</a>, HTTP Response
+           Splitting x 2 <a href="https://nvd.nist.gov/vuln/detail/CVE-2024-24795">CVE-2024-24795</a>
+      <a href="https://nvd.nist.gov/vuln/detail/CVE-2023-38709">CVE-2023-38709</a>)
+      を含む。iida さん情報ありがとうございます。
+      </p>
+
+</li></ul>
+</div>
+
+
+<h4>Android</h4>
+
+<div class="BOX INDENT-2EM">
+<ul>
+  <li><p>
+      <a href="https://source.android.com/docs/security/bulletin/2024-04-01?hl=ja">Android セキュリティ情報 - 2024 年 4 月</a>
+      (Android, 2024.04.01)。セキュリティ パッチ レベル 2024-04-01 と 2024-04-05 。
+      </p>
+</li></ul>
+</div>
+
+
+<h4>Node.js</h4>
+
+<div class="BOX INDENT-2EM">
+<ul>
+  <li><p>
+      <a href="https://forest.watch.impress.co.jp/docs/news/1581642.html">「Node.js」にセキュリティアップデート ～v21.7.2/v20.12.1/v18.20.1がリリース</a>
+      (窓の杜, 2024.04.04)。
+      <a href="https://nvd.nist.gov/vuln/detail/CVE-2024-27982">CVE-2024-27982</a>
+      <a href="https://nvd.nist.gov/vuln/detail/CVE-2024-27983">CVE-2024-27983</a>
+      を修正。
+      </p>
+</li></ul>
+</div>
+
+
+
+</div> <!-- class="NORMAL2" -->
+]]></description>
+        </item>
+        <item>
+            <title><![CDATA[
+Chrome Stable Channel Update for Desktop 
+]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240405_chrome</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240405_chrome</guid>
+            <pubDate>Fri, 05 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[
+<p>
+　Chrome 123.0.6312.105/.106/.107 (Windows / Mac) および  123.0.6312.105 (Linux) 出てたんですね。
+Pwn2Own 2024 の件含む 3 件のセキュリティ修正を含む。
+</p>
+]]></description>
+        </item>
+        <item>
+            <title><![CDATA[
+追記
+]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240404_tuiki</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240404_tuiki</guid>
+            <pubDate>Thu, 04 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[
+<dl>
+  <dt><p>
+      <a href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240402_xz">脅威に関する情報: 複数の Linux ディストリビューションに影響を与える XZ Utils データ圧縮ライブラリーの脆弱性 (CVE-2024-3094)</a>
+      (2024.04.02)
+      </p>
+      </dt>
+  <dd><div class="BOX">
+<p>
+　FreeBSD は影響なしだそうです。
+</p>
+<ul>
+  <li><p>
+      <a href="https://lists.freebsd.org/archives/freebsd-security/2024-March/000248.html">Disclosed backdoor in xz releases - FreeBSD not affected</a>
+      (freebsd-security ML, 2024.03.29)
+      </p>
+      <blockquote cite="https://lists.freebsd.org/archives/freebsd-security/2024-March/000248.html">
+      The main, stable/14, and stable/13 branches do include the affected version (5.6.0), but the backdoor components were excluded from the vendor import. Additionally, FreeBSD does not use the upstream's build tooling, which was a required part of the attack. Lastly, the attack specifically targeted x86_64 Linux systems using glibc.
+      </blockquote>
+
+</li></ul>
+      
+      </div>
+      </dd>
+</dl>
+]]></description>
+        </item>
+        <item>
+            <title><![CDATA[岡口基一判事を罷免とした弾劾裁判所の判決に反対する]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240404__okamoto</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240404__okamoto</guid>
+            <pubDate>Thu, 04 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240404__okamoto">》</a>
+<a name="20240404__okamoto" href="https://www.naka2656-b.site/archives/40346819.html">岡口基一判事を罷免とした弾劾裁判所の判決に反対する</a>
+      (なか2656のblog, 4/3)。なか2656さん情報ありがとうございます。
+      </p>
+      <p>
+      　関連:
+      </p>
+      <ul>
+	<li><p>
+	    <a href="https://www.jiji.com/jc/article?k=2024040300741&amp;g=soc">裁判官、罷免に慎重意見　識者「萎縮効果与える」―岡口判事弾劾</a>
+	    (時事, 4/3)
+	    </p>
+	    <blockquote cite="https://www.jiji.com/jc/article?k=2024040300741&amp;g=soc">
+	    立命館大の市川正人特任教授（憲法）は「投稿の意図よりも遺族感情を傷つけたという結果を過大に重視した判断だ」と分析。裁判官としての威信を著しく失うほどの非行に当たるかの説明が尽くされておらず、「国会議員が胸三寸で裁判官を追放できることになってしまいかねない」と懸念を示した。 
+	    </blockquote>
+	    
+	</li><li><p>
+	    <a href="https://www.tokyo-np.co.jp/article/319123">SNS投稿で「罷免」…法曹資格まで失うのは行き過ぎ？　岡口基一判事の弾劾裁判で課題が浮かんだ </a>
+	    (東京, 4/4)
+	    </p>
+	    <blockquote cite="https://www.tokyo-np.co.jp/article/319123">
+	    大阪経済法科大の渡辺康行教授（憲法学）は、訴追委も弾劾裁判所の裁判員も全員が国会議員であるため、「権限濫用（らんよう）や行き過ぎた判断に歯止めをかける仕組みが求められている」と強調する。裁判員は憲法で規定されているため、改正のハードルは高いが、一定数を法曹資格者とする要件を設けることは可能とみる。 
+	    </blockquote>
+
+      </li></ul>
+      <p>
+      　裁判員に自民党の裏金議員や壷議員が含まれるような状況ですからねえ。
+      </p>
+
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[HOYA で大規模システム障害発生、ランサムウェアか?]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240404__hoya</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240404__hoya</guid>
+            <pubDate>Thu, 04 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240404__hoya">》</a>
+<a name="20240404__hoya">HOYA で大規模システム障害発生、ランサムウェアか?</a>
+      </p>
+      <ul>
+	<li><p>
+	    <a href="https://xtech.nikkei.com/atcl/nxt/news/24/00499/">HOYAがシステム障害、外的要因による重大なインシデントで出荷に影響も</a>
+	    (日経 xTECH, 4/1)
+	    </p>
+	</li><li><p>
+	    <a href="https://xtech.nikkei.com/atcl/nxt/news/24/00516/">HOYAのシステム障害、他社レンズメーカーで納期の遅れが全国的に発生</a>
+	    (日経 xTECH, 4/4)
+	    </p>
+	</li><li><p>
+	    <a href="https://www.nikkansports.com/general/news/202404040000238.html">眼鏡レンズの注文受付停止が広がる　HOYAでシステム障害発生、復旧の見通したたず長期化も</a>
+	    (共同 / 日刊スポーツ, 4/4)
+	    </p>
+	    <blockquote cite="https://www.nikkansports.com/general/news/202404040000238.html">
+	    HOYAは、コンタクトレンズや半導体に電子回路を描く工程で使うガラス製品も製造しており、幅広い事業に影響が出る可能性がある。
+	    </blockquote>
+
+
+      </li></ul>
+      <p>
+      　ランサムウェア説:
+      </p>
+
+      <ul>
+	<li><p>
+	    <a href="https://note.com/darkpedia/n/n5f81cc41d9ac">（速報）HOYA、ランサムウェア被害か </a>
+	    (Darkpedia / note, 4/3)。「脅威アクター：Hunters International」
+	    </p>
+	</li><li><p>
+	    <a href="https://jp.broadcom.com/support/security-center/protection-bulletin/protection-highlight-hunters-international-ransomware">Protection Highlight: Hunters International Ransomware</a>
+	    (broadcom)
+	    </p>
+
+	    
+      </li></ul>
+      
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[イスラエル国会、アルジャジーラ閉鎖の法案可決]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240403__israel</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240403__israel</guid>
+            <pubDate>Wed, 03 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240403__israel">》</a>
+<a name="20240403__israel" href="https://www.cnn.co.jp/world/35217203.html">イスラエル国会、アルジャジーラ閉鎖の法案可決</a>
+      (CNN, 4/2)。ファシスト国家らしさがさらに増加。
+      </p>
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[viva! 大阪万博]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240403__osaka</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240403__osaka</guid>
+            <pubDate>Wed, 03 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240403__osaka">》</a>
+<a name="20240403__osaka">viva! 大阪万博</a>
+      </p>
+      <ul>
+	<li><p>
+	    <a href="https://news.yahoo.co.jp/articles/e204b28b23277628c32881b8fe465bbe2e41b3ba">小林製薬は「いのち輝く」大阪万博メインパビリオンに5億円協賛…同社の対応は？</a>
+	    (日刊ゲンダイ / Yahoo, 3/29)
+	    </p>
+	</li><li><p>
+	    <a href="https://www.nikkan-gendai.com/articles/view/money/338302">大阪万博にイスラエル正式参加…「いのち輝く」理念から乖離も日本「NO」言えない情けなさ</a>
+	    (日刊ゲンダイ, 4/2)。大阪万博のテーマは「いのち輝く未来社会のデザイン」ですからね!
+	    現代社会じゃないからいいのかな?
+	    </p>
+	    <blockquote class="twitter-tweet" data-media-max-width="400"><p lang="ja" dir="ltr">ガザのシファ病院から発見され続ける遺体の数々。遺体の様子からも、イスラエル軍が足を縛って殺害したのは明らか。<a href="https://twitter.com/hashtag/StopGenocide?src=hash&amp;ref_src=twsrc%5Etfw">#StopGenocide</a> <a href="https://t.co/oqdk2MzMTa">https://t.co/oqdk2MzMTa</a></p>— 駐日パレスチナ常駐総代表部 (@PalestineEmb) <a href="https://twitter.com/PalestineEmb/status/1774982517432746056?ref_src=twsrc%5Etfw">April 2, 2024</a></blockquote> 
+
+	    <p>
+	    関連: <a href="https://www.cnn.co.jp/world/35217210.html">シファ病院からイスラエル軍撤収、攻撃の跡はさながら「ホラー映画」</a>
+	    (CNN, 4/2)
+	    </p>
+
+	    
+	</li><li><p>
+	    <a href="https://www.nikkan-gendai.com/articles/view/money/338375?utm_source=x&amp;utm_medium=sns">大阪万博「玉川徹氏は禁止」…吉村府知事オラオラ発言で大炎上→詭弁屁理屈で釈明の何サマ</a>
+	     (日刊ゲンダイ, 4/3)
+	    </p>
+
+	</li><li><p>
+	    メタンガス爆発の件:
+	    </p>
+	    <ul>
+	      <li><p>
+		  <a href="https://www.fnn.jp/articles/-/678390">【万博工事で事故】たまった可燃性ガスに引火　トイレ床100平米が破損　夢洲の地下にはメタンガスが </a>
+		  (FNN, 3/29)
+		  </p>
+		  <blockquote cite="https://www.fnn.jp/articles/-/678390">
+		  博覧会協会によると、事故があったのは、万博会場の北西にある緑地エリア、「グリーンワールド（ＧＷ）」工区です。このエリアは元々、産業廃棄物の処分場で、地下にはメタンガスなどの可燃性ガスがたまっています。
+		  </blockquote>
+		  <p>
+		  もともとそういう土地でした。駄目じゃん。
+		  </p>
+
+	      </li><li><p>
+		  <a href="https://www.nikkan-gendai.com/articles/view/life/338279">大阪・関西万博会場でガス爆発事故…「メタンガス」の危険性は国会で指摘されていた</a>
+		  (日刊ゲンダイ, 3/30)
+		  </p>
+		  <blockquote cite="https://www.nikkan-gendai.com/articles/view/life/338279">
+		  　2023年11月29日の参院予算委員会。社民党の福島みずほ参議院議員（68）は、万博会場となっている現場の土壌改良の必要性についてこう質問。<br>
+
+		  「何で万博会場は土壌改良をやらないんですか。有害物質の上でやるんですか。今、ここ、現場でメタンガスが出ていますよね。どういう状況ですか」
+		  </blockquote>
+
+	      </li><li><p>
+		  <a href="https://kokkai.ndl.go.jp/#/detail?minId=121215261X00620231129">第212回国会　参議院　予算委員会　第6号　令和5年11月29日</a>
+		  (国会会議録検索システム)。メタンガスの件は174番から。
+		  </p>
+		  
+		  
+	      </li><li><p>
+		  <a href="https://www.jcp.or.jp/akahata/aik23/2024-03-31/2024033101_02_0.html">大阪　万博工事　可燃性ガス爆発　
+		  危険な会場　直ちに中止を</a>
+		  (しんぶん赤旗, 3/31)
+		  </p>
+		  <blockquote cite="https://www.jcp.or.jp/akahata/aik23/2024-03-31/2024033101_02_0.html">
+		  同工区のある夢洲１区は廃棄物の処分場で、地下にはメタンガスなどの可燃性ガスのほかダイオキシンなど有害物質が大量に埋まっています。可燃性ガスを放出する管（写真）は、市民団体が確認しただけでも７９本に上ります。(中略) 万博協会はガス抜き管の出口の付け替えだけで建設工事を推進。政府も「開催は危険だと認識していない」（自見英子万博相）と容認してきましたが、今回の事故で危険性が露呈しました。
+		  </blockquote>
+		  
+	      </li><li><p>
+		  <a href="https://lite-ra.com/2024/03/post-6326.html">大阪万博の工事現場でガス爆発　会場地下に溜まるメタンガスへの懸念が現実に！ 危険な有害物質PCB汚泥も覆うだけ</a>
+		  (リテラ, 3/31)
+		  </p>
+
+	      </li><li><p>
+		  <a href="https://www.tokyo-np.co.jp/article/318707">「万博会場でたばこ吸ったら吹っ飛ぶ」をホンマに否定できるんか　建設現場で爆発、原因はメタンガスらしい </a>
+		  (東京, 4/2)
+		  </p>
+
+	    </li></ul>
+
+      </li></ul>
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[iPad miniを機内に忘れ、8,700km先から取り戻した話]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240403__ipad</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240403__ipad</guid>
+            <pubDate>Wed, 03 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240403__ipad">》</a>
+<a name="20240403__ipad" href="https://pc.watch.impress.co.jp/docs/topic/feature/1580678.html">iPad miniを機内に忘れ、8,700km先から取り戻した話</a>
+      (PC Watch, 4/3)
+      </p>
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[【津波注意報 解除】台湾付近でM7.7の地震　沖縄で津波観測]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240403__taiwan</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240403__taiwan</guid>
+            <pubDate>Wed, 03 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240403__taiwan">》</a>
+<a name="20240403__taiwan" href="https://weathernews.jp/s/topics/202404/030045/">【津波注意報 解除】台湾付近でM7.7の地震　沖縄で津波観測</a>
+      (ウェザーニュース, 4/3)
+      </p>
+      <ul>
+	<li><p>
+	    <a href="https://www.data.jma.go.jp/multi/quake/quake_detail.html?eventID=20240403090405&amp;lang=jp">台湾付近 M7.5 ごく浅い</a>
+	    (気象庁, 4/3 08:58)、
+	    <a href="https://www.data.jma.go.jp/multi/quake/quake_detail.html?eventID=20240403091635&amp;lang=jp">台湾付近 M6.6 ごく浅い</a>
+	    (気象庁, 4/3 09:11)
+	    </p>
+
+	</li><li><p>
+	    <a href="https://earthquake.usgs.gov/earthquakes/eventpage/us7000m9g4/executive">M 7.4 - 18 km SSW of Hualien City, Taiwan </a>
+	    (USGS, 4/2 23:58:11 UTC)、
+	    <a href="https://earthquake.usgs.gov/earthquakes/eventpage/us7000m9gc/executive">M 6.4 - 11 km NE of Hualien City, Taiwan</a>
+	    (USGS, 4/3 00:11:25 UTC)
+	    </p>
+
+	</li><li><p>
+	    <a href="https://twitter.com/UN_NERV/status/1775335104468181489">https://twitter.com/UN_NERV/status/1775335104468181489</a>
+	    (NERV / twitter, 4/3)
+	    </p>
+	    <blockquote cite="https://twitter.com/UN_NERV/status/1775335104468181489">
+	    【地震の震源要素更新】<br>
+	    令和 6年 4月 3日10時30分をもって、地震の発生場所と規模を更新します。<br>
+	    震源: 台湾付近(北緯23度49.9分 東経121度35.9分 深さ 23km)<br>
+	    規模: M7.7
+	    </blockquote>
+
+	</li><li><p>
+	    <a href="https://www3.nhk.or.jp/news/html/20240403/k10014411081000.html">沖縄県の津波注意報をすべて解除 各地で津波観測</a>
+	    (NHK, 4/3)
+	    </p>
+
+	</li><li><p>
+	    <a href="https://www.bloomberg.co.jp/news/articles/2024-04-03/SBCC9FT1UM0W00">台湾でＭ7.7、99年以来の大地震－ＴＳＭＣとＵＭＣ生産ラインに影響</a>
+	    (ブルームバーグ, 4/3)
+	    </p>
+	</li><li><p>
+	    <a href="https://www3.nhk.or.jp/news/html/20240403/k10014411141000.html">台湾東部 マグニチュード7超える地震 1人死亡50人以上けが</a>
+	    (NHK, 4/3)
+	    </p>
+
+	</li><li><p>
+	    <a href="https://www.cna.com.tw/news/ahel/202404035004.aspx">花蓮規模7.2地震市區2大樓嚴重傾斜 新北中和倉庫倒塌【圖輯】</a>
+	    (中央社網站, 4/3)
+	    </p>
+
+	</li><li><p>
+	    <a href="https://japan.focustaiwan.tw/society/202404030003">台湾東部地震/台湾東部で地震 複数の建物に被害 鉄道も一部で運転見合わせ</a>
+	    (フォーカス台湾, 4/3)
+	    </p>
+
+      </li></ul>
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[上川外相 パレスチナ首相に“UNRWAへの資金拠出再開”伝える]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240403__unrwa</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240403__unrwa</guid>
+            <pubDate>Wed, 03 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240403__unrwa">》</a>
+<a name="20240403__unrwa" href="https://www3.nhk.or.jp/news/html/20240402/k10014410971000.html">上川外相 パレスチナ首相に“UNRWAへの資金拠出再開”伝える</a>
+      (NHK, 4/2)。ようやくですか。
+      </p>
+
+]]></description>
+        </item>
+        <item>
+            <title><![CDATA[ガザ情勢が及ぼすエネルギー供給への地政学的影響
+      ――中東のエスカレーション・リスクと紅海地域の不安定化 ]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240402__me</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240402__me</guid>
+            <pubDate>Tue, 02 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240402__me">》</a>
+<a name="20240402__me" href="https://www.spf.org/iina/articles/kobayashi_08.html">ガザ情勢が及ぼすエネルギー供給への地政学的影響
+      ――中東のエスカレーション・リスクと紅海地域の不安定化 </a>
+      (笹川平和財団, 4/2)
+      </p>
+      <blockquote cite="https://www.spf.org/iina/articles/kobayashi_08.html">
+      　現状では、中東の地域大国や米国のいずれも紛争のエスカレーションは望んでおらず、直接介入を明確に否定し、全面戦争を回避してきた。しかし、イスラエルは10月7日の事件によって破られた抑止を回復させるために、ガザ地区への大規模な軍事侵攻を継続するとともに、イランや親イラン勢力を挑発して米国を引きずり込もうとしており、この試みが暴発する危険性は無視できない。また、非国家主体という「ワイルドカード」が軍事衝突や偶発的エスカレーションの引き金になり得る。<br>
+
+      　米国やイラン、その他の地域大国が抑制的に行動する限り、複数の国を巻き込む全面戦争が発生する見込みは短期的には低いが、「戦争状態には至らずとも域内諸国が緊張状態にあり、武力衝突が突発的に発生し、邦人や日本権益が巻き込まれる」という状況は継続している。局所的な対立がエスカレーションを引き起こし、中東域内で「意図せざる戦争（unwanted war）」を引き起こすリスクには常に注意が必要である[1]。 
+      
+      
+      </blockquote>
+
+  ]]></description>
+        </item>
+        <item>
+            <title><![CDATA[「諸刃の剣」としてのAUKUS
+      ――豪州の原子力潜水艦取得に向けた課題(前編) ]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240402__aukus</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240402__aukus</guid>
+            <pubDate>Tue, 02 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[<p>
+      <a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240402__aukus">》</a>
+<a name="20240402__aukus" href="https://www.spf.org/iina/articles/satake_06.html">「諸刃の剣」としてのAUKUS
+      ――豪州の原子力潜水艦取得に向けた課題(前編) </a>
+       (笹川平和財団, 3/14)、
+
+      <a href="https://www.spf.org/iina/articles/satake_07.html">（後編） </a>
+      (笹川平和財団, 3/18)
+      
+      </p>
+      
+      <blockquote cite="https://www.spf.org/iina/articles/satake_07.html">
+      　より深刻な問題は、米国内の動向であろう。前節で見たように、米国議会は12月に豪州への原潜供与に同意したものの、潜水艦の譲渡が「米国の海中能力を低下させず」、「米国の外交政策と国家安全保障上の利益に合致する」ことを米大統領が証明すること、また米国が自国のニーズを満たすために「十分な潜水艦の生産・保守投資を行う」こと、そして豪州が同艦を運用する能力を持つことなど、多くの条件がつけられた[10]。また、豪州は潜水艦の購入費用とは別に、米国の潜水艦産業育成のために30億米ドル（日本円で約4400億円）を支払わなければならない。<br>
+
+      　ここでもっとも大きな問題となるのが、米国の原潜の生産能力の問題である。現在の米海軍の弾道ミサイル搭載原子力潜水艦以外の潜水艦は50隻前後で、長期目標である66〜72隻には遠く及ばない。ある分析によると、豪州に提供する分を踏まえた場合、米国は現在から2030年代にかけてヴァージニア級原潜を少なくとも年間2.3隻のペースで建造する必要がある。もっとも、ヴァージニア級の引き渡し速度は現在、年1.4隻程度であり、2隻に達するまでには5年かかると見られている[11]。 
+      </blockquote>
+      <p>
+      　US の建艦能力の低さよ……。ほんまにできるんかいな。
+      </p>
+
+
+]]></description>
+        </item>
+        <item>
+            <title><![CDATA[
+脅威に関する情報: 複数の Linux ディストリビューションに影響を与える XZ Utils データ圧縮ライブラリーの脆弱性 (CVE-2024-3094)
+]]></title>
+            <link>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240402_xz</link>
+            <guid>https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240402_xz</guid>
+            <pubDate>Tue, 02 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[
+<p>
+　XZ Utils 5.6.0 / 5.6.1 に難読化されたバックドアが仕掛けられており、
+liblzma を利用するアプリケーション (例: SSH) を通じて侵害を行うことが可能。
+<a href="https://nvd.nist.gov/vuln/detail/CVE-2024-3094">CVE-2024-3094</a>
+</p>
+<p>
+　XZ Utils 5.6.0 / 5.6.1 が比較的最近リリースされたもの
+(5.6.0: 2024.02.24、5.6.1: 2024.03.09) であったため、
+主要な Linux ディストリビューションの安定版にはまだ採用されていなかった。
+</p>
+<ul>
+  <li><p>
+      <a href="https://www.redhat.com/en/blog/urgent-security-alert-fedora-41-and-rawhide-users">Urgent security alert for Fedora Linux 40 and Fedora Rawhide users</a>
+      (Red Hat, 2024.03.29)。
+      Fedora Linux 40 / 40 beta および Fedora Rawhide にのみ影響。
+      </p>
+  </li><li><p>
+      <a href="https://lists.debian.org/debian-security-announce/2024/msg00057.html">[SECURITY] [DSA 5649-1] xz-utils security update</a>
+      (Debian, 2024.03.29)、
+      <a href="https://security-tracker.debian.org/tracker/CVE-2024-3094">CVE-2024-3094</a>
+      (Debain)。unstable のみ影響。
+      </p>
+  </li><li><p>
+      <a href="https://news.opensuse.org/2024/03/29/xz-backdoor/">openSUSE addresses supply chain attack against xz compression library</a>
+      (OpenSUSE, 2024.03.29)。ローリングリリースである
+      openSUSE Tumbleweed および openSUSE MicroOS
+      の 3/7〜3/28 版にのみ影響。3/29 リリースの liblzma5 5.6.1.revertto5.4 で修正。
+      </p>
+
+  </li><li><p>
+      <a href="https://www.alpinelinux.org/posts/XZ-backdoor-CVE-2024-3094.html">Backdoor found in xz package source</a>
+      (alpine linux, 2024.03.31)、
+      <a href="https://security.alpinelinux.org/vuln/CVE-2024-3094">CVE-2024-3094</a>
+      (alpine linux)。
+      開発版である Edge にのみ影響。ただし問題のコードは alpine linux では機能しないと考えられている。
+      </p>
+
+  </li><li><p>
+      <a href="https://archlinux.org/news/the-xz-package-has-been-backdoored/">The xz package has been backdoored</a>
+      (arch linux, 2024.03.29)。
+      2024.03.01 以降のインストールメディア、
+      VM イメージ 20240301.218094 および 20240315.221711、
+      コンテナイメージ 2024-02-24 から 2024-03-28 までに影響。
+      </p>
+
+  </li><li><p>
+      <a href="https://www.kali.org/blog/about-the-xz-backdoor/">All about the xz-utils backdoor</a>
+     (KALI Linux, 2024.03.29)。3/26 以降、
+      xz-utils パッケージが 5.6.0 ベースになっていた。
+      3/29 にリリースされた xz-utils 5.6.1+really5.4.5-1 で修正。
+      </p>
+
+</li></ul>
+<p>
+　macOS 方面の Homebrew / MacPorts にも影響あったようで。
+</p>
+<ul>
+  <li><p>
+      <a href="https://github.com/macports/macports-ports/commits/master/archivers/xz/Portfile">History for
+
+          macports-portsarchiversxzPortfile
+
+      </a>
+      (GitHub)。3/22 に 5.6.1 になり 3/28 に 5.4.6 に戻っている。
+      </p>
+  </li><li><p>
+      <a href="https://github.com/orgs/Homebrew/discussions/5243">brew install xz installs the outdated version 5.4.6 instead of 5.6.1 #5243</a>
+      (GitHub)。3/10 に 5.6.1 になり 3/29 に 5.4.6 に戻っている。
+      </p>
+
+</li></ul>
+<p>
+　関連:
+</p>
+<ul>
+  <li><p>
+      <a href="https://tukaani.org/xz-backdoor/">XZ Utils backdoor</a>
+      (Lasse Collin)。震源地。「Most likely it will be during the first week of April 2024」
+      だそうです。
+      </p>
+
+  </li><li><p>
+      <a href="https://openwall.com/lists/oss-security/2024/03/29/4">backdoor in upstream xz/liblzma leading to ssh server compromise</a>
+      (Andres Freund / oss-sec ML, 2024.03.29)。発見者による詳細解説。
+      </p>
+
+  </li><li><p>
+      <a href="https://forest.watch.impress.co.jp/docs/news/1580604.html">「XZ Utils」にバックドア、オープンソースエコシステム全体の信頼を揺るがす事態に　
+      0.5秒の遅延からたまたま発覚、数年をかけた周到なやり口が明るみに </a>
+      (窓の杜, 2024.04.01)。浸透工作 (= 信頼構築) は年単位の作業なんだよなあ。
+      </p>
+
+  </li><li><p>
+      <a href="https://piyolog.hatenadiary.jp/entry/2024/04/01/035321">XZ Utilsの脆弱性 CVE-2024-3094 についてまとめてみた</a>
+      (piyolog, 2024.04.01)
+      </p>
+
+  </li><li><p>
+      <a href="https://boehs.org/node/everything-i-know-about-the-xz-backdoor">Everything I Know About the XZ Backdoor</a>
+      (boehs.org, 2024.03.29)。JiaT75 (Jia Tan) 氏の足跡について。
+      </p>
+
+      
+</li></ul>
+
+<h4 class="TSUIKI">2024.04.04 追記:</h4>
+<p>
+　FreeBSD は影響なしだそうです。
+</p>
+<ul>
+  <li><p>
+      <a href="https://lists.freebsd.org/archives/freebsd-security/2024-March/000248.html">Disclosed backdoor in xz releases - FreeBSD not affected</a>
+      (freebsd-security ML, 2024.03.29)
+      </p>
+      <blockquote cite="https://lists.freebsd.org/archives/freebsd-security/2024-March/000248.html">
+      The main, stable/14, and stable/13 branches do include the affected version (5.6.0), but the backdoor components were excluded from the vendor import. Additionally, FreeBSD does not use the upstream's build tooling, which was a required part of the attack. Lastly, the attack specifically targeted x86_64 Linux systems using glibc.
+      </blockquote>
+
+</li></ul>
+
+]]></description>
+        </item>
+    </channel>
+</rss>
