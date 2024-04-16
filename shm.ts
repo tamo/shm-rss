@@ -1,6 +1,12 @@
 // https://github.com/tamo/shm-rss/blob/main/shm.rb を Deno に移植してみた
 // このファイル内容を https://dash.deno.com/ の Playground に置けば使える
 
+// Deno Deploy 環境 (DENO_DEPLOYMENT_ID がある) ではその Kv を使用し、
+// ローカル環境では
+// DENO_KV_ACCESS_TOKEN (https://dash.deno.com/projects/<プロジェクト名>/kv 参照) があれば
+// DENO_KV_URL の Kv を使用する (ので https://api.deno.com/databases/<GUID>/connect と設定)
+// それ以外では ./shm.kv* を使用する
+
 import {
   type Document,
   DOMParser,
@@ -190,8 +196,8 @@ type FeedObj = {
 if (import.meta.main) { // test の場合は実行しない
   const localkv = Deno.env.get("DENO_DEPLOYMENT_ID")
     ? undefined
-    : (Deno.env.get("DENO_KV_ACCESS_TOKEN") // https://dash.deno.com/projects/<プロジェクト名>/kv 参照
-      ? Deno.env.get("DENO_KV_URL") // https://api.deno.com/databases/<GUID>/connect
+    : (Deno.env.get("DENO_KV_ACCESS_TOKEN")
+      ? Deno.env.get("DENO_KV_URL")
       : "./shm.kv");
   const shm = new SHM();
 
