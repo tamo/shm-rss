@@ -1,4 +1,4 @@
-import { SHM } from "../shm.ts";
+import { SHM } from "./shm.ts";
 import { assertEquals } from "jsr:@std/assert"; // "https://deno.land/std/assert/mod.ts";
 // import FakeTimers from "npm:@sinonjs/fake-timers"; // 現在時刻に左右されるとき使う
 
@@ -8,7 +8,7 @@ Deno.test(
     // const faketimer = FakeTimers.install();
     // faketimer.setSystemTime(new Date("2024-04-14"));
 
-    const denokv = await Deno.openKv("./test/20240414.kv");
+    const denokv = await Deno.openKv("./testdata/20240414.kv");
     const shm = new SHM();
 
     await t.step("html2kv", async () => {
@@ -18,7 +18,7 @@ Deno.test(
         logs.push(a1, a2);
       };
 
-      const html = Deno.readTextFileSync("./test/20240414.html");
+      const html = Deno.readTextFileSync("./testdata/20240414.html");
       await shm.html2kv(html, denokv);
 
       globalThis.console.log = origlog;
@@ -33,25 +33,25 @@ Deno.test(
 
     await t.step("kv2feed (rss)", async () => {
       const rss = (await shm.kv2feed(denokv)).rss2();
-      Deno.writeTextFileSync("./test/20240414.rss", rss); // デバッグ用
-      const expectedrss = Deno.readTextFileSync("./test/20240414.expected.rss");
+      Deno.writeTextFileSync("./testdata/20240414.rss", rss); // デバッグ用
+      const expectedrss = Deno.readTextFileSync("./testdata/20240414.expected.rss");
       assertEquals(rss, expectedrss);
-      Deno.removeSync("./test/20240414.rss"); // 失敗時には残る
+      Deno.removeSync("./testdata/20240414.rss"); // 失敗時には残る
     });
 
     await t.step("kv2feed (atom)", async () => {
       shm.selflink = "https://shm-rss.deno.dev/";
 
       const atom = (await shm.kv2feed(denokv)).rss2();
-      Deno.writeTextFileSync("./test/20240414.atom", atom); // デバッグ用
+      Deno.writeTextFileSync("./testdata/20240414.atom", atom); // デバッグ用
       const expectedatom = Deno.readTextFileSync(
-        "./test/20240414.expected.atom",
+        "./testdata/20240414.expected.atom",
       );
       assertEquals(atom, expectedatom);
-      Deno.removeSync("./test/20240414.atom"); // 失敗時には残る
+      Deno.removeSync("./testdata/20240414.atom"); // 失敗時には残る
     });
 
     denokv.close();
-    Deno.removeSync("./test/20240414.kv");
+    Deno.removeSync("./testdata/20240414.kv");
   },
 );

@@ -8,7 +8,7 @@ jobs:
       - uses: denoland/setup-deno@main
         with:
           deno-version: v1.x
-      - run: deno fmt --check shm.ts test
+      - run: deno fmt --check shm.ts shm.test.ts
       - run: deno lint
-      - run: deno cache test/shm.test.ts
+      - run: deno cache shm.test.ts
       - run: deno test -A --unstable-kv
