@@ -1,7 +1,11 @@
-shm.rss
-shm.html
-.ruby-version
-shm.kv*
+# ts version
+/shm.kv*
+/.vscode
+
+# ruby version
+/shm.rss
+/shm.html
+/.ruby-version
 
 *.gem
 *.rbc
