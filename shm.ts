@@ -102,12 +102,12 @@ export class SHM {
     if (parent.tagName == "H2") return new Error(); // その中にまた a.NU がある
 
     const ititle = elem.nextElementSibling?.textContent;
-    if (!ititle) return new Error("no title");
+    if (!ititle || !ititle.trim()) return new Error("no title");
 
     const ihref = elem.getAttribute("href");
     if (!ihref) return new Error("no href");
     const imatches = ihref.match(
-      /^.*#([0-9]{4})([0-9]{2})([0-9]{2})(_+)(.+)$/,
+      /^.*#([0-9]{4})([0-9]{2})([0-9]{2})(_+).*$/,
     );
     if (!imatches) return new Error("invalid href");
     const idate = `${imatches[1]}-${imatches[2]}-${imatches[3]}`; // アンカーから日付だけ取得する
