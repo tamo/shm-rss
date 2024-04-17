@@ -313,7 +313,10 @@ if (import.meta.main) { // test の場合は実行しない
     if (cachedfeed.lastfetch) {
       try {
         if (new URL(req.url).pathname == "/html") {
-          return new Response(shm.feed2html(cachedfeed));
+          return new Response(
+            shm.feed2html(cachedfeed),
+            { headers: { "Content-Type": "text/html; charset=utf-8" } },
+          );
         }
         return new Response(
           cachedfeed.rss2(),
