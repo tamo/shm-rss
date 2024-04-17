@@ -7,12 +7,7 @@
 // DENO_KV_URL の Kv を使用する (ので https://api.deno.com/databases/<GUID>/connect と設定)
 // それ以外では ./shm.kv* を使用する
 
-import {
-  type Document,
-  DOMParser,
-  type Element,
-} from "jsr:@b-fuze/deno-dom@0.1"; // "https://deno.land/x/deno_dom/deno-dom-wasm.ts";
-
+import { DOMParser, type Element } from "jsr:@b-fuze/deno-dom@0.1"; // "https://deno.land/x/deno_dom/deno-dom-wasm.ts";
 import { Feed } from "https://jspm.dev/feed";
 
 // 前回の fetch から ttl 分以上経ってたら fetch して kv に入れる (保存期間 storedays 日)
@@ -28,12 +23,17 @@ export class SHM {
 
   myname = "shm";
   link = "https://www.st.ryukoku.ac.jp/~kjm/security/memo/";
+  failmsg = "(HTML のパースに失敗しました)";
 
   html2kv = async (html: string, kv: Deno.Kv) => {
     const promises: Promise<Deno.KvCommitResult | Deno.KvCommitError>[] = [];
 
     const document = new DOMParser().parseFromString(html, "text/html")!;
-    const lastmoddate = lastmod(document);
+    const lastmoddate = new Date(
+      document.querySelector("p.INDENT-2EM small")!
+        .textContent!
+        .match(/Last modified: ((.*)\n.*\))/)?.[1]!,
+    );
     const now = Date.now();
     /*
     // Kv の読み書きを少しでも減らしたい場合
@@ -71,7 +71,7 @@ export class SHM {
     for (
       const elem of (document.querySelectorAll("a.NU") as Iterable<Element>)
     ) {
-      const item: Item | Error = elem2item(elem);
+      const item: Item | Error = this.elem2item(elem);
       if (item instanceof Error) {
         if (item.message) console.log(item.message, elem.outerHTML);
         continue;
@@ -93,57 +93,49 @@ export class SHM {
     }
 
     await Promise.all(promises);
-
     return;
+  };
 
-    function lastmod(document: Document) {
-      const lastmodstr = document.querySelector("p.INDENT-2EM small")!
-        .textContent!
-        .match(/Last modified: ((.*)\n.*\))/)?.[1]!;
-      return new Date(lastmodstr);
-    }
+  private elem2item = (elem: Element): Item | Error => {
+    const parent = elem.parentElement;
+    if (!parent) return new Error("no parent");
+    if (parent.tagName == "H2") return new Error(); // その中にまた a.NU がある
 
-    function elem2item(elem: Element): Item | Error {
-      const parent = elem.parentElement;
-      if (!parent) return new Error("no parent");
-      if (parent.tagName == "H2") return new Error(); // その中にまた a.NU がある
+    const ititle = elem.nextElementSibling?.textContent;
+    if (!ititle) return new Error("no title");
 
-      const ititle = elem.nextElementSibling?.textContent;
-      if (!ititle) return new Error("no title");
+    const ihref = elem.getAttribute("href");
+    if (!ihref) return new Error("no href");
+    const imatches = ihref.match(
+      /^.*#([0-9]{4})([0-9]{2})([0-9]{2})(_+)(.+)$/,
+    );
+    if (!imatches) return new Error("invalid href");
+    const idate = `${imatches[1]}-${imatches[2]}-${imatches[3]}`; // アンカーから日付だけ取得する
+    const ibars = imatches[4].length; // アンダーバーの数で記事の種類を判別
 
-      const ihref = elem.getAttribute("href");
-      if (!ihref) return new Error("no href");
-      const imatches = ihref.match(
-        /^.*#([0-9]{4})([0-9]{2})([0-9]{2})(_+)(.+)$/,
-      );
-      if (!imatches) return new Error("invalid href");
-      const idate = `${imatches[1]}-${imatches[2]}-${imatches[3]}`; // アンカーから日付だけ取得する
-      const ibars = imatches[4].length; // アンダーバーの数で記事の種類を判別
+    return {
+      title: ititle,
+      link: ihref,
+      date: Date.parse(idate),
+      description: this.parent2desc(parent, ibars),
+    };
+  };
 
-      return {
-        title: ititle,
-        link: ihref,
-        date: Date.parse(idate),
-        description: parent2desc(parent, ibars),
-      };
-
-      function parent2desc(p: Element, bars: number): string {
-        if (bars == 2 && p.tagName == "P") { // 大部分の一行もの
-          if (p.parentElement?.tagName == "LI") {
-            return p.parentElement.innerHTML;
-          }
-        } else if (bars == 1 && p.tagName == "H3") { // 「いろいろ」とか「追記」
-          const nextElement = p.nextElementSibling;
-          if (
-            nextElement?.tagName == "DIV" && nextElement.className == "BODY"
-          ) {
-            return nextElement.innerHTML;
-          }
-        }
-        console.log("parent error", p, bars);
-        return "(HTML のパースに失敗しました)";
+  private parent2desc = (p: Element, bars: number): string => {
+    if (bars == 2 && p.tagName == "P") { // 大部分の一行もの
+      if (p.parentElement?.tagName == "LI") {
+        return p.parentElement.innerHTML;
+      }
+    } else if (bars == 1 && p.tagName == "H3") { // 「いろいろ」とか「追記」
+      const nextElement = p.nextElementSibling;
+      if (
+        nextElement?.tagName == "DIV" && nextElement.className == "BODY"
+      ) {
+        return nextElement.innerHTML;
       }
     }
+    console.log("parent error", p, bars);
+    return this.failmsg;
   };
 
   kv2feed = async (kv: Deno.Kv): Promise<FeedObj> => {
@@ -175,6 +167,73 @@ export class SHM {
 
     return feed;
   };
+
+  feed2html = (feed: FeedObj) => {
+    const json = JSON.parse(feed.json1());
+    const htmlparts = [];
+    htmlparts.push(`<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <title>Previewing RSS of ${json.title}</title>
+    ${
+      json.feed_url
+        ? '<link rel="alternate" type="application/rss+xml" href="' +
+          json.feed_url + '" title="RSS">'
+        : ""
+    }
+    <style>
+      blockquote {
+        border-style: solid;
+        border-width: thin;
+      }
+      div.date {
+        font-size: x-small;
+      }
+      details[open] summary {
+        background-color: red;
+      }
+    </style>
+  </head>
+  <body id="body">
+    <h1>Previewing ${
+      json.feed_url ? '<a href="' + json.feed_url + '">RSS</a>' : "RSS"
+    } of <a href="${json.home_page_url}">${json.title}</a></h1>
+    ${
+      json.feed_url
+        ? '<h2><a href="' + json.feed_url + '">Get the RSS</a></h2>'
+        : ""
+    }
+    <hr>
+    <h3>description</h3>
+    <blockquote id="channel_description">${json.description}</blockquote>
+    <p><a href="https://github.com/ttamo/shm-rss/">RSS 生成プロジェクトはこちら</a></p>
+    <hr>`);
+
+    (json.items as Array<{
+      title: string;
+      url: string;
+      summary: string;
+      date_modified: string;
+    }>).forEach((i) =>
+      htmlparts.push(`
+    <details ${(i.summary == this.failmsg) ? "open=true" : ""}>
+      <summary>${i.title}</summary>
+      <div class="date">
+        <a href="${i.url}">${i.date_modified}</a>
+      </div>
+      <blockquote class="description">
+        ${i.summary}
+      </blockquote>
+    </details>`)
+    );
+
+    htmlparts.push(`
+  </body>
+</html>`);
+
+    return "".concat(...htmlparts);
+  };
 }
 
 type Item = {
@@ -189,6 +248,7 @@ type FeedItem = Omit<Item, "date"> & {
 };
 type FeedObj = {
   rss2: () => string;
+  json1: () => string;
   addItem: (item: FeedItem) => void;
   lastfetch?: number;
 };
@@ -220,12 +280,13 @@ if (import.meta.main) { // test の場合は実行しない
   } catch {
     cachedfeed = {
       rss2: () => "",
+      json1: () => "",
       addItem: (_) => {},
       lastfetch: 0,
     };
   }
 
-  Deno.serve(async (_req) => {
+  Deno.serve(async (req) => {
     try {
       const ttlms = shm.ttl * 60 * 1000; // ミリ秒
       const now = Date.now();
@@ -245,13 +306,24 @@ if (import.meta.main) { // test の場合は実行しない
         cachedfeed = await shm.kv2feed(denokv);
         cachedfeed.lastfetch = now;
       }
-      return new Response(
-        cachedfeed.rss2(),
-        { headers: { "Content-Type": "application/rss+xml; charset=utf-8" } },
-      );
     } catch (error) {
       console.log(error);
     }
+
+    if (cachedfeed.lastfetch) {
+      try {
+        if (new URL(req.url).pathname == "/html") {
+          return new Response(shm.feed2html(cachedfeed));
+        }
+        return new Response(
+          cachedfeed.rss2(),
+          { headers: { "Content-Type": "application/rss+xml; charset=utf-8" } },
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
     return new Response("error", { status: 500 });
   });
 }
