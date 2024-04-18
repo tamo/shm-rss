@@ -25,163 +25,171 @@ export class SHM {
   link = "https://www.st.ryukoku.ac.jp/~kjm/security/memo/";
   failmsg = "(HTML のパースに失敗しました)";
 
-  html2kv = async (html: string, kv: Deno.Kv) => {
-    const promises: Promise<Deno.KvCommitResult | Deno.KvCommitError>[] = [];
+  html2kv: (html: string) => Promise<void>;
+  private elem2item: (elem: Element) => Item | Error;
+  private parent2desc: (p: Element, bars: number) => string;
+  kv2feed: () => Promise<FeedObj>;
+  feed2html: (feed: FeedObj) => string;
+  handler: Deno.ServeHandler;
 
-    const document = new DOMParser().parseFromString(html, "text/html")!;
-    const lastmoddate = new Date(
-      document.querySelector("p.INDENT-2EM small")!
-        .textContent!
-        .match(/Last modified: ((.*)\n.*\))/)?.[1]!,
-    );
-    const now = Date.now();
-    /*
-    // Kv の読み書きを少しでも減らしたい場合
-    if (
-      lastmoddate.getTime() ==
-        ((await kv.get<number>([this.myname, "lastmod"]))?.value || 0)
-    ) {
-      await kv.set([this.myname, "lastfetch"], now);
-      console.log("skip same lastmod");
-      return;
-    }
-    */
+  constructor(kv: Deno.Kv) {
+    this.html2kv = async (html: string) => {
+      const promises: Promise<Deno.KvCommitResult | Deno.KvCommitError>[] = [];
 
-    { // 相対パスを絶対パスに
-      const baseurl = this.link + lastmoddate.toISOString()
-        .replace(/^([0-9]{4})-([0-9]{2})-.*$/, "$1/$2.html");
-      document.getElementsByTagName("a").forEach((a) => {
-        const ahref = a.getAttribute("href");
-        if (!ahref) return;
-        a.setAttribute("href", new URL(ahref, baseurl).href);
-      });
-    }
-    const docdesc = document.querySelector("div.NORMAL")!.innerHTML; // 「追いかけてみるテストです」のあたり
-    promises.push(
-      kv.atomic()
-        .set([this.myname, "title"], document.title)
-        .set([this.myname, "link"], this.link)
-        .set([this.myname, "description"], docdesc)
-        .set([this.myname, "lastfetch"], now)
-        .set([this.myname, "lastmod"], lastmoddate.getTime())
-        .commit(),
-    );
-
-    let index = 0; // Deno の querySelectorAll は Element にするために手間が必要
-    for (
-      const elem of (document.querySelectorAll("a.NU") as Iterable<Element>)
-    ) {
-      const item: Item | Error = this.elem2item(elem);
-      if (item instanceof Error) {
-        if (item.message) console.log(item.message, elem.outerHTML);
-        continue;
-      }
-
-      const ikey = item.link.replace(/^.*#/, "");
-
-      const olditem = (await kv.get([this.myname, "item", ikey])).value as {
-        fetchdate: number;
-      } | null;
-      item.fetchdate = olditem?.fetchdate ?? (now - (index++) * 10000); // できるだけ順番を復元
-
-      const storems = this.storedays * 24 * 60 * 60 * 1000; // ミリ秒
-      promises.push(kv.set(
-        [this.myname, "item", ikey],
-        JSON.stringify(item),
-        { expireIn: storems },
-      ));
-    }
-
-    await Promise.all(promises);
-    return;
-  };
-
-  private elem2item = (elem: Element): Item | Error => {
-    const parent = elem.parentElement;
-    if (!parent) return new Error("no parent");
-    if (parent.tagName == "H2") return new Error(); // その中にまた a.NU がある
-
-    const ititle = elem.nextElementSibling?.textContent;
-    if (!ititle || !ititle.trim()) return new Error("no title");
-
-    const ihref = elem.getAttribute("href");
-    if (!ihref) return new Error("no href");
-    const imatches = ihref.match(
-      /^.*#([0-9]{4})([0-9]{2})([0-9]{2})(_+).*$/,
-    );
-    if (!imatches) return new Error("invalid href");
-    const idate = `${imatches[1]}-${imatches[2]}-${imatches[3]}`; // アンカーから日付だけ取得する
-    const ibars = imatches[4].length; // アンダーバーの数で記事の種類を判別
-
-    return {
-      title: ititle,
-      link: ihref,
-      date: Date.parse(idate),
-      description: this.parent2desc(parent, ibars),
-    };
-  };
-
-  private parent2desc = (p: Element, bars: number): string => {
-    if (bars == 2 && p.tagName == "P") { // 大部分の一行もの
-      if (p.parentElement?.tagName == "LI") {
-        return p.parentElement.innerHTML;
-      }
-    } else if (bars == 1 && p.tagName == "H3") { // 「いろいろ」とか「追記」
-      const nextElement = p.nextElementSibling;
+      const document = new DOMParser().parseFromString(html, "text/html")!;
+      const lastmoddate = new Date(
+        document.querySelector("p.INDENT-2EM small")!
+          .textContent!
+          .match(/Last modified: ((.*)\n.*\))/)?.[1]!,
+      );
+      const now = Date.now();
+      /*
+      // Kv の読み書きを少しでも減らしたい場合
       if (
-        nextElement?.tagName == "DIV" && nextElement.className == "BODY"
+        lastmoddate.getTime() ==
+          ((await kv.get<number>([this.myname, "lastmod"]))?.value || 0)
       ) {
-        return nextElement.innerHTML;
+        await kv.set([this.myname, "lastfetch"], now);
+        console.log("skip same lastmod");
+        return;
       }
-    }
-    console.log("parent error", p, bars);
-    return this.failmsg;
-  };
+      */
 
-  kv2feed = async (kv: Deno.Kv): Promise<FeedObj> => {
-    const kvval = async (key: string) =>
-      (await kv.get<string>([this.myname, key])).value || "";
-    const feed: FeedObj = new Feed({
-      title: await kvval("title"),
-      link: await kvval("link"),
-      description: await kvval("description"),
-      updated: new Date(parseInt(await kvval("lastmod"))),
-      ttl: this.ttl,
-      feed: this.selflink,
-    });
+      { // 相対パスを絶対パスに
+        const baseurl = this.link + lastmoddate.toISOString()
+          .replace(/^([0-9]{4})-([0-9]{2})-.*$/, "$1/$2.html");
+        document.getElementsByTagName("a").forEach((a) => {
+          const ahref = a.getAttribute("href");
+          if (!ahref) return;
+          a.setAttribute("href", new URL(ahref, baseurl).href);
+        });
+      }
+      const docdesc = document.querySelector("div.NORMAL")!.innerHTML; // 「追いかけてみるテストです」のあたり
+      promises.push(
+        kv.atomic()
+          .set([this.myname, "title"], document.title)
+          .set([this.myname, "link"], this.link)
+          .set([this.myname, "description"], docdesc)
+          .set([this.myname, "lastfetch"], now)
+          .set([this.myname, "lastmod"], lastmoddate.getTime())
+          .commit(),
+      );
 
-    const itemiter = kv.list<string>({ prefix: [this.myname, "item"] });
-    const items: FeedItem[] = [];
-    for await (const itemstr of itemiter) {
-      const item = JSON.parse(itemstr.value);
-      item.date = new Date(item.date);
-      items.push(item);
-    }
-    items.sort((a, b) =>
-      (b.date.getTime() * 2 + b.fetchdate!) -
-      (a.date.getTime() * 2 + a.fetchdate!) // できるだけ逆順に
-    );
-    for (const item of items) {
-      feed.addItem(item);
-    }
+      let index = 0; // Deno の querySelectorAll は Element にするために手間が必要
+      for (
+        const elem of (document.querySelectorAll("a.NU") as Iterable<Element>)
+      ) {
+        const item: Item | Error = this.elem2item(elem);
+        if (item instanceof Error) {
+          if (item.message) console.log(item.message, elem.outerHTML);
+          continue;
+        }
 
-    return feed;
-  };
+        const ikey = item.link.replace(/^.*#/, "");
 
-  feed2html = (feed: FeedObj) => {
-    const json = JSON.parse(feed.json1());
-    const htmlparts = [];
-    htmlparts.push(`<!doctype html>
+        const olditem = (await kv.get([this.myname, "item", ikey])).value as {
+          fetchdate: number;
+        } | null;
+        item.fetchdate = olditem?.fetchdate ?? (now - (index++) * 10000); // できるだけ順番を復元
+
+        const storems = this.storedays * 24 * 60 * 60 * 1000; // ミリ秒
+        promises.push(kv.set(
+          [this.myname, "item", ikey],
+          JSON.stringify(item),
+          { expireIn: storems },
+        ));
+      }
+
+      await Promise.all(promises);
+      return;
+    };
+
+    this.elem2item = (elem: Element) => {
+      const parent = elem.parentElement;
+      if (!parent) return new Error("no parent");
+      if (parent.tagName == "H2") return new Error(); // その中にまた a.NU がある
+
+      const ititle = elem.nextElementSibling?.textContent;
+      if (!ititle || !ititle.trim()) return new Error("no title");
+
+      const ihref = elem.getAttribute("href");
+      if (!ihref) return new Error("no href");
+      const imatches = ihref.match(
+        /^.*#([0-9]{4})([0-9]{2})([0-9]{2})(_+).*$/,
+      );
+      if (!imatches) return new Error("invalid href");
+      const idate = `${imatches[1]}-${imatches[2]}-${imatches[3]}`; // アンカーから日付だけ取得する
+      const ibars = imatches[4].length; // アンダーバーの数で記事の種類を判別
+
+      return {
+        title: ititle,
+        link: ihref,
+        date: Date.parse(idate),
+        description: this.parent2desc(parent, ibars),
+      };
+    };
+
+    this.parent2desc = (p: Element, bars: number) => {
+      if (bars == 2 && p.tagName == "P") { // 大部分の一行もの
+        if (p.parentElement?.tagName == "LI") {
+          return p.parentElement.innerHTML;
+        }
+      } else if (bars == 1 && p.tagName == "H3") { // 「いろいろ」とか「追記」
+        const nextElement = p.nextElementSibling;
+        if (
+          nextElement?.tagName == "DIV" && nextElement.className == "BODY"
+        ) {
+          return nextElement.innerHTML;
+        }
+      }
+      console.log("parent error", p, bars);
+      return this.failmsg;
+    };
+
+    this.kv2feed = async () => {
+      const kvval = async (key: string) =>
+        (await kv.get<string>([this.myname, key])).value || "";
+      const feed: FeedObj = new Feed({
+        title: await kvval("title"),
+        link: await kvval("link"),
+        description: await kvval("description"),
+        updated: new Date(parseInt(await kvval("lastmod"))),
+        ttl: this.ttl,
+        feed: this.selflink,
+      });
+
+      const itemiter = kv.list<string>({ prefix: [this.myname, "item"] });
+      const items: FeedItem[] = [];
+      for await (const itemstr of itemiter) {
+        const item = JSON.parse(itemstr.value);
+        item.date = new Date(item.date);
+        items.push(item);
+      }
+      items.sort((a, b) =>
+        (b.date.getTime() * 2 + b.fetchdate!) -
+        (a.date.getTime() * 2 + a.fetchdate!) // できるだけ逆順に
+      );
+      for (const item of items) {
+        feed.addItem(item);
+      }
+
+      return feed;
+    };
+
+    this.feed2html = (feed: FeedObj) => {
+      const json = JSON.parse(feed.json1());
+      const htmlparts = [];
+      htmlparts.push(`<!doctype html>
 <html lang="ja">
   <head>
     <meta charset="utf-8">
     <title>Previewing RSS of ${json.title}</title>
     ${
-      json.feed_url
-        ? '<link rel="alternate" type="application/rss+xml" href="' +
-          json.feed_url + '" title="RSS">'
-        : ""
-    }
+        this.selflink
+          ? '<link rel="alternate" type="application/rss+xml" href="' +
+            this.selflink + '" title="RSS">'
+          : ""
+      }
     <style>
       blockquote {
         border-style: solid;
@@ -197,26 +205,26 @@ export class SHM {
   </head>
   <body id="body">
     <h1>Previewing ${
-      json.feed_url ? '<a href="' + json.feed_url + '">RSS</a>' : "RSS"
-    } of <a href="${json.home_page_url}">${json.title}</a></h1>
+        this.selflink ? '<a href="' + this.selflink + '">RSS</a>' : "RSS"
+      } of <a href="${json.home_page_url}">${json.title}</a></h1>
     ${
-      json.feed_url
-        ? '<h2><a href="' + json.feed_url + '">Get the RSS</a></h2>'
-        : ""
-    }
+        this.selflink
+          ? '<h2><a href="' + this.selflink + '">Get the RSS</a></h2>'
+          : ""
+      }
     <hr>
     <h3>description</h3>
     <blockquote id="channel_description">${json.description}</blockquote>
     <p><a href="https://github.com/ttamo/shm-rss/">RSS 生成プロジェクトはこちら</a></p>
     <hr>`);
 
-    (json.items as Array<{
-      title: string;
-      url: string;
-      summary: string;
-      date_modified: string;
-    }>).forEach((i) =>
-      htmlparts.push(`
+      (json.items as Array<{
+        title: string;
+        url: string;
+        summary: string;
+        date_modified: string;
+      }>).forEach((i) =>
+        htmlparts.push(`
     <details ${(i.summary == this.failmsg) ? "open=true" : ""}>
       <summary>${i.title}</summary>
       <div class="date">
@@ -226,14 +234,66 @@ export class SHM {
         ${i.summary}
       </blockquote>
     </details>`)
-    );
+      );
 
-    htmlparts.push(`
+      htmlparts.push(`
   </body>
 </html>`);
 
-    return "".concat(...htmlparts);
-  };
+      return "".concat(...htmlparts);
+    };
+
+    let cachedfeed: FeedObj | undefined;
+    this.handler = async function (req) {
+      if (!cachedfeed || !cachedfeed.lastfetch) {
+        cachedfeed = await this.kv2feed();
+      }
+
+      try {
+        const ttlms = this.ttl * 60 * 1000; // ミリ秒
+        const now = Date.now();
+        if (now - (cachedfeed.lastfetch ?? 0) > ttlms) {
+          if (
+            cachedfeed.lastfetch || // cache がないだけじゃなくて本当に時間が経っている
+            (now - (
+                (await kv.get<number>([this.myname, "lastfetch"])).value ?? 0
+              )) > ttlms
+          ) {
+            console.log("fetch", new Date().toString());
+            await fetch(this.link)
+              .then((res) => res.text())
+              .then((html) => this.html2kv(html));
+          }
+
+          cachedfeed = await this.kv2feed();
+          cachedfeed.lastfetch = now;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+
+      if (cachedfeed.lastfetch) {
+        try {
+          if (new URL(req.url).pathname == "/html") {
+            return new Response(
+              this.feed2html(cachedfeed),
+              { headers: { "Content-Type": "text/html; charset=utf-8" } },
+            );
+          }
+          return new Response(
+            cachedfeed.rss2(),
+            {
+              headers: { "Content-Type": "application/rss+xml; charset=utf-8" },
+            },
+          );
+        } catch (error) {
+          console.log(error);
+        }
+      }
+
+      return new Response("error", { status: 500 });
+    };
+  }
 }
 
 type Item = {
@@ -259,74 +319,18 @@ if (import.meta.main) { // test の場合は実行しない
     : (Deno.env.get("DENO_KV_ACCESS_TOKEN")
       ? Deno.env.get("DENO_KV_URL")
       : "./shm.kv");
-  const shm = new SHM();
+  const denokv = await Deno.openKv(localkv);
+  const shm = new SHM(denokv);
 
   if (refresh) {
-    const delkv = await Deno.openKv(localkv);
-    const delents = delkv.list({ prefix: [shm.myname] });
+    const delents = denokv.list({ prefix: [shm.myname] });
     const delproms: Promise<void>[] = [];
     for await (const delent of delents) {
-      delproms.push(delkv.delete(delent.key));
+      delproms.push(denokv.delete(delent.key));
     }
     await Promise.all(delproms);
-    delkv.close();
     console.log("kv deleted");
   }
 
-  const denokv = await Deno.openKv(localkv);
-  let cachedfeed: FeedObj;
-  try {
-    cachedfeed = await shm.kv2feed(denokv);
-  } catch {
-    cachedfeed = {
-      rss2: () => "",
-      json1: () => "",
-      addItem: (_) => {},
-      lastfetch: 0,
-    };
-  }
-
-  Deno.serve(async (req) => {
-    try {
-      const ttlms = shm.ttl * 60 * 1000; // ミリ秒
-      const now = Date.now();
-      if (now - (cachedfeed.lastfetch ?? 0) > ttlms) {
-        if (
-          cachedfeed.lastfetch || // cache がないだけじゃなくて本当に時間が経っている
-          now - ((await denokv.get<number>(
-                  [shm.myname, "lastfetch"],
-                )).value ?? 0) > ttlms
-        ) {
-          console.log("fetch", new Date().toString());
-          await fetch(shm.link)
-            .then((res) => res.text())
-            .then((html) => shm.html2kv(html, denokv));
-        }
-
-        cachedfeed = await shm.kv2feed(denokv);
-        cachedfeed.lastfetch = now;
-      }
-    } catch (error) {
-      console.log(error);
-    }
-
-    if (cachedfeed.lastfetch) {
-      try {
-        if (new URL(req.url).pathname == "/html") {
-          return new Response(
-            shm.feed2html(cachedfeed),
-            { headers: { "Content-Type": "text/html; charset=utf-8" } },
-          );
-        }
-        return new Response(
-          cachedfeed.rss2(),
-          { headers: { "Content-Type": "application/rss+xml; charset=utf-8" } },
-        );
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
-    return new Response("error", { status: 500 });
-  });
+  Deno.serve(shm.handler);
 }

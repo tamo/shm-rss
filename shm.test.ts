@@ -1,9 +1,9 @@
 import { SHM } from "./shm.ts";
 import { assertEquals } from "jsr:@std/assert"; // "https://deno.land/std/assert/mod.ts";
 
-// import FakeTimers from "npm:@sinonjs/fake-timers"; // 現在時刻に左右されるとき使う
-// const faketimer = FakeTimers.install();
-// faketimer.setSystemTime(new Date("2024-04-14"));
+import FakeTimers from "npm:@sinonjs/fake-timers";
+const faketimer = FakeTimers.install();
+faketimer.setSystemTime(new Date("2024-04-17"));
 
 Deno.test(
   "20240414 snapshot (needs --unstable-kv)",
@@ -14,6 +14,7 @@ Deno.test(
         "no title",
         '<a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412_">■</a>',
       ],
+      srvlog: false,
     }, t),
 );
 
@@ -23,13 +24,14 @@ Deno.test(
     await snaptester({
       date: "20240417",
       log: [],
+      srvlog: [],
     }, t),
 );
 
-type Snapshot = { date: string; log: string[] };
+type Snapshot = { date: string; log: string[]; srvlog: string[] | false };
 async function snaptester(s: Snapshot, t: Deno.TestContext) {
   const denokv = await Deno.openKv(`./testdata/${s.date}.kv`);
-  const shm = new SHM();
+  const shm = new SHM(denokv);
 
   await t.step("html2kv", async () => {
     const logs: string[] = [];
@@ -39,14 +41,14 @@ async function snaptester(s: Snapshot, t: Deno.TestContext) {
     };
 
     const html = Deno.readTextFileSync(`./testdata/${s.date}.html`);
-    await shm.html2kv(html, denokv);
+    await shm.html2kv(html);
 
     globalThis.console.log = origlog;
     assertEquals(logs, s.log);
   });
 
   await t.step("kv2feed (rss)", async () => {
-    const rss = (await shm.kv2feed(denokv)).rss2();
+    const rss = (await shm.kv2feed()).rss2();
     Deno.writeTextFileSync(`./testdata/${s.date}.rss`, rss); // デバッグ用
     const expectedrss = Deno.readTextFileSync(
       `./testdata/${s.date}.expected.rss`,
@@ -58,7 +60,7 @@ async function snaptester(s: Snapshot, t: Deno.TestContext) {
   await t.step("kv2feed (atom)", async () => {
     shm.selflink = "https://shm-rss.deno.dev/";
 
-    const atom = (await shm.kv2feed(denokv)).rss2();
+    const atom = (await shm.kv2feed()).rss2();
     Deno.writeTextFileSync(`./testdata/${s.date}.atom`, atom); // デバッグ用
     const expectedatom = Deno.readTextFileSync(
       `./testdata/${s.date}.expected.atom`,
@@ -66,6 +68,57 @@ async function snaptester(s: Snapshot, t: Deno.TestContext) {
     assertEquals(atom, expectedatom);
     Deno.removeSync(`./testdata/${s.date}.atom`); // 失敗時には残る
   });
+
+  if (Array.isArray(s.srvlog)) {
+    await t.step("serve", async (t) => {
+      const logs: string[] = [];
+      const origlog = globalThis.console.log;
+      globalThis.console.log = (a1: string, a2 = "") => {
+        logs.push(a1, a2);
+      };
+
+      await t.step("atom", async () => {
+        const res = await shm.handler(
+          new Request(new URL("http://localhost:8000/")),
+          {
+            remoteAddr: {
+              transport: "tcp",
+              hostname: "localhost",
+              port: 18000,
+            },
+          },
+        );
+
+        assertEquals(res.status, 200);
+        const expectedatom = Deno.readTextFileSync(
+          `./testdata/${s.date}.expected.atom`,
+        );
+        assertEquals(await res.text(), expectedatom);
+      });
+
+      await t.step("html", async () => {
+        const res = await shm.handler(
+          new Request(new URL("http://localhost:8000/html")),
+          {
+            remoteAddr: {
+              transport: "tcp",
+              hostname: "localhost",
+              port: 18000,
+            },
+          },
+        );
+
+        assertEquals(res.status, 200);
+        const expectedhtml = Deno.readTextFileSync(
+          `./testdata/${s.date}.expected.html`,
+        );
+        assertEquals(await res.text(), expectedhtml);
+      });
+
+      globalThis.console.log = origlog;
+      assertEquals(logs, s.srvlog);
+    });
+  }
 
   denokv.close();
   Deno.removeSync(`./testdata/${s.date}.kv`);
