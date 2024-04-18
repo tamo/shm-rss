@@ -244,7 +244,7 @@ export class SHM {
     };
 
     let cachedfeed: FeedObj | undefined;
-    this.handler = async function (req) {
+    this.handler = async (req) => {
       if (!cachedfeed || !cachedfeed.lastfetch) {
         cachedfeed = await this.kv2feed();
       }
