@@ -11,6 +11,8 @@ Deno.test(
     await snaptester({
       date: "20240414",
       log: [
+        "initialized",
+        "",
         "no title",
         '<a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412_">■</a>',
       ],
@@ -23,7 +25,10 @@ Deno.test(
   async (t) =>
     await snaptester({
       date: "20240417",
-      log: [],
+      log: [
+        "initialized",
+        "",
+      ],
       srvlog: [],
     }, t),
 );
@@ -48,7 +53,8 @@ async function snaptester(s: Snapshot, t: Deno.TestContext) {
   });
 
   await t.step("kv2feed (rss)", async () => {
-    const rss = (await shm.kv2feed()).rss2();
+    await shm.kv2feed();
+    const rss = shm.rss();
     Deno.writeTextFileSync(`./testdata/${s.date}.rss`, rss); // デバッグ用
     const expectedrss = Deno.readTextFileSync(
       `./testdata/${s.date}.expected.rss`,
@@ -60,7 +66,8 @@ async function snaptester(s: Snapshot, t: Deno.TestContext) {
   await t.step("kv2feed (atom)", async () => {
     shm.selflink = "https://shm-rss.deno.dev/";
 
-    const atom = (await shm.kv2feed()).rss2();
+    await shm.kv2feed();
+    const atom = shm.rss();
     Deno.writeTextFileSync(`./testdata/${s.date}.atom`, atom); // デバッグ用
     const expectedatom = Deno.readTextFileSync(
       `./testdata/${s.date}.expected.atom`,
@@ -80,13 +87,6 @@ async function snaptester(s: Snapshot, t: Deno.TestContext) {
       await t.step("atom", async () => {
         const res = await shm.handler(
           new Request(new URL("http://localhost:8000/")),
-          {
-            remoteAddr: {
-              transport: "tcp",
-              hostname: "localhost",
-              port: 18000,
-            },
-          },
         );
 
         assertEquals(res.status, 200);
@@ -99,13 +99,6 @@ async function snaptester(s: Snapshot, t: Deno.TestContext) {
       await t.step("html", async () => {
         const res = await shm.handler(
           new Request(new URL("http://localhost:8000/html")),
-          {
-            remoteAddr: {
-              transport: "tcp",
-              hostname: "localhost",
-              port: 18000,
-            },
-          },
         );
 
         assertEquals(res.status, 200);
