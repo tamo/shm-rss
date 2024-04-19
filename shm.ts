@@ -250,7 +250,13 @@ export class SHM {
   };
 
   handler = async (req: Request) => {
-    if (!this.cachedfeed) return new Response("error", { status: 500 });
+    if (!this.cachedfeed) {
+      console.log("accessed before initialized");
+      return new Response("try again in a second", {
+        status: 503,
+        headers: { "Retry-After": "1" },
+      });
+    }
 
     try {
       const ttlms = this.ttl * 60 * 1000; // ミリ秒
