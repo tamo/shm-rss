@@ -84,17 +84,20 @@ export class SHM {
     for (
       const elem of (document.querySelectorAll("a.NU") as Iterable<Element>)
     ) {
-      const item: Item | Error = this.elem2item(elem);
+      const item = this.elem2item(elem);
       if (item instanceof Error) {
-        if (item.message) console.log(item.message, elem.outerHTML);
+        console.log(item.message, elem.outerHTML);
         continue;
       }
+      if (!item.title) continue; // 親が H2 の場合、中の a.NU だけ処理
 
       const ikey = item.link.replace(/^.*#/, "");
 
-      const olditem = (await this.kv.get([this.myname, "item", ikey]))
-        .value as { fetchdate: number } | null;
-      item.fetchdate = olditem?.fetchdate ?? (now - (index++) * 10000); // できるだけ順番を復元
+      const olditem = JSON.parse(
+        (await this.kv.get<string>([this.myname, "item", ikey]))
+          .value ?? '{"fetchdate": 0}',
+      ) as { fetchdate: number };
+      item.fetchdate = olditem.fetchdate || (now - (index++) * 10000); // できるだけ順番を復元
 
       const storems = this.storedays * 24 * 60 * 60 * 1000; // ミリ秒
       promises.push(this.kv.set(
@@ -107,10 +110,12 @@ export class SHM {
     await Promise.all(promises);
   };
 
-  private elem2item(elem: Element): Item | Error {
+  private elem2item = (elem: Element): Item | Error => {
     const parent = elem.parentElement;
     if (!parent) return new Error("no parent");
-    if (parent.tagName == "H2") return new Error(); // その中にまた a.NU がある
+    if (parent.tagName == "H2") { // その中にまた a.NU がある
+      return { title: "", link: "", date: 0, description: "" };
+    }
 
     const ititle = elem.nextElementSibling?.textContent;
     if (!ititle || !ititle.trim()) return new Error("no title");
@@ -130,9 +135,9 @@ export class SHM {
       date: Date.parse(idate),
       description: this.parent2desc(parent, ibars),
     };
-  }
+  };
 
-  private parent2desc(p: Element, bars: number) {
+  private parent2desc = (p: Element, bars: number) => {
     if (bars == 2 && p.tagName == "P") { // 大部分の一行もの
       if (p.parentElement?.tagName == "LI") {
         return p.parentElement.innerHTML;
@@ -145,7 +150,7 @@ export class SHM {
     }
     console.log("parent error", p, bars);
     return this.failmsg;
-  }
+  };
 
   kv2feed = async () => {
     const kvstr = async (key: string) =>
