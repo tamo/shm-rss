@@ -12,7 +12,6 @@ Deno.test(
       date: "20240414",
       log: [
         "initialized",
-        "",
         "no title",
         '<a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412_">■</a>',
       ],
@@ -27,7 +26,6 @@ Deno.test(
       date: "20240417",
       log: [
         "initialized",
-        "",
       ],
       srvlog: [],
     }, t),
@@ -41,8 +39,9 @@ async function snaptester(s: Snapshot, t: Deno.TestContext) {
   await t.step("html2kv", async () => {
     const logs: string[] = [];
     const origlog = globalThis.console.log;
-    globalThis.console.log = (a1: string, a2 = "") => {
-      logs.push(a1, a2);
+    globalThis.console.log = (...data: string[]) => {
+      origlog(...data);
+      logs.push(...data);
     };
 
     const html = Deno.readTextFileSync(`./testdata/${s.date}.html`);
@@ -80,8 +79,9 @@ async function snaptester(s: Snapshot, t: Deno.TestContext) {
     await t.step("serve", async (t) => {
       const logs: string[] = [];
       const origlog = globalThis.console.log;
-      globalThis.console.log = (a1: string, a2 = "") => {
-        logs.push(a1, a2);
+      globalThis.console.log = (...data: string[]) => {
+        origlog(...data);
+        logs.push(...data);
       };
 
       await t.step("atom", async () => {
