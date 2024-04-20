@@ -17,32 +17,28 @@ import { Feed } from "https://jspm.dev/feed";
 const refresh = false;
 
 export class SHM {
-  selflink: string;
-  ttl: number;
-  storedays: number;
-  initsecs: number;
   kv: Deno.Kv;
+  opts: SHMOptions;
   private cachedfeed?: FeedObj;
 
-  constructor(
-    kv: Deno.Kv,
-    opts?: {
-      selflink?: string;
-      ttl?: number;
-      storedays?: number;
-      initsecs?: number;
-    },
-  ) {
-    this.selflink = opts?.selflink ?? ""; // "https://shm-rss.deno.dev/"; // validator を黙らせる
-    this.ttl = opts?.ttl ?? 60;
-    this.storedays = opts?.storedays ?? 31;
-    this.initsecs = opts?.initsecs ?? 10;
+  constructor(kv: Deno.Kv, opts?: SHMOptions) {
     this.kv = kv;
+    this.opts = {
+      link: "https://www.st.ryukoku.ac.jp/~kjm/security/memo/",
+      feed: "", // "https://shm-rss.deno.dev/", // validator を黙らせる
+      ttl: 60,
+      storedays: 31,
+      initsecs: 10,
+      ...(opts ?? {}),
+    };
     this.kv2feed().then(() => console.log("initialized"));
   }
 
+  delcache = () => {
+    this.cachedfeed = undefined;
+  };
+
   myname = "shm";
-  link = "https://www.st.ryukoku.ac.jp/~kjm/security/memo/";
   failmsg = "(HTML のパースに失敗しました)";
 
   html2kv = async (html: string) => {
@@ -65,7 +61,7 @@ export class SHM {
     }
 
     { // 相対パスを絶対パスに
-      const baseurl = this.link + lastmoddate.toISOString()
+      const baseurl = this.opts.link + lastmoddate.toISOString()
         .replace(/^([0-9]{4})-([0-9]{2})-.*$/, "$1/$2.html");
       document.getElementsByTagName("a").forEach((a) => {
         const ahref = a.getAttribute("href");
@@ -83,7 +79,7 @@ export class SHM {
         }
       };
       await setifupdated("title", document.title);
-      await setifupdated("link", this.link);
+      await setifupdated("link", this.opts.link);
       await setifupdated(
         "description",
         document.querySelector("div.NORMAL")!.innerHTML, // 「追いかけてみるテストです」のあたり
@@ -92,7 +88,7 @@ export class SHM {
       kvatom = kvatom.set([this.myname, "lastmod"], lastmoddate.getTime());
     }
 
-    const storems = this.storedays * 24 * 60 * 60 * 1000; // ミリ秒
+    const storems = this.opts.storedays * 24 * 60 * 60 * 1000; // ミリ秒
     let index = 0; // Deno の querySelectorAll は Element にするために手間が必要
     for (
       const elem of (document.querySelectorAll("a.NU") as Iterable<Element>)
@@ -178,13 +174,17 @@ export class SHM {
         link: await kvstr("link"),
         description: await kvstr("description"),
         updated: new Date(await kvnum("lastmod")),
-        ttl: this.ttl,
-        feed: this.selflink,
+        ttl: this.opts.ttl,
+        feed: this.opts.feed,
       }),
       lastfetch: await kvnum("lastfetch"),
     };
 
-    if (this.cachedfeed?.options.updated == feed.options.updated) {
+    if (
+      feed.options.updated?.getTime() &&
+      feed.options.updated.getTime() ==
+        this.cachedfeed?.options?.updated?.getTime()
+    ) {
       console.log("kv2feed: skip same lastmod");
       return;
     }
@@ -218,9 +218,9 @@ export class SHM {
     <meta charset="utf-8">
     <title>Previewing RSS of ${json.title}</title>
     ${
-      this.selflink
+      this.opts.feed
         ? '<link rel="alternate" type="application/rss+xml" href="' +
-          this.selflink + '" title="RSS">'
+          this.opts.feed + '" title="RSS">'
         : ""
     }
     <style>
@@ -238,11 +238,11 @@ export class SHM {
   </head>
   <body id="body">
     <h1>Previewing ${
-      this.selflink ? '<a href="' + this.selflink + '">RSS</a>' : "RSS"
+      this.opts.feed ? '<a href="' + this.opts.feed + '">RSS</a>' : "RSS"
     } of <a href="${json.home_page_url}">${json.title}</a></h1>
     ${
-      this.selflink
-        ? '<h2><a href="' + this.selflink + '">Get the RSS</a></h2>'
+      this.opts.feed
+        ? '<h2><a href="' + this.opts.feed + '">Get the RSS</a></h2>'
         : ""
     }
     <hr>
@@ -277,7 +277,7 @@ export class SHM {
   };
 
   handler = async (req: Request) => {
-    let patience = this.initsecs;
+    let patience = this.opts.initsecs;
     const checkcache = (resolve: (_?: unknown) => void) => {
       if (this.cachedfeed || patience < 1) {
         resolve();
@@ -289,17 +289,17 @@ export class SHM {
     await (new Promise(checkcache));
     if (!this.cachedfeed) {
       console.log("accessed before initialized");
-      return new Response(`try again in ${this.initsecs} seconds`, {
+      return new Response(`try again in ${this.opts.initsecs} seconds`, {
         status: 503,
-        headers: { "Retry-After": `${this.initsecs}` },
+        headers: { "Retry-After": `${this.opts.initsecs}` },
       });
     }
 
     try {
-      const ttlms = this.ttl * 60 * 1000; // ミリ秒
+      const ttlms = this.opts.ttl * 60 * 1000; // ミリ秒
       if (Date.now() - this.cachedfeed.lastfetch > ttlms) {
         console.log("fetch", new Date().toISOString());
-        await fetch(this.link)
+        await fetch(this.opts.link)
           .then((res) => res.text())
           .then((html) => this.html2kv(html))
           .then(() => this.kv2feed())
@@ -340,11 +340,23 @@ type Item = {
 type FeedItem = Omit<Item, "date"> & {
   date: Date; // number のままでは Feed の Item にできない
 };
+type FeedOptions = {
+  title?: string;
+  link: string;
+  description?: string;
+  updated?: Date;
+  ttl: number;
+  feed: string;
+};
+type SHMOptions = FeedOptions & {
+  storedays: number;
+  initsecs: number;
+};
 type FeedObj = {
   addItem: (item: FeedItem) => void;
   rss2: () => string;
   json1: () => string;
-  options: { updated: Date };
+  options: FeedOptions;
   lastfetch: number;
 };
 

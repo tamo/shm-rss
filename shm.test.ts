@@ -63,7 +63,8 @@ async function snaptester(s: Snapshot, t: Deno.TestContext) {
   });
 
   await t.step("kv2feed (atom)", async () => {
-    shm.selflink = "https://shm-rss.deno.dev/";
+    shm.delcache();
+    shm.opts.feed = "https://shm-rss.deno.dev/";
 
     await shm.kv2feed();
     const atom = shm.rss();
