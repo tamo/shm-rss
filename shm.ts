@@ -164,15 +164,17 @@ export class SHM {
       (await this.kv.get<string>([this.myname, key])).value || "";
     const kvnum = async (key: string) =>
       (await this.kv.get<number>([this.myname, key])).value || 0;
-    const feed: FeedObj = new Feed({
-      title: await kvstr("title"),
-      link: await kvstr("link"),
-      description: await kvstr("description"),
-      updated: new Date(await kvnum("lastmod")),
-      ttl: this.ttl,
-      feed: this.selflink,
-    });
-    feed.lastfetch = await kvnum("lastfetch");
+    const feed: FeedObj = {
+      ...new Feed({
+        title: await kvstr("title"),
+        link: await kvstr("link"),
+        description: await kvstr("description"),
+        updated: new Date(await kvnum("lastmod")),
+        ttl: this.ttl,
+        feed: this.selflink,
+      }),
+      lastfetch: await kvnum("lastfetch"),
+    };
 
     const itemiter = this.kv.list<string>({ prefix: [this.myname, "item"] });
     const items: FeedItem[] = [];
