@@ -20,16 +20,23 @@ export class SHM {
   selflink: string;
   ttl: number;
   storedays: number;
+  initsecs: number;
   kv: Deno.Kv;
   private cachedfeed?: FeedObj;
 
   constructor(
     kv: Deno.Kv,
-    opts?: { selflink?: string; ttl?: number; storedays?: number },
+    opts?: {
+      selflink?: string;
+      ttl?: number;
+      storedays?: number;
+      initsecs?: number;
+    },
   ) {
     this.selflink = opts?.selflink ?? ""; // "https://shm-rss.deno.dev/"; // validator を黙らせる
     this.ttl = opts?.ttl ?? 60;
     this.storedays = opts?.storedays ?? 31;
+    this.initsecs = opts?.initsecs ?? 10;
     this.kv = kv;
     this.kv2feed().then(() => console.log("initialized"));
   }
@@ -255,11 +262,21 @@ export class SHM {
   };
 
   handler = async (req: Request) => {
+    let patience = this.initsecs;
+    const checkcache = (resolve: (_?: unknown) => void) => {
+      if (this.cachedfeed || patience < 1) {
+        resolve();
+      } else {
+        patience--;
+        setTimeout(() => checkcache(resolve), 1000);
+      }
+    };
+    await (new Promise(checkcache));
     if (!this.cachedfeed) {
       console.log("accessed before initialized");
-      return new Response("try again in a second", {
+      return new Response(`try again in ${this.initsecs} seconds`, {
         status: 503,
-        headers: { "Retry-After": "1" },
+        headers: { "Retry-After": `${this.initsecs}` },
       });
     }
 
