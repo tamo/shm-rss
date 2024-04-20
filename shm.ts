@@ -46,8 +46,6 @@ export class SHM {
   failmsg = "(HTML のパースに失敗しました)";
 
   html2kv = async (html: string) => {
-    const promises: Promise<Deno.KvCommitResult | Deno.KvCommitError>[] = [];
-
     const document = new DOMParser().parseFromString(html, "text/html")!;
     const lastmoddate = new Date(
       document.querySelector("p.INDENT-2EM small")!
@@ -55,17 +53,16 @@ export class SHM {
         .match(/Last modified: ((.*)\n.*\))/)?.[1]!,
     );
     const now = Date.now();
-    /*
-    // Kv の読み書きを少しでも減らしたい場合
+
+    // Kv の読み書きを少しでも減らしたい
     if (
       lastmoddate.getTime() ==
         ((await this.kv.get<number>([this.myname, "lastmod"]))?.value || 0)
     ) {
       await this.kv.set([this.myname, "lastfetch"], now);
-      console.log("skip same lastmod");
+      console.log("html2kv: skip same lastmod");
       return;
     }
-    */
 
     { // 相対パスを絶対パスに
       const baseurl = this.link + lastmoddate.toISOString()
@@ -76,17 +73,26 @@ export class SHM {
         a.setAttribute("href", new URL(ahref, baseurl).href);
       });
     }
-    const docdesc = document.querySelector("div.NORMAL")!.innerHTML; // 「追いかけてみるテストです」のあたり
-    promises.push(
-      this.kv.atomic()
-        .set([this.myname, "title"], document.title)
-        .set([this.myname, "link"], this.link)
-        .set([this.myname, "description"], docdesc)
-        .set([this.myname, "lastfetch"], now)
-        .set([this.myname, "lastmod"], lastmoddate.getTime())
-        .commit(),
-    );
 
+    let kvatom = this.kv.atomic();
+
+    { // メタデータ
+      const setifupdated = async (key: string, value: string) => {
+        if (value != (await this.kv.get<string>([this.myname, key])).value) {
+          kvatom = kvatom.set([this.myname, key], value);
+        }
+      };
+      await setifupdated("title", document.title);
+      await setifupdated("link", this.link);
+      await setifupdated(
+        "description",
+        document.querySelector("div.NORMAL")!.innerHTML, // 「追いかけてみるテストです」のあたり
+      );
+      kvatom = kvatom.set([this.myname, "lastfetch"], now);
+      kvatom = kvatom.set([this.myname, "lastmod"], lastmoddate.getTime());
+    }
+
+    const storems = this.storedays * 24 * 60 * 60 * 1000; // ミリ秒
     let index = 0; // Deno の querySelectorAll は Element にするために手間が必要
     for (
       const elem of (document.querySelectorAll("a.NU") as Iterable<Element>)
@@ -100,21 +106,23 @@ export class SHM {
 
       const ikey = item.link.replace(/^.*#/, "");
 
-      const olditem = JSON.parse(
-        (await this.kv.get<string>([this.myname, "item", ikey]))
-          .value ?? '{"fetchdate": 0}',
-      ) as { fetchdate: number };
-      item.fetchdate = olditem.fetchdate || (now - (index++) * 10000); // できるだけ順番を復元
+      const oldjson = (await this.kv.get<string>([this.myname, "item", ikey]))
+        .value ?? '{"fetchdate": 0}';
+      const olditem = JSON.parse(oldjson) as Item;
 
-      const storems = this.storedays * 24 * 60 * 60 * 1000; // ミリ秒
-      promises.push(this.kv.set(
-        [this.myname, "item", ikey],
-        JSON.stringify(item),
-        { expireIn: storems },
-      ));
+      item.fetchdate = olditem.fetchdate || (now - (index++) * 10000); // できるだけ順番を復元
+      const newjson = JSON.stringify(item);
+
+      if (newjson != oldjson) {
+        kvatom = kvatom.set(
+          [this.myname, "item", ikey],
+          newjson,
+          { expireIn: storems },
+        );
+      }
     }
 
-    await Promise.all(promises);
+    await kvatom.commit();
   };
 
   private elem2item = (elem: Element): Item | Error => {
@@ -175,6 +183,11 @@ export class SHM {
       }),
       lastfetch: await kvnum("lastfetch"),
     };
+
+    if (this.cachedfeed?.options.updated == feed.options.updated) {
+      console.log("kv2feed: skip same lastmod");
+      return;
+    }
 
     const itemiter = this.kv.list<string>({ prefix: [this.myname, "item"] });
     const items: FeedItem[] = [];
@@ -284,15 +297,13 @@ export class SHM {
 
     try {
       const ttlms = this.ttl * 60 * 1000; // ミリ秒
-      const now = Date.now();
-      if (now - this.cachedfeed.lastfetch > ttlms) {
-        console.log("fetch", new Date().toString());
+      if (Date.now() - this.cachedfeed.lastfetch > ttlms) {
+        console.log("fetch", new Date().toISOString());
         await fetch(this.link)
           .then((res) => res.text())
-          .then((html) => this.html2kv(html));
-
-        await this.kv2feed();
-        this.cachedfeed.lastfetch = now;
+          .then((html) => this.html2kv(html))
+          .then(() => this.kv2feed())
+          .then(() => console.log("fetched", new Date().toISOString()));
       }
     } catch (error) {
       console.log(error);
@@ -330,9 +341,10 @@ type FeedItem = Omit<Item, "date"> & {
   date: Date; // number のままでは Feed の Item にできない
 };
 type FeedObj = {
+  addItem: (item: FeedItem) => void;
   rss2: () => string;
   json1: () => string;
-  addItem: (item: FeedItem) => void;
+  options: { updated: Date };
   lastfetch: number;
 };
 
