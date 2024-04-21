@@ -23,6 +23,8 @@ export class SHM {
     ttl: 60,
     storedays: 31,
     initsecs: 10,
+    htmlpath: "/html",
+    jsonpath: "/json",
   };
 
   constructor(public kv: Deno.Kv, partialopts?: Partial<SHMOptions>) {
@@ -181,7 +183,7 @@ export class SHM {
           ? {
             feedLinks: {
               rss: this.opts.feed,
-              json: `${this.opts.feed}/json`,
+              json: new URL(this.opts.jsonpath, this.opts.feed).href,
             },
           }
           : {}),
@@ -310,13 +312,13 @@ export class SHM {
 
     if (this.cachedfeed.lastfetch) {
       try {
-        if (new URL(req.url).pathname == "/html") {
+        if (new URL(req.url).pathname == this.opts.htmlpath) {
           return new Response(
             this.html(),
             { headers: { "Content-Type": "text/html; charset=utf-8" } },
           );
         }
-        if (new URL(req.url).pathname == "/json") {
+        if (new URL(req.url).pathname == this.opts.jsonpath) {
           return new Response(
             this.json(),
             { headers: { "Content-Type": "application/feed+json" } },
@@ -356,6 +358,8 @@ type FeedOptions = {
 type SHMOptions = FeedOptions & {
   storedays: number;
   initsecs: number;
+  htmlpath: string;
+  jsonpath: string;
 };
 type FeedObj = {
   addItem: (item: FeedItem) => void;
