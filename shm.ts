@@ -189,15 +189,6 @@ export class SHM {
       lastfetch: await kvnum("lastfetch"),
     };
 
-    if (
-      feed.options.updated?.getTime() &&
-      feed.options.updated.getTime() ==
-        this.cachedfeed?.options?.updated?.getTime()
-    ) {
-      console.log("kv2feed: skip same lastmod");
-      return;
-    }
-
     const itemiter = this.kv.list<string>({ prefix: [this.myname, "item"] });
     const items: FeedItem[] = [];
     for await (const itemstr of itemiter) {
