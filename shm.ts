@@ -297,12 +297,12 @@ export class SHM {
     try {
       const ttlms = this.opts.ttl * 60 * 1000; // ミリ秒
       if (Date.now() - this.cachedfeed.lastfetch > ttlms) {
-        console.log("fetch", new Date().toISOString());
+        console.log(`fetch: ${new Date().toISOString()}`);
         await fetch(this.opts.link)
           .then((res) => res.text())
           .then((html) => this.html2kv(html))
           .then(() => this.kv2feed())
-          .then(() => console.log("fetched", new Date().toISOString()));
+          .then(() => console.log(`fetched: ${new Date().toISOString()}`));
       }
     } catch (error) {
       console.log(error);

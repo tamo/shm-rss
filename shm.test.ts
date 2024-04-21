@@ -1,83 +1,109 @@
 import { SHM } from "./shm.ts";
 import { assertEquals } from "jsr:@std/assert"; // "https://deno.land/std/assert/mod.ts";
-
 import FakeTimers from "npm:@sinonjs/fake-timers";
+
 const faketimer = FakeTimers.install();
-faketimer.setSystemTime(new Date("2024-04-17"));
 
 Deno.test(
-  "20240414 snapshot (needs --unstable-kv)",
+  "2024-04-14 snapshot (needs --unstable-kv)",
   async (t) =>
     await snaptester({
-      date: "20240414",
-      log: [
-        "initialized",
-        "no title",
-        '<a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412_">■</a>',
+      local: {
+        date: "2024-04-14",
+        log: [
+          "initialized",
+          "no title",
+          '<a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412_">■</a>',
+        ],
+      },
+      srv: [
+        {
+          date: "2024-04-17", // update
+          log: [
+            "fetch: 2024-04-17T00:00:00.000Z",
+            "fetched: 2024-04-17T00:00:00.000Z",
+          ],
+        },
+        {
+          date: "2024-04-18", // without update
+          log: [
+            "fetch: 2024-04-18T00:00:00.000Z",
+            "html2kv: skip same lastmod",
+            "fetched: 2024-04-18T00:00:00.000Z",
+          ],
+        },
+        { date: "2024-04-18", log: [] },
       ],
-      srvlog: false,
     }, t),
 );
 
 Deno.test(
-  "20240417 snapshot (needs --unstable-kv)",
+  "2024-04-17 snapshot (needs --unstable-kv)",
   async (t) =>
     await snaptester({
-      date: "20240417",
-      log: [
-        "initialized",
-      ],
-      srvlog: [],
+      local: { date: "2024-04-17", log: ["initialized"] },
+      srv: [{ date: "2024-04-17", log: [] }],
     }, t),
 );
 
-type Snapshot = { date: string; log: string[]; srvlog: string[] | false };
-async function snaptester(s: Snapshot, t: Deno.TestContext) {
-  const denokv = await Deno.openKv(`./testdata/${s.date}.kv`);
+type Snapshot = { date: string; log: string[] };
+type Snapshots = { local: Snapshot; srv: Snapshot[] };
+
+async function snaptester(s: Snapshots, t: Deno.TestContext) {
+  faketimer.setSystemTime(new Date(s.local.date));
+
+  const logs: string[] = [];
+  const origlog = globalThis.console.log;
+  globalThis.console.log = (...data: string[]) => {
+    origlog(...data);
+    logs.push(...data);
+  };
+
+  const denokv = await Deno.openKv(`./testdata/${s.local.date}.kv`);
   const shm = new SHM(denokv);
 
-  await t.step("html2kv", async () => {
-    const logs: string[] = [];
-    const origlog = globalThis.console.log;
-    globalThis.console.log = (...data: string[]) => {
-      origlog(...data);
-      logs.push(...data);
-    };
-
-    const html = Deno.readTextFileSync(`./testdata/${s.date}.html`);
+  await t.step(`${s.local.date} html2kv`, async () => {
+    const html = Deno.readTextFileSync(`./testdata/${s.local.date}.html`);
     await shm.html2kv(html);
-
-    globalThis.console.log = origlog;
-    assertEquals(logs, s.log);
   });
 
-  await t.step("kv2feed (rss)", async () => {
+  await t.step(`${s.local.date} kv2feed (rss)`, async () => {
     await shm.kv2feed();
     const rss = shm.rss();
-    Deno.writeTextFileSync(`./testdata/${s.date}.rss`, rss); // デバッグ用
+    Deno.writeTextFileSync(`./testdata/${s.local.date}.rss`, rss); // デバッグ用
     const expectedrss = Deno.readTextFileSync(
-      `./testdata/${s.date}.expected.rss`,
+      `./testdata/${s.local.date}.expected.rss`,
     );
     assertEquals(rss, expectedrss);
-    Deno.removeSync(`./testdata/${s.date}.rss`); // 失敗時には残る
+    Deno.removeSync(`./testdata/${s.local.date}.rss`); // 失敗時には残る
   });
 
-  await t.step("kv2feed (atom)", async () => {
+  await t.step(`${s.local.date} kv2feed (atom)`, async () => {
     shm.delcache();
     shm.opts.feed = "https://shm-rss.deno.dev/";
 
     await shm.kv2feed();
     const atom = shm.rss();
-    Deno.writeTextFileSync(`./testdata/${s.date}.atom`, atom); // デバッグ用
+    Deno.writeTextFileSync(`./testdata/${s.local.date}.atom`, atom); // デバッグ用
     const expectedatom = Deno.readTextFileSync(
-      `./testdata/${s.date}.expected.atom`,
+      `./testdata/${s.local.date}.expected.atom`,
     );
     assertEquals(atom, expectedatom);
-    Deno.removeSync(`./testdata/${s.date}.atom`); // 失敗時には残る
+    Deno.removeSync(`./testdata/${s.local.date}.atom`); // 失敗時には残る
   });
 
-  if (Array.isArray(s.srvlog)) {
-    await t.step("serve", async (t) => {
+  globalThis.console.log = origlog;
+  assertEquals(logs, s.local.log);
+
+  for (const [i, srv] of s.srv.entries()) {
+    await t.step(`(${i}) ${srv.date} serve`, async (t) => {
+      faketimer.setSystemTime(new Date(srv.date));
+
+      globalThis.fetch = (_input: unknown, _init?: unknown) => {
+        const html = Deno.readTextFileSync(`./testdata/${s.srv[0].date}.html`);
+        return new Promise((resolve) => resolve(new Response(html)));
+      };
+
       const logs: string[] = [];
       const origlog = globalThis.console.log;
       globalThis.console.log = (...data: string[]) => {
@@ -85,35 +111,35 @@ async function snaptester(s: Snapshot, t: Deno.TestContext) {
         logs.push(...data);
       };
 
-      await t.step("atom", async () => {
+      await t.step(`(${i}) ${srv.date} atom`, async () => {
         const res = await shm.handler(
           new Request(new URL("http://localhost:8000/")),
         );
 
         assertEquals(res.status, 200);
         const expectedatom = Deno.readTextFileSync(
-          `./testdata/${s.date}.expected.atom`,
+          `./testdata/${s.srv[0].date}.expected.atom`,
         );
         assertEquals(await res.text(), expectedatom);
       });
 
-      await t.step("html", async () => {
+      await t.step(`(${i}) ${srv.date} html`, async () => {
         const res = await shm.handler(
           new Request(new URL("http://localhost:8000/html")),
         );
 
         assertEquals(res.status, 200);
         const expectedhtml = Deno.readTextFileSync(
-          `./testdata/${s.date}.expected.html`,
+          `./testdata/${s.srv[0].date}.expected.html`,
         );
         assertEquals(await res.text(), expectedhtml);
       });
 
       globalThis.console.log = origlog;
-      assertEquals(logs, s.srvlog);
+      assertEquals(logs, srv.log);
     });
   }
 
   denokv.close();
-  Deno.removeSync(`./testdata/${s.date}.kv`);
+  Deno.removeSync(`./testdata/${s.local.date}.kv`);
 }
