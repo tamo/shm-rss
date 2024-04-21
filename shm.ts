@@ -274,22 +274,24 @@ export class SHM {
   };
 
   handler = async (req: Request) => {
-    let patience = this.opts.initsecs;
-    const checkcache = (resolve: (_?: unknown) => void) => {
-      if (this.cachedfeed || patience < 1) {
-        resolve();
-      } else {
-        patience--;
-        setTimeout(() => checkcache(resolve), 1000);
+    { // キャッシュ待ち
+      let patience = this.opts.initsecs;
+      const checkcache = (resolve: (_?: unknown) => void) => {
+        if (this.cachedfeed || patience < 1) {
+          resolve();
+        } else {
+          patience--;
+          setTimeout(() => checkcache(resolve), 1000);
+        }
+      };
+      await (new Promise(checkcache));
+      if (!this.cachedfeed) {
+        console.log("accessed before initialized");
+        return new Response(`try again in ${this.opts.initsecs} seconds`, {
+          status: 503,
+          headers: { "Retry-After": `${this.opts.initsecs}` },
+        });
       }
-    };
-    await (new Promise(checkcache));
-    if (!this.cachedfeed) {
-      console.log("accessed before initialized");
-      return new Response(`try again in ${this.opts.initsecs} seconds`, {
-        status: 503,
-        headers: { "Retry-After": `${this.opts.initsecs}` },
-      });
     }
 
     try {
