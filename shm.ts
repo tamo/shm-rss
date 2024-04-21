@@ -17,22 +17,23 @@ import { Feed } from "https://jspm.dev/feed";
 const refresh = false;
 
 export class SHM {
-  kv: Deno.Kv;
-  opts: SHMOptions;
-  private cachedfeed?: FeedObj;
+  opts: SHMOptions = {
+    link: "https://www.st.ryukoku.ac.jp/~kjm/security/memo/",
+    feed: "", // "https://shm-rss.deno.dev/", // validator を黙らせる
+    ttl: 60,
+    storedays: 31,
+    initsecs: 10,
+  };
 
-  constructor(kv: Deno.Kv, opts?: SHMOptions) {
+  constructor(public kv: Deno.Kv, partialopts?: Partial<SHMOptions>) {
     this.kv = kv;
-    this.opts = {
-      link: "https://www.st.ryukoku.ac.jp/~kjm/security/memo/",
-      feed: "", // "https://shm-rss.deno.dev/", // validator を黙らせる
-      ttl: 60,
-      storedays: 31,
-      initsecs: 10,
-      ...(opts ?? {}),
-    };
+    if (partialopts) {
+      this.opts = { ...this.opts, ...partialopts };
+    }
     this.kv2feed().then(() => console.log("initialized"));
   }
+
+  private cachedfeed?: FeedObj;
 
   delcache = () => {
     this.cachedfeed = undefined;
@@ -175,7 +176,15 @@ export class SHM {
         description: await kvstr("description"),
         updated: new Date(await kvnum("lastmod")),
         ttl: this.opts.ttl,
-        feed: this.opts.feed,
+        // feed: this.opts.feed,
+        ...(this.opts.feed
+          ? {
+            feedLinks: {
+              rss: this.opts.feed,
+              json: `${this.opts.feed}/json`,
+            },
+          }
+          : {}),
       }),
       lastfetch: await kvnum("lastfetch"),
     };
@@ -192,9 +201,9 @@ export class SHM {
     const itemiter = this.kv.list<string>({ prefix: [this.myname, "item"] });
     const items: FeedItem[] = [];
     for await (const itemstr of itemiter) {
-      const item = JSON.parse(itemstr.value);
-      item.date = new Date(item.date);
-      items.push(item);
+      const item: Item = JSON.parse(itemstr.value);
+      const feeditem: FeedItem = { ...item, date: new Date(item.date) };
+      items.push(feeditem);
     }
     items.sort((a, b) =>
       (b.date.getTime() * 2 + b.fetchdate!) -
@@ -209,8 +218,10 @@ export class SHM {
 
   rss = () => this.cachedfeed!.rss2();
 
+  json = () => this.cachedfeed!.json1();
+
   html = () => {
-    const json = JSON.parse(this.cachedfeed!.json1());
+    const json: FeedJson = JSON.parse(this.json());
     const htmlparts = [];
     htmlparts.push(`<!doctype html>
 <html lang="ja">
@@ -251,12 +262,7 @@ export class SHM {
     <p><a href="https://github.com/ttamo/shm-rss/">RSS 生成プロジェクトはこちら</a></p>
     <hr>`);
 
-    (json.items as Array<{
-      title: string;
-      url: string;
-      summary: string;
-      date_modified: string;
-    }>).forEach((i) =>
+    json.items.forEach((i) =>
       htmlparts.push(`
     <details ${(i.summary == this.failmsg) ? "open=true" : ""}>
       <summary>${i.title}</summary>
@@ -317,6 +323,12 @@ export class SHM {
             { headers: { "Content-Type": "text/html; charset=utf-8" } },
           );
         }
+        if (new URL(req.url).pathname == "/json") {
+          return new Response(
+            this.json(),
+            { headers: { "Content-Type": "application/feed+json" } },
+          );
+        }
         return new Response(
           this.rss(),
           { headers: { "Content-Type": "application/rss+xml; charset=utf-8" } },
@@ -358,6 +370,19 @@ type FeedObj = {
   json1: () => string;
   options: FeedOptions;
   lastfetch: number;
+};
+type FeedJsonItem = {
+  // content_html: string;
+  url: string;
+  title: string;
+  summary: string;
+  date_modified: string;
+};
+type FeedJson = {
+  title: string;
+  home_page_url: string;
+  description: string;
+  items: FeedJsonItem[];
 };
 
 if (import.meta.main) { // test の場合は実行しない
