@@ -42,6 +42,12 @@ export class SHM {
   };
 
   myname = "shm";
+
+  private kvstr = async (keys: string[]) =>
+    (await this.kv.get<string>([this.myname, ...keys])).value ?? "";
+  private kvnum = async (keys: string[]) =>
+    (await this.kv.get<number>([this.myname, ...keys])).value ?? 0;
+
   failmsg = "(HTML のパースに失敗しました)";
 
   html2kv = async (html: string) => {
@@ -54,10 +60,7 @@ export class SHM {
     const now = Date.now();
 
     // Kv の読み書きを少しでも減らしたい
-    if (
-      lastmoddate.getTime() ==
-        ((await this.kv.get<number>([this.myname, "lastmod"]))?.value || 0)
-    ) {
+    if (lastmoddate.getTime() == await this.kvnum(["lastmod"])) {
       await this.kv.set([this.myname, "lastfetch"], now);
       console.log("html2kv: skip same lastmod");
       return;
@@ -77,7 +80,7 @@ export class SHM {
 
     { // メタデータ
       const setifupdated = async (key: string, value: string) => {
-        if (value != (await this.kv.get<string>([this.myname, key])).value) {
+        if (value != await this.kvstr([key])) {
           kvatom = kvatom.set([this.myname, key], value);
         }
       };
@@ -105,8 +108,7 @@ export class SHM {
 
       const ikey = item.link.replace(/^.*#/, "");
 
-      const oldjson = (await this.kv.get<string>([this.myname, "item", ikey]))
-        .value ?? '{"fetchdate": 0}';
+      const oldjson = await this.kvstr(["item", ikey]) || '{"fetchdate": 0}';
       const olditem = JSON.parse(oldjson) as Item;
 
       item.fetchdate = olditem.fetchdate || (now - (index++) * 10000); // できるだけ順番を復元
@@ -167,16 +169,12 @@ export class SHM {
   };
 
   kv2feed = async () => {
-    const kvstr = async (key: string) =>
-      (await this.kv.get<string>([this.myname, key])).value || "";
-    const kvnum = async (key: string) =>
-      (await this.kv.get<number>([this.myname, key])).value || 0;
     const feed: FeedObj = {
       ...new Feed({
-        title: await kvstr("title"),
-        link: await kvstr("link"),
-        description: await kvstr("description"),
-        updated: new Date(await kvnum("lastmod")),
+        title: await this.kvstr(["title"]),
+        link: await this.kvstr(["link"]),
+        description: await this.kvstr(["description"]),
+        updated: new Date(await this.kvnum(["lastmod"])),
         ttl: this.opts.ttl,
         // feed: this.opts.feed,
         ...(this.opts.feed
@@ -188,7 +186,7 @@ export class SHM {
           }
           : {}),
       }),
-      lastfetch: await kvnum("lastfetch"),
+      lastfetch: await this.kvnum(["lastfetch"]),
     };
 
     const itemiter = this.kv.list<string>({ prefix: [this.myname, "item"] });
