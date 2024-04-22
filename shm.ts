@@ -2,7 +2,7 @@
 // このファイル内容を https://dash.deno.com/ の Playground に置けば使える
 
 import { DOMParser, type Element } from "jsr:@b-fuze/deno-dom@0.1";
-import { Feed } from "https://jspm.dev/feed";
+import { Feed, type FeedOptions, type Item } from "npm:feed";
 
 const refresh = false; // デバッグ用: 実行前に kv を全部消す
 
@@ -52,7 +52,7 @@ export class SHM {
     }
 
     { // 相対パスを絶対パスに
-      const baseurl = this.opts.link + lastmoddate.toISOString()
+      const baseurl = this.opts.link! + lastmoddate.toISOString()
         .replace(/^([0-9]{4})-([0-9]{2})-.*$/, "$1/$2.html");
       document.getElementsByTagName("a").forEach((a) => {
         const ahref = a.getAttribute("href");
@@ -70,7 +70,7 @@ export class SHM {
         }
       };
       await setifupdated("title", document.title);
-      await setifupdated("link", this.opts.link);
+      await setifupdated("link", this.opts.link!);
       await setifupdated(
         "description",
         document.querySelector("div.NORMAL")!.innerHTML, // 「追いかけてみるテストです」のあたり
@@ -94,7 +94,7 @@ export class SHM {
       const ikey = item.link.replace(/^.*#/, "");
 
       const oldjson = await this.kvstr(["item", ikey]) || '{"fetchdate": 0}';
-      const olditem = JSON.parse(oldjson) as Item;
+      const olditem = JSON.parse(oldjson) as KvItem;
       item.fetchdate = olditem.fetchdate || (now - (index++) * 10000); // できるだけ順番を復元
       const newjson = JSON.stringify(item);
 
@@ -110,7 +110,7 @@ export class SHM {
     await kvatom.commit();
   };
 
-  private elem2item = (elem: Element): Item | Error => {
+  private elem2item = (elem: Element): KvItem | Error => {
     const parent = elem.parentElement;
     if (!parent) return new Error("no parent");
     if (parent.tagName == "H2") { // その中にまた a.NU がある
@@ -153,15 +153,18 @@ export class SHM {
     return this.failmsg;
   };
 
-  private cachedfeed?: FeedObj;
+  private cachedfeed?: SHMFeed;
 
   // 初回や html2kv 後に cachedfeed を更新
   kv2feed = async () => {
-    const feed: FeedObj = {
+    const url = await this.kvstr(["link"]);
+    const feed: SHMFeed = {
       ...new Feed({
         title: await this.kvstr(["title"]),
-        link: await this.kvstr(["link"]),
         description: await this.kvstr(["description"]),
+        id: url,
+        link: url,
+        copyright: "https://www.st.ryukoku.ac.jp/~kjm/security/memo/desc.html",
         updated: new Date(await this.kvnum(["lastmod"])),
         ttl: this.opts.ttl,
         // feed: this.opts.feed,
@@ -180,17 +183,16 @@ export class SHM {
     };
 
     const itemiter = this.kv.list<string>({ prefix: [this.myname, "item"] });
-    const items: FeedItem[] = [];
+    const kvitems: KvItem[] = [];
     for await (const itemstr of itemiter) {
-      const item: Item = JSON.parse(itemstr.value);
-      const feeditem: FeedItem = { ...item, date: new Date(item.date) };
-      items.push(feeditem);
+      const kvitem = JSON.parse(itemstr.value) as KvItem;
+      kvitems.push(kvitem);
     }
-    items.sort((a, b) =>
-      (b.date.getTime() * 2 + b.fetchdate!) -
-      (a.date.getTime() * 2 + a.fetchdate!) // できるだけ逆順に
+    kvitems.sort((a, b) =>
+      (b.date * 2 + b.fetchdate!) - (a.date * 2 + a.fetchdate!) // できるだけ逆順に
     );
-    for (const item of items) {
+    for (const kvitem of kvitems) {
+      const item = { ...kvitem, date: new Date(kvitem.date) } as Item;
       feed.addItem(item);
     }
 
@@ -287,10 +289,10 @@ export class SHM {
     }
 
     try {
-      const ttlms = this.opts.ttl * 60 * 1000; // ミリ秒
+      const ttlms = this.opts.ttl! * 60 * 1000; // ミリ秒
       if (Date.now() - this.cachedfeed.lastfetch > ttlms) {
         console.log(`fetch: ${new Date().toISOString()}`);
-        await fetch(this.opts.link)
+        await fetch(this.opts.link!)
           .then((res) => res.text())
           .then((html) => this.html2kv(html))
           .then(() => this.kv2feed())
@@ -327,35 +329,17 @@ export class SHM {
   };
 }
 
-type Item = {
-  title: string;
-  link: string;
-  date: number; // あとで Date に変換
-  description: string;
+type KvItem = Omit<Item, "date"> & {
+  date: number; // Feed の Item では Date なので注意
   fetchdate?: number; // 記事の順番のため
 };
-type FeedItem = Omit<Item, "date"> & {
-  date: Date; // number のままでは Feed の Item にできない
-};
-type FeedOptions = {
-  title?: string;
-  link: string;
-  description?: string;
-  updated?: Date;
-  ttl: number;
-  feed: string;
-};
-type SHMOptions = FeedOptions & {
+type SHMOptions = Partial<FeedOptions> & {
   storedays: number;
   initsecs: number;
   htmlpath?: string;
   jsonpath?: string;
 };
-type FeedObj = {
-  addItem: (item: FeedItem) => void;
-  rss2: () => string;
-  json1: () => string;
-  options: FeedOptions;
+type SHMFeed = Feed & {
   lastfetch: number;
 };
 type FeedJsonItem = {

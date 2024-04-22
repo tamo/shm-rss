@@ -26,6 +26,7 @@ Security Watch さんのような詳細なものではありません。
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <ttl>60</ttl>
+        <copyright>https://www.st.ryukoku.ac.jp/~kjm/security/memo/desc.html</copyright>
         <item>
             <title><![CDATA[
 「PuTTY」に秘密鍵が復元できてしまう深刻な脆弱性 ～「WinSCP」など他ツールにも影響　

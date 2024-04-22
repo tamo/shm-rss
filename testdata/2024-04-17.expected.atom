@@ -26,6 +26,7 @@ Security Watch さんのような詳細なものではありません。
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <ttl>60</ttl>
+        <copyright>https://www.st.ryukoku.ac.jp/~kjm/security/memo/desc.html</copyright>
         <atom:link href="https://shm-rss.deno.dev/" rel="self" type="application/rss+xml"/>
         <item>
             <title><![CDATA[
