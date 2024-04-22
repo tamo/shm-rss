@@ -1,20 +1,10 @@
 // https://github.com/tamo/shm-rss/blob/main/shm.rb を Deno に移植してみた
 // このファイル内容を https://dash.deno.com/ の Playground に置けば使える
 
-// Deno Deploy 環境 (DENO_DEPLOYMENT_ID がある) ではその Kv を使用し、
-// ローカル環境では
-// DENO_KV_ACCESS_TOKEN (https://dash.deno.com/projects/<プロジェクト名>/kv 参照) があれば
-// DENO_KV_URL の Kv を使用する (ので https://api.deno.com/databases/<GUID>/connect と設定)
-// それ以外では ./shm.kv* を使用する
-
-import { DOMParser, type Element } from "jsr:@b-fuze/deno-dom@0.1"; // "https://deno.land/x/deno_dom/deno-dom-wasm.ts";
+import { DOMParser, type Element } from "jsr:@b-fuze/deno-dom@0.1";
 import { Feed } from "https://jspm.dev/feed";
 
-// 前回の fetch から ttl 分以上経ってたら fetch して kv に入れる (保存期間 storedays 日)
-// kv から feed を作成して response にする
-// refresh が true ならそれらの前に kv を全部消してから始める (デバッグ中に使う)
-
-const refresh = false;
+const refresh = false; // デバッグ用: 実行前に kv を全部消す
 
 export class SHM {
   opts: SHMOptions = {
@@ -24,7 +14,7 @@ export class SHM {
     storedays: 31,
     initsecs: 10,
     htmlpath: "/html",
-    jsonpath: "/json",
+    jsonpath: undefined,
   };
 
   constructor(public kv: Deno.Kv, partialopts?: Partial<SHMOptions>) {
@@ -35,12 +25,6 @@ export class SHM {
     this.kv2feed().then(() => console.log("initialized"));
   }
 
-  private cachedfeed?: FeedObj;
-
-  delcache = () => {
-    this.cachedfeed = undefined;
-  };
-
   myname = "shm";
 
   private kvstr = async (keys: string[]) =>
@@ -50,6 +34,7 @@ export class SHM {
 
   failmsg = "(HTML のパースに失敗しました)";
 
+  // handler で fetch した html を kv に set (保存期間 storedays 日)
   html2kv = async (html: string) => {
     const document = new DOMParser().parseFromString(html, "text/html")!;
     const lastmoddate = new Date(
@@ -59,7 +44,7 @@ export class SHM {
     );
     const now = Date.now();
 
-    // Kv の読み書きを少しでも減らしたい
+    // Kv の読み書きを少しでも減らしたい (set より get の方が安い)
     if (lastmoddate.getTime() == await this.kvnum(["lastmod"])) {
       await this.kv.set([this.myname, "lastfetch"], now);
       console.log("html2kv: skip same lastmod");
@@ -76,12 +61,12 @@ export class SHM {
       });
     }
 
-    let kvatom = this.kv.atomic();
+    const kvatom = this.kv.atomic(); // 書き込みは一気にしたい
 
     { // メタデータ
       const setifupdated = async (key: string, value: string) => {
         if (value != await this.kvstr([key])) {
-          kvatom = kvatom.set([this.myname, key], value);
+          kvatom.set([this.myname, key], value);
         }
       };
       await setifupdated("title", document.title);
@@ -90,8 +75,8 @@ export class SHM {
         "description",
         document.querySelector("div.NORMAL")!.innerHTML, // 「追いかけてみるテストです」のあたり
       );
-      kvatom = kvatom.set([this.myname, "lastfetch"], now);
-      kvatom = kvatom.set([this.myname, "lastmod"], lastmoddate.getTime());
+      kvatom.set([this.myname, "lastfetch"], now);
+      kvatom.set([this.myname, "lastmod"], lastmoddate.getTime());
     }
 
     const storems = this.opts.storedays * 24 * 60 * 60 * 1000; // ミリ秒
@@ -110,12 +95,11 @@ export class SHM {
 
       const oldjson = await this.kvstr(["item", ikey]) || '{"fetchdate": 0}';
       const olditem = JSON.parse(oldjson) as Item;
-
       item.fetchdate = olditem.fetchdate || (now - (index++) * 10000); // できるだけ順番を復元
       const newjson = JSON.stringify(item);
 
       if (newjson != oldjson) {
-        kvatom = kvatom.set(
+        kvatom.set(
           [this.myname, "item", ikey],
           newjson,
           { expireIn: storems },
@@ -153,6 +137,7 @@ export class SHM {
     };
   };
 
+  // 引数は parent だけで足りるが bars も使って厳密にチェックしている
   private parent2desc = (p: Element, bars: number) => {
     if (bars == 2 && p.tagName == "P") { // 大部分の一行もの
       if (p.parentElement?.tagName == "LI") {
@@ -168,6 +153,9 @@ export class SHM {
     return this.failmsg;
   };
 
+  private cachedfeed?: FeedObj;
+
+  // 初回や html2kv 後に cachedfeed を更新
   kv2feed = async () => {
     const feed: FeedObj = {
       ...new Feed({
@@ -181,7 +169,9 @@ export class SHM {
           ? {
             feedLinks: {
               rss: this.opts.feed,
-              json: new URL(this.opts.jsonpath, this.opts.feed).href,
+              ...(this.opts.jsonpath
+                ? { json: new URL(this.opts.jsonpath, this.opts.feed).href }
+                : {}),
             },
           }
           : {}),
@@ -273,8 +263,10 @@ export class SHM {
     return "".concat(...htmlparts);
   };
 
+  // 前回の fetch から ttl 分以上経ってたら fetch して kv に入れ cachedfeed にする
+  // cachedfeed から response にする
   handler = async (req: Request) => {
-    { // キャッシュ待ち
+    { // 起動直後のキャッシュ待ち (initsecs 秒までは待つが時間切れなら 503 エラー)
       let patience = this.opts.initsecs;
       const checkcache = (resolve: (_?: unknown) => void) => {
         if (this.cachedfeed || patience < 1) {
@@ -356,8 +348,8 @@ type FeedOptions = {
 type SHMOptions = FeedOptions & {
   storedays: number;
   initsecs: number;
-  htmlpath: string;
-  jsonpath: string;
+  htmlpath?: string;
+  jsonpath?: string;
 };
 type FeedObj = {
   addItem: (item: FeedItem) => void;
@@ -380,6 +372,11 @@ type FeedJson = {
   items: FeedJsonItem[];
 };
 
+// Deno Deploy 環境 (DENO_DEPLOYMENT_ID がある) ではその Kv を使用し、
+// ローカル環境では
+// DENO_KV_ACCESS_TOKEN (https://dash.deno.com/projects/<プロジェクト名>/kv 参照) があれば
+// DENO_KV_URL の Kv を使用する (ので https://api.deno.com/databases/<GUID>/connect と設定)
+// それ以外では ./shm.kv* を使用する
 if (import.meta.main) { // test の場合は実行しない
   const localkv = Deno.env.get("DENO_DEPLOYMENT_ID")
     ? undefined
@@ -390,12 +387,11 @@ if (import.meta.main) { // test の場合は実行しない
   const shm = new SHM(denokv);
 
   if (refresh) {
-    const delents = denokv.list({ prefix: [shm.myname] });
-    const delproms: Promise<void>[] = [];
-    for await (const delent of delents) {
-      delproms.push(denokv.delete(delent.key));
+    const delatom = denokv.atomic();
+    for await (const delent of denokv.list({ prefix: [shm.myname] })) {
+      delatom.delete(delent.key);
     }
-    await Promise.all(delproms);
+    await delatom.commit();
     console.log("kv deleted");
   }
 

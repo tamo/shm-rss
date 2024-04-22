@@ -79,10 +79,9 @@ async function snaptester(s: Snapshots, t: Deno.TestContext) {
   });
 
   await t.step(`${s.local.date} kv2feed (atom)`, async () => {
-    shm.delcache();
     shm.opts.feed = "https://shm-rss.deno.dev/";
-
     await shm.kv2feed();
+
     const atom = shm.rss();
     Deno.writeTextFileSync(`./testdata/${s.local.date}.atom`, atom); // デバッグ用
     const expectedatom = Deno.readTextFileSync(
