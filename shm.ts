@@ -9,6 +9,7 @@ const refresh = false; // デバッグ用: 実行前に kv を全部消す
 export class SHM {
   opts: SHMOptions = {
     link: "https://www.st.ryukoku.ac.jp/~kjm/security/memo/",
+    copyright: "https://www.st.ryukoku.ac.jp/~kjm/security/memo/desc.html",
     feed: "", // "https://shm-rss.deno.dev/", // validator を黙らせる
     ttl: 60,
     storedays: 31,
@@ -18,7 +19,6 @@ export class SHM {
   };
 
   constructor(public kv: Deno.Kv, partialopts?: Partial<SHMOptions>) {
-    this.kv = kv;
     if (partialopts) {
       this.opts = { ...this.opts, ...partialopts };
     }
@@ -70,7 +70,6 @@ export class SHM {
         }
       };
       await setifupdated("title", document.title);
-      await setifupdated("link", this.opts.link!);
       await setifupdated(
         "description",
         document.querySelector("div.NORMAL")!.innerHTML, // 「追いかけてみるテストです」のあたり
@@ -114,7 +113,7 @@ export class SHM {
     const parent = elem.parentElement;
     if (!parent) return new Error("no parent");
     if (parent.tagName == "H2") { // その中にまた a.NU がある
-      return { title: "", link: "", date: 0, description: "" };
+      return { title: "", link: "", date: 0 };
     }
 
     const ititle = elem.nextElementSibling?.textContent;
@@ -157,36 +156,33 @@ export class SHM {
 
   // 初回や html2kv 後に cachedfeed を更新
   kv2feed = async () => {
-    const url = await this.kvstr(["link"]);
-    const feed: SHMFeed = {
-      ...new Feed({
-        title: await this.kvstr(["title"]),
-        description: await this.kvstr(["description"]),
-        id: url,
-        link: url,
-        copyright: "https://www.st.ryukoku.ac.jp/~kjm/security/memo/desc.html",
-        updated: new Date(await this.kvnum(["lastmod"])),
-        ttl: this.opts.ttl,
-        // feed: this.opts.feed,
-        ...(this.opts.feed
-          ? {
-            feedLinks: {
-              rss: this.opts.feed,
-              ...(this.opts.jsonpath
-                ? { json: new URL(this.opts.jsonpath, this.opts.feed).href }
-                : {}),
-            },
-          }
-          : {}),
-      }),
-      lastfetch: await this.kvnum(["lastfetch"]),
-    };
+    const feed: SHMFeed = new Feed({
+      id: this.opts.link!,
+      link: this.opts.link!,
+      copyright: this.opts.copyright!,
+      title: await this.kvstr(["title"]),
+      description: await this.kvstr(["description"]),
+      updated: new Date(await this.kvnum(["lastmod"])),
+      ttl: this.opts.ttl,
+      // feed: this.opts.feed,
+      ...(this.opts.feed
+        ? {
+          feedLinks: {
+            rss: this.opts.feed,
+            ...(this.opts.jsonpath
+              ? { json: new URL(this.opts.jsonpath, this.opts.feed).href }
+              : {}),
+          },
+        }
+        : {}),
+    });
+    feed.lastfetch = await this.kvnum(["lastfetch"]);
 
-    const itemiter = this.kv.list<string>({ prefix: [this.myname, "item"] });
     const kvitems: KvItem[] = [];
-    for await (const itemstr of itemiter) {
-      const kvitem = JSON.parse(itemstr.value) as KvItem;
-      kvitems.push(kvitem);
+    for await (
+      const itemstr of this.kv.list<string>({ prefix: [this.myname, "item"] })
+    ) {
+      kvitems.push(JSON.parse(itemstr.value) as KvItem);
     }
     kvitems.sort((a, b) =>
       (b.date * 2 + b.fetchdate!) - (a.date * 2 + a.fetchdate!) // できるだけ逆順に
@@ -290,7 +286,7 @@ export class SHM {
 
     try {
       const ttlms = this.opts.ttl! * 60 * 1000; // ミリ秒
-      if (Date.now() - this.cachedfeed.lastfetch > ttlms) {
+      if (Date.now() - this.cachedfeed.lastfetch! > ttlms) {
         console.log(`fetch: ${new Date().toISOString()}`);
         await fetch(this.opts.link!)
           .then((res) => res.text())
@@ -340,7 +336,7 @@ type SHMOptions = Partial<FeedOptions> & {
   jsonpath?: string;
 };
 type SHMFeed = Feed & {
-  lastfetch: number;
+  lastfetch?: number;
 };
 type FeedJsonItem = {
   // content_html: string;
