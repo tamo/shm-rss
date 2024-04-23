@@ -238,7 +238,7 @@ export class SHM {
     <hr>
     <h3>description</h3>
     <blockquote id="channel_description">${json.description}</blockquote>
-    <p><a href="https://github.com/ttamo/shm-rss/">RSS 生成プロジェクトはこちら</a></p>
+    <p><a href="https://github.com/tamo/shm-rss/">RSS 生成プロジェクトはこちら</a></p>
     <hr>`);
 
     json.items.forEach((i) =>
