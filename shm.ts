@@ -35,6 +35,7 @@ export class SHM {
   failmsg = "(HTML のパースに失敗しました)";
 
   // handler で fetch した html を kv に set (保存期間 storedays 日)
+  // cachedfeed も更新する
   html2kv = async (html: string) => {
     const document = new DOMParser().parseFromString(html, "text/html")!;
     const lastmoddate = new Date(
@@ -46,6 +47,7 @@ export class SHM {
 
     // Kv の読み書きを少しでも減らしたい (set より get の方が安い)
     if (lastmoddate.getTime() == await this.kvnum(["lastmod"])) {
+      this.cachedfeed!.lastfetch = now;
       await this.kv.set([this.myname, "lastfetch"], now);
       console.log("html2kv: skip same lastmod");
       return;
@@ -64,47 +66,60 @@ export class SHM {
     const kvatom = this.kv.atomic(); // 書き込みは一気にしたい
 
     { // メタデータ
+      this.cachedfeed!.options.title = document.title;
+      this.cachedfeed!.options.description =
+        document.querySelector("div.NORMAL")!.innerHTML; // 「追いかけてみるテストです」のあたり
+      this.cachedfeed!.lastfetch = now;
+      this.cachedfeed!.options.updated = lastmoddate;
       const setifupdated = async (key: string, value: string) => {
         if (value != await this.kvstr([key])) {
           kvatom.set([this.myname, key], value);
         }
       };
-      await setifupdated("title", document.title);
-      await setifupdated(
-        "description",
-        document.querySelector("div.NORMAL")!.innerHTML, // 「追いかけてみるテストです」のあたり
+      await setifupdated("title", this.cachedfeed!.options.title);
+      await setifupdated("description", this.cachedfeed!.options.description!);
+      kvatom.set([this.myname, "lastfetch"], this.cachedfeed!.lastfetch);
+      kvatom.set(
+        [this.myname, "lastmod"],
+        this.cachedfeed!.options.updated.getTime(),
       );
-      kvatom.set([this.myname, "lastfetch"], now);
-      kvatom.set([this.myname, "lastmod"], lastmoddate.getTime());
     }
 
     const storems = this.opts.storedays * 24 * 60 * 60 * 1000; // ミリ秒
-    let index = 0; // Deno の querySelectorAll は Element にするために手間が必要
-    for (
-      const elem of (document.querySelectorAll("a.NU") as Iterable<Element>)
-    ) {
+    Array.prototype.reverse.call(
+      document.querySelectorAll("a.NU") as Iterable<Element>,
+    ).forEach((elem: Element, index) => {
       const item = this.elem2item(elem);
       if (item instanceof Error) {
         console.log(item.message, elem.outerHTML);
-        continue;
+        return;
       }
-      if (!item.title) continue; // 親が H2 の場合、中の a.NU だけ処理
+      if (!item.title) return; // 親が H2 の場合、中の a.NU だけ処理
 
       const ikey = item.link.replace(/^.*#/, "");
 
-      const olditem = (this.cachedfeed!.items as CachedItem[]).find((citem) =>
-        citem.link == item.link
-      );
+      let oldindexplusone = 0;
+      const olditem = (this.cachedfeed!.items as CachedItem[])
+        .find((citem, cindex) =>
+          citem.link == item.link && (oldindexplusone = cindex + 1)
+        );
       const oldjson = JSON.stringify({
         ...olditem,
         date: olditem?.date.getTime(),
       });
-      item.fetchdate = olditem?.fetchdate || (now - (index++) * 10000); // できるだけ順番を復元
+      item.fetchdate = olditem?.fetchdate || (now + index * 10000); // できるだけ順番を復元
       const newjson = JSON.stringify(item);
 
       if (newjson != oldjson) {
-        if (olditem) {
+        const cacheditem: CachedItem = {
+          ...item,
+          date: new Date(item.date),
+        };
+        if (oldindexplusone) {
           console.log(`modified: ${newjson}`);
+          this.cachedfeed!.items[oldindexplusone - 1] = cacheditem;
+        } else {
+          this.cachedfeed!.items.unshift(cacheditem);
         }
         kvatom.set(
           [this.myname, "item", ikey],
@@ -112,7 +127,7 @@ export class SHM {
           { expireIn: storems },
         );
       }
-    }
+    });
 
     await kvatom.commit();
   };
@@ -162,7 +177,7 @@ export class SHM {
 
   private cachedfeed?: SHMFeed;
 
-  // 初回や html2kv 後に cachedfeed を更新
+  // cachedfeed を初期化
   kv2feed = async () => {
     const feed: SHMFeed = new Feed({
       id: this.opts.link!,
@@ -272,7 +287,7 @@ export class SHM {
     return "".concat(...htmlparts);
   };
 
-  // 前回の fetch から ttl 分以上経ってたら fetch して kv に入れ cachedfeed にする
+  // 前回の fetch から ttl 分以上経ってたら fetch して kv と cachedfeed を更新
   // cachedfeed から response にする
   handler = async (req: Request) => {
     await this.waitforcache();
@@ -291,7 +306,6 @@ export class SHM {
         await fetch(this.opts.link!)
           .then((res) => res.text())
           .then((html) => this.html2kv(html))
-          .then(() => this.kv2feed())
           .then(() => console.log(`fetched: ${new Date().toISOString()}`));
       }
     } catch (error) {
