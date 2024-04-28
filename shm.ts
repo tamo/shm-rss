@@ -188,7 +188,10 @@ export class SHM {
 
     const kvitems: KvItem[] = [];
     for await (
-      const itemstr of this.kv.list<string>({ prefix: [this.myname, "item"] })
+      const itemstr of this.kv.list<string>(
+        { prefix: [this.myname, "item"] },
+        { batchSize: 500 }, // どうせ全部読むので最大値に
+      )
     ) {
       kvitems.push(JSON.parse(itemstr.value) as KvItem);
     }
