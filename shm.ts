@@ -92,12 +92,20 @@ export class SHM {
 
       const ikey = item.link.replace(/^.*#/, "");
 
-      const oldjson = await this.kvstr(["item", ikey]) || '{"fetchdate": 0}';
-      const olditem = JSON.parse(oldjson) as KvItem;
-      item.fetchdate = olditem.fetchdate || (now - (index++) * 10000); // できるだけ順番を復元
+      const olditem = (this.cachedfeed!.items as CachedItem[]).find((citem) =>
+        citem.link == item.link
+      );
+      const oldjson = JSON.stringify({
+        ...olditem,
+        date: olditem?.date.getTime(),
+      });
+      item.fetchdate = olditem?.fetchdate || (now - (index++) * 10000); // できるだけ順番を復元
       const newjson = JSON.stringify(item);
 
       if (newjson != oldjson) {
+        if (olditem) {
+          console.log(`modified: ${newjson}`);
+        }
         kvatom.set(
           [this.myname, "item", ikey],
           newjson,
@@ -264,24 +272,13 @@ export class SHM {
   // 前回の fetch から ttl 分以上経ってたら fetch して kv に入れ cachedfeed にする
   // cachedfeed から response にする
   handler = async (req: Request) => {
-    { // 起動直後のキャッシュ待ち (initsecs 秒までは待つが時間切れなら 503 エラー)
-      let patience = this.opts.initsecs;
-      const checkcache = (resolve: (_?: unknown) => void) => {
-        if (this.cachedfeed || patience < 1) {
-          resolve();
-        } else {
-          patience--;
-          setTimeout(() => checkcache(resolve), 1000);
-        }
-      };
-      await (new Promise(checkcache));
-      if (!this.cachedfeed) {
-        console.log("accessed before initialized");
-        return new Response(`try again in ${this.opts.initsecs} seconds`, {
-          status: 503,
-          headers: { "Retry-After": `${this.opts.initsecs}` },
-        });
-      }
+    await this.waitforcache();
+    if (!this.cachedfeed) {
+      console.log("accessed before initialized");
+      return new Response(`try again in ${this.opts.initsecs} seconds`, {
+        status: 503,
+        headers: { "Retry-After": `${this.opts.initsecs}` },
+      });
     }
 
     try {
@@ -323,11 +320,27 @@ export class SHM {
 
     return new Response("error", { status: 500 });
   };
+
+  // 起動直後のキャッシュ待ち (initsecs 秒まで待つ)
+  waitforcache = () => {
+    let patience = this.opts.initsecs;
+    const checkcache = (resolve: (_?: unknown) => void) => {
+      if (this.cachedfeed || patience < 1) {
+        resolve();
+      } else {
+        patience--;
+        setTimeout(() => checkcache(resolve), 1000);
+      }
+    };
+    return new Promise(checkcache);
+  };
 }
 
-type KvItem = Omit<Item, "date"> & {
-  date: number; // Feed の Item では Date なので注意
+type CachedItem = Item & {
   fetchdate?: number; // 記事の順番のため
+};
+type KvItem = Omit<CachedItem, "date"> & {
+  date: number; // Feed の Item では Date なので注意
 };
 type SHMOptions = Partial<FeedOptions> & {
   storedays: number;
@@ -336,6 +349,7 @@ type SHMOptions = Partial<FeedOptions> & {
   jsonpath?: string;
 };
 type SHMFeed = Feed & {
+  items: CachedItem[];
   lastfetch?: number;
 };
 type FeedJsonItem = {

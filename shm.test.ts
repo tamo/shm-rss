@@ -21,6 +21,8 @@ Deno.test(
           date: "2024-04-17", // update
           log: [
             "fetch: 2024-04-17T00:00:00.000Z",
+            'modified: {"title":"\\nChrome Stable Channel Update for Desktop\\n","link":"https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412_chrome","date":1712880000000,"description":"\\n<p>\\n　Chrome 123.0.6312.122/.123 (Windows) 123.0.6312.122/.123/.124 (Mac)  123.0.6312.122 (Linux)\\n公開。3 件のセキュリティ修正を含む。関連:\\n</p>\\n<ul>\\n  <li><p>\\n      <a href=\\"https://chromereleases.googleblog.com/2024/04/chrome-for-android-update_10.html\\">\\n      Chrome for Android Update </a>\\n      (Google, 2024.04.10)。Chrome 123 (123.0.6312.118) for Android。\\n      </p>\\n\\n</li></ul>\\n\\n<div class=\\"TSUIKI\\">2024.04.16 追記:</div>\\n<p>\\n　関連:\\n</p>\\n<ul>\\n  <li><p>\\n      <a href=\\"https://forest.watch.impress.co.jp/docs/news/1584121.html\\">「Microsoft Edge」にセキュリティ更新 ～「Angle」のヒープバッファーオーバーフローなど\\n\\n      v123.0.2420.97への更新を </a>\\n      (窓の杜, 2024.04.15)\\n      </p>\\n\\n</li></ul>\\n\\n","fetchdate":1713052650000}',
+            'modified: {"title":"Toward greater transparency: Adopting the CWE standard for Microsoft CVEs","link":"https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240411__msrc","date":1712793600000,"description":"<p>\\n      <a class=\\"NU\\" href=\\"https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240411__msrc\\">》</a>\\n<a name=\\"20240411__msrc\\" href=\\"https://msrc.microsoft.com/blog/2024/04/toward-greater-transparency-adopting-the-cwe-standard-for-microsoft-cves/\\">Toward greater transparency: Adopting the CWE standard for Microsoft CVEs</a>\\n      (MSRC, 4/8)\\n      </p>\\n      <p>\\n      　2024.04.16 追記: <a href=\\"https://forest.watch.impress.co.jp/docs/news/1584488.html\\">Microsoft、セキュリティレポートに「CWE」標準を採用、脆弱性のタイプを分類して表示</a>\\n      (窓の杜, 4/16)\\n      </p>\\n\\n\\n  ","fetchdate":1713052620000}',
             "fetched: 2024-04-17T00:00:00.000Z",
           ],
         },
@@ -59,8 +61,15 @@ async function snaptester(s: Snapshots, t: Deno.TestContext) {
     logs.push(...data);
   };
 
-  const denokv = await Deno.openKv(`./testdata/${s.local.date}.kv`);
+  const kvpath = `./testdata/${s.local.date}.kv`;
+  try {
+    Deno.removeSync(kvpath);
+  } catch (e) {
+    if (e.name != "NotFound") throw e;
+  }
+  const denokv = await Deno.openKv(kvpath);
   const shm = new SHM(denokv);
+  await shm.waitforcache();
 
   await t.step(`${s.local.date} html2kv`, async () => {
     const html = Deno.readTextFileSync(`./testdata/${s.local.date}.html`);
@@ -140,5 +149,5 @@ async function snaptester(s: Snapshots, t: Deno.TestContext) {
   }
 
   denokv.close();
-  Deno.removeSync(`./testdata/${s.local.date}.kv`);
+  Deno.removeSync(kvpath);
 }
