@@ -300,22 +300,20 @@ export class SHM {
 
     if (this.cachedfeed.lastfetch) {
       try {
-        if (new URL(req.url).pathname == this.opts.htmlpath) {
-          return new Response(
-            this.html(),
-            { headers: { "Content-Type": "text/html; charset=utf-8" } },
-          );
+        switch (new URL(req.url).pathname) {
+          case this.opts.htmlpath:
+            return new Response(this.html(), {
+              headers: { "Content-Type": "text/html; charset=utf-8" },
+            });
+          case this.opts.jsonpath:
+            return new Response(this.json(), {
+              headers: { "Content-Type": "application/feed+json" },
+            });
+          default:
+            return new Response(this.rss(), {
+              headers: { "Content-Type": "application/rss+xml; charset=utf-8" },
+            });
         }
-        if (new URL(req.url).pathname == this.opts.jsonpath) {
-          return new Response(
-            this.json(),
-            { headers: { "Content-Type": "application/feed+json" } },
-          );
-        }
-        return new Response(
-          this.rss(),
-          { headers: { "Content-Type": "application/rss+xml; charset=utf-8" } },
-        );
       } catch (error) {
         console.log(error);
       }
