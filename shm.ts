@@ -3,6 +3,7 @@
 
 import { DOMParser, type Element } from "jsr:@b-fuze/deno-dom@0.1";
 import { Feed, type FeedOptions, type Item } from "npm:feed";
+import { compress, decompress } from "https://deno.land/x/brotli@0.1.7/mod.ts";
 
 const refresh = false; // デバッグ用: 実行前に kv を全部消す
 
@@ -129,6 +130,24 @@ export class SHM {
       }
     });
 
+    { // まとめて圧縮
+      const feedjson = new TextEncoder().encode(
+        JSON.stringify(this.cachedfeed),
+      );
+      const compfeed = compress(feedjson);
+      const chunksize = 64000;
+      let sliceindex = 0;
+      while (sliceindex * chunksize < compfeed.length) {
+        const slicefrom = sliceindex * chunksize;
+        kvatom.set(
+          [this.myname, "all", String(sliceindex).padStart(3, "0")],
+          compfeed.slice(slicefrom, slicefrom + chunksize),
+        );
+        sliceindex++;
+      }
+      kvatom.delete([this.myname, "all", String(sliceindex).padStart(3, "0")]);
+    }
+
     await kvatom.commit();
   };
 
@@ -179,13 +198,38 @@ export class SHM {
 
   // cachedfeed を初期化
   kv2feed = async () => {
+    let brokenfeed;
+    { // まとめて復元
+      let u8a = new Uint8Array();
+      let index = 0;
+      for await (
+        const u8chunk of this.kv.list<Uint8Array>(
+          { prefix: [this.myname, "all"] },
+        )
+      ) {
+        if (u8chunk.key[2] != String(index).padStart(3, "0")) break;
+        const newu8a = new Uint8Array(u8a.length + u8chunk.value.length);
+        newu8a.set(u8a, 0);
+        newu8a.set(u8chunk.value, u8a.length);
+        u8a = newu8a;
+        index++;
+      }
+      if (u8a.length) {
+        const json = new TextDecoder().decode(decompress(u8a));
+        brokenfeed = JSON.parse(json);
+      }
+    }
+
     const feed: SHMFeed = new Feed({
       id: this.opts.link!,
       link: this.opts.link!,
       copyright: this.opts.copyright!,
-      title: await this.kvstr(["title"]),
-      description: await this.kvstr(["description"]),
-      updated: new Date(await this.kvnum(["lastmod"])),
+      title: brokenfeed?.options.title ?? await this.kvstr(["title"]),
+      description: brokenfeed?.options.description ??
+        await this.kvstr(["description"]),
+      updated: new Date(
+        brokenfeed?.options.updated ?? await this.kvnum(["lastmod"]),
+      ),
       ttl: this.opts.ttl,
       // feed: this.opts.feed,
       ...(this.opts.feed
@@ -199,16 +243,20 @@ export class SHM {
         }
         : {}),
     });
-    feed.lastfetch = await this.kvnum(["lastfetch"]);
+    feed.lastfetch = brokenfeed?.lastfetch ?? await this.kvnum(["lastfetch"]);
 
     const kvitems: KvItem[] = [];
-    for await (
-      const itemstr of this.kv.list<string>(
-        { prefix: [this.myname, "item"] },
-        { batchSize: 500 }, // どうせ全部読むので最大値に
-      )
-    ) {
-      kvitems.push(JSON.parse(itemstr.value) as KvItem);
+    if (brokenfeed) {
+      kvitems.push(...(brokenfeed.items as KvItem[]));
+    } else {
+      for await (
+        const itemstr of this.kv.list<string>(
+          { prefix: [this.myname, "item"] },
+          { batchSize: 500 }, // どうせ全部読むので最大値に
+        )
+      ) {
+        kvitems.push(JSON.parse(itemstr.value) as KvItem);
+      }
     }
     kvitems.sort((a, b) =>
       (b.date * 2 + b.fetchdate!) - (a.date * 2 + a.fetchdate!) // できるだけ逆順に
