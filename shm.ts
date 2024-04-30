@@ -28,12 +28,6 @@ export class SHM {
   }
 
   myname = "shm";
-
-  private kvstr = async (keys: string[]) =>
-    (await this.kv.get<string>([this.myname, ...keys])).value ?? "";
-  private kvnum = async (keys: string[]) =>
-    (await this.kv.get<number>([this.myname, ...keys])).value ?? 0;
-
   failmsg = "(HTML のパースに失敗しました)";
 
   html2cache = async (html: string) => {
@@ -163,8 +157,10 @@ export class SHM {
   // まとめて圧縮保存
   cache2kv = async () => {
     if (!this.cachedfeed) return;
-    const lastmod = await this.kvnum(["lastmod"]);
+
+    const lastmod = (await this.kv.get<number>([this.myname, "lastmod"])).value;
     if (lastmod == this.cachedfeed.options.updated!.getTime()) return;
+
     const kvatom = this.kv.atomic();
     const jsonfeed = JSON.stringify(
       this.cachedfeed,
