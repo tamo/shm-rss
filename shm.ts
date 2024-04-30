@@ -155,29 +155,27 @@ export class SHM {
     if (lastmod == this.cachedfeed.options.updated!.getTime()) return;
 
     const kvatom = this.kv.atomic();
-    {
-      const jsonfeed = JSON.stringify(
-        this.cachedfeed,
-        (key, value) =>
-        (key == "updated" || key == "date") ? Date.parse(value) : value,
-    );
-    const compfeed = compress(new TextEncoder().encode(jsonfeed));
-    const chunknum = Math.ceil(compfeed.length / this.chunksize);
-      [...Array(chunknum)]
-        .map((_, i) => i * this.chunksize)
-        .forEach((s, i) => {
-          kvatom.set(
-            [this.myname, "all", String(i).padStart(3, "0")],
-            compfeed.slice(s, s + this.chunksize), // 大きくても大丈夫
-          );
-        });
-      kvatom.delete([this.myname, "all", String(chunknum).padStart(3, "0")]); // オーバーラン防止
-    }
-
     kvatom.set(
       [this.myname, "lastmod"],
       this.cachedfeed.options.updated!.getTime(),
     );
+
+    const jsonfeed = JSON.stringify(
+      this.cachedfeed,
+      (key, value) =>
+        (key == "updated" || key == "date") ? Date.parse(value) : value,
+    );
+    const compfeed = compress(new TextEncoder().encode(jsonfeed));
+    const chunknum = Math.ceil(compfeed.length / this.chunksize);
+    [...Array(chunknum)]
+      .map((_, i) => i * this.chunksize)
+      .forEach((s, i) => {
+        kvatom.set(
+          [this.myname, "all", String(i).padStart(3, "0")],
+          compfeed.slice(s, s + this.chunksize), // 大きくても大丈夫
+        );
+      });
+    kvatom.delete([this.myname, "all", String(chunknum).padStart(3, "0")]); // オーバーラン防止
 
     const result = await kvatom.commit();
     console.log(`cache2kv: ${result.ok}`);
