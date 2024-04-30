@@ -6,7 +6,6 @@ import { Feed, type FeedOptions, type Item } from "npm:feed";
 import { compress, decompress } from "https://deno.land/x/brotli@0.1.7/mod.ts";
 
 const refresh = false; // デバッグ用: 実行前に kv を全部消す
-const saveitems = true; // デバッグ用: 各記事も保存する
 
 export class SHM {
   opts: SHMOptions = {
@@ -28,9 +27,10 @@ export class SHM {
   }
 
   myname = "shm";
+  chunksize = 64000;
   failmsg = "(HTML のパースに失敗しました)";
 
-  html2cache = async (html: string) => {
+  html2cache = (html: string) => {
     const document = new DOMParser().parseFromString(html, "text/html")!;
     const lastmoddate = new Date(
       document.querySelector("p.INDENT-2EM small")!
@@ -61,9 +61,6 @@ export class SHM {
         document.querySelector("div.NORMAL")!.innerHTML; // 「追いかけてみるテストです」のあたり
       this.cachedfeed!.options.updated = lastmoddate;
     }
-
-    const kvatom = saveitems ? this.kv.atomic() : undefined; // 書き込みは一気にしたい
-    const storems = this.opts.storedays * 24 * 60 * 60 * 1000; // ミリ秒
 
     Array.prototype.reverse.call(
       document.querySelectorAll("a.NU") as Iterable<Element>,
@@ -98,15 +95,8 @@ export class SHM {
         } else {
           this.cachedfeed!.items.unshift(cacheditem);
         }
-        saveitems && kvatom!.set(
-          [this.myname, "item", item.link.replace(/^.*#/, "")],
-          newjson,
-          { expireIn: storems },
-        );
       }
     });
-
-    saveitems && await kvatom!.commit();
   };
 
   private elem2item = (elem: Element): KvItem | Error => {
@@ -162,30 +152,29 @@ export class SHM {
     if (lastmod == this.cachedfeed.options.updated!.getTime()) return;
 
     const kvatom = this.kv.atomic();
-    const jsonfeed = JSON.stringify(
-      this.cachedfeed,
-      (key, value) =>
-        (key == "updated" || key == "date") ? Date.parse(value) : value,
-    );
-    const compfeed = compress(new TextEncoder().encode(jsonfeed));
-    const chunksize = 4000;
-    const chunknum = Math.ceil(compfeed.length / chunksize);
-    [...Array(chunknum)]
-      .map((_, i) => i * chunksize)
-      .forEach((s, i) => {
-        kvatom.set(
-          [this.myname, "all", String(i).padStart(3, "0")],
-          compfeed.slice(s, s + chunksize), // 大きくても大丈夫
-        );
-      });
-    kvatom
-      .delete(
-        [this.myname, "all", String(chunknum).padStart(3, "0")],
-      )
-      .set(
-        [this.myname, "lastmod"],
-        this.cachedfeed.options.updated!.getTime(),
+    {
+      const jsonfeed = JSON.stringify(
+        this.cachedfeed,
+        (key, value) =>
+          (key == "updated" || key == "date") ? Date.parse(value) : value,
       );
+      const compfeed = compress(new TextEncoder().encode(jsonfeed));
+      const chunknum = Math.ceil(compfeed.length / this.chunksize);
+      [...Array(chunknum)]
+        .map((_, i) => i * this.chunksize)
+        .forEach((s, i) => {
+          kvatom.set(
+            [this.myname, "all", String(i).padStart(3, "0")],
+            compfeed.slice(s, s + this.chunksize), // 大きくても大丈夫
+          );
+        });
+      kvatom.delete([this.myname, "all", String(chunknum).padStart(3, "0")]); // オーバーラン防止
+    }
+
+    kvatom.set(
+      [this.myname, "lastmod"],
+      this.cachedfeed.options.updated!.getTime(),
+    );
 
     const result = await kvatom.commit();
     console.log(`cache2kv: ${result.ok}`);
@@ -193,32 +182,24 @@ export class SHM {
 
   // cachedfeed を初期化
   kv2feed = async () => {
-    let oldfeed: SHMFeed | undefined;
-    { // まとめて復元
-      let u8a = new Uint8Array();
-      let index = 0;
-      for await (
-        const u8chunk of this.kv.list<Uint8Array>(
-          { prefix: [this.myname, "all"] },
-        )
-      ) {
-        if (u8chunk.key[2] != String(index).padStart(3, "0")) break;
-        const newu8a = new Uint8Array(u8a.length + u8chunk.value.length);
-        newu8a.set(u8a, 0);
-        newu8a.set(u8chunk.value, u8a.length);
-        u8a = newu8a;
-        index++;
-      }
-      if (u8a.length) {
-        oldfeed = JSON.parse(
-          new TextDecoder().decode(decompress(u8a)),
-          (key, value) =>
-            (key == "updated" || key == "date")
-              ? new Date(value as number)
-              : value,
-        );
-      }
-    }
+    const kvs = (await Array.fromAsync(
+      this.kv.list<Uint8Array>({ prefix: [this.myname, "all"] }),
+    )).filter((kv, index) => kv.key[2] == String(index).padStart(3, "0"));
+    const u8a = new Uint8Array(
+      kvs.reduce<number>((p, c) => p + c.value.length, 0),
+    );
+    kvs.forEach((u8chunk, index) =>
+      u8a.set(u8chunk.value, index * this.chunksize)
+    );
+    const oldfeed = u8a.length
+      ? JSON.parse(
+        new TextDecoder().decode(decompress(u8a)),
+        (key, value) =>
+          (key == "updated" || key == "date")
+            ? new Date(value as number)
+            : value,
+      )
+      : undefined;
 
     const feed: SHMFeed = new Feed({
       id: this.opts.link!,
@@ -244,17 +225,6 @@ export class SHM {
 
     const olditems: CachedItem[] = oldfeed?.items
       ? Array.from(oldfeed.items)
-      : saveitems
-      ? (await Array.fromAsync(this.kv.list<string>(
-        { prefix: [this.myname, "item"] },
-        { batchSize: 500 }, // どうせ全部読むので最大値に
-      )))
-        .map((strentry) =>
-          JSON.parse(
-            strentry.value,
-            (key, value) => (key == "date") ? new Date(value) : value,
-          )
-        )
       : [];
     olditems.sort((a, b) =>
       (b.date.getTime() * 2 + b.fetchdate!) -
@@ -353,8 +323,8 @@ export class SHM {
         console.log(`fetch: ${new Date().toISOString()}`);
         await fetch(this.opts.link!)
           .then((res) => res.text())
-          .then((html) => this.html2cache(html))
-          .then(() => console.log(`fetched: ${new Date().toISOString()}`));
+          .then((html) => this.html2cache(html));
+        console.log(`fetched: ${new Date().toISOString()}`);
         await this.cache2kv(); // これは投げっぱなしでもいいんだけどな……
       }
     } catch (error) {

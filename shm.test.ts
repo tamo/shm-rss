@@ -73,9 +73,9 @@ async function snaptester(s: Snapshots, t: Deno.TestContext) {
   const shm = new SHM(denokv);
   await shm.waitforcache();
 
-  await t.step(`${s.local.date} html2cache`, async () => {
+  await t.step(`${s.local.date} html2cache`, () => {
     const html = Deno.readTextFileSync(`./testdata/${s.local.date}.html`);
-    await shm.html2cache(html);
+    shm.html2cache(html);
     const rss = shm.rss();
     Deno.writeTextFileSync(`./testdata/${s.local.date}.rss`, rss); // デバッグ用
     const expectedrss = Deno.readTextFileSync(
