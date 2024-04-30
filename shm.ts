@@ -4,7 +4,7 @@
 import { DOMParser, type Element } from "jsr:@b-fuze/deno-dom@0.1";
 import { Feed, type FeedOptions, type Item } from "npm:feed";
 import { compress, decompress } from "https://deno.land/x/brotli@0.1.7/mod.ts";
-import { assert } from "jsr:@std/assert/assert";
+import { assert } from "jsr:@std/assert";
 
 const refresh = false; // デバッグ用: 実行前に kv を全部消す
 
