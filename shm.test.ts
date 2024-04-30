@@ -1,5 +1,5 @@
 import { SHM } from "./shm.ts";
-import { assertEquals } from "jsr:@std/assert"; // "https://deno.land/std/assert/mod.ts";
+import { assertEquals } from "jsr:@std/assert";
 import FakeTimers from "npm:@sinonjs/fake-timers";
 
 const faketimer = FakeTimers.install();
