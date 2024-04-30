@@ -159,10 +159,10 @@ export class SHM {
       const jsonfeed = JSON.stringify(
         this.cachedfeed,
         (key, value) =>
-          (key == "updated" || key == "date") ? Date.parse(value) : value,
-      );
-      const compfeed = compress(new TextEncoder().encode(jsonfeed));
-      const chunknum = Math.ceil(compfeed.length / this.chunksize);
+        (key == "updated" || key == "date") ? Date.parse(value) : value,
+    );
+    const compfeed = compress(new TextEncoder().encode(jsonfeed));
+    const chunknum = Math.ceil(compfeed.length / this.chunksize);
       [...Array(chunknum)]
         .map((_, i) => i * this.chunksize)
         .forEach((s, i) => {
@@ -330,7 +330,11 @@ export class SHM {
           .then((res) => res.text())
           .then((html) => this.html2cache(html));
         console.log(`fetched: ${new Date().toISOString()}`);
-        await this.cache2kv(); // これは投げっぱなしでもいいんだけどな……
+        if (import.meta.main) {
+          this.cache2kv(); // 待つ必要ない
+        } else {
+          await this.cache2kv(); // テストだと重複して Bad resource
+        }
       }
     } catch (error) {
       console.log(error);
