@@ -71,7 +71,7 @@ async function snaptester(s: Snapshots, t: Deno.TestContext) {
   }
   const denokv = await Deno.openKv(kvpath);
   const shm = new SHM(denokv);
-  await shm.waitforcache();
+  await shm.waitforcache(shm.opts.initsecs);
 
   await t.step(`${s.local.date} html2cache`, () => {
     const html = Deno.readTextFileSync(`./testdata/${s.local.date}.html`);

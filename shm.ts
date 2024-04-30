@@ -4,6 +4,7 @@
 import { DOMParser, type Element } from "jsr:@b-fuze/deno-dom@0.1";
 import { Feed, type FeedOptions, type Item } from "npm:feed";
 import { compress, decompress } from "https://deno.land/x/brotli@0.1.7/mod.ts";
+import { assert } from "jsr:@std/assert/assert";
 
 const refresh = false; // デバッグ用: 実行前に kv を全部消す
 
@@ -31,6 +32,7 @@ export class SHM {
   failmsg = "(HTML のパースに失敗しました)";
 
   html2cache = (html: string) => {
+    assert(this.cachedfeed);
     const document = new DOMParser().parseFromString(html, "text/html")!;
     const lastmoddate = new Date(
       document.querySelector("p.INDENT-2EM small")!
@@ -38,9 +40,9 @@ export class SHM {
         .match(/Last modified: ((.*)\n.*\))/)?.[1]!,
     );
     const now = Date.now();
-    this.cachedfeed!.lastfetch = now;
+    this.cachedfeed.lastfetch = now;
 
-    if (lastmoddate.getTime() == this.cachedfeed!.options.updated!.getTime()) {
+    if (lastmoddate.getTime() == this.cachedfeed.options.updated!.getTime()) {
       console.log("html2cache: skip same lastmod");
       return;
     }
@@ -56,10 +58,10 @@ export class SHM {
     }
 
     { // メタデータ
-      this.cachedfeed!.options.title = document.title;
-      this.cachedfeed!.options.description =
+      this.cachedfeed.options.title = document.title;
+      this.cachedfeed.options.description =
         document.querySelector("div.NORMAL")!.innerHTML; // 「追いかけてみるテストです」のあたり
-      this.cachedfeed!.options.updated = lastmoddate;
+      this.cachedfeed.options.updated = lastmoddate;
     }
 
     Array.prototype.reverse.call(
@@ -72,26 +74,27 @@ export class SHM {
       }
       if (!item.title) return; // 親が H2 の場合、中の a.NU だけ処理
 
-      let oldindexplusone = 0;
-      const olditem = (this.cachedfeed!.items as CachedItem[])
-        .find((citem, cindex) =>
-          citem.link == item.link && (oldindexplusone = cindex + 1)
-        );
+      assert(this.cachedfeed);
+      const oldindex = this.cachedfeed.items
+        .findIndex((citem) => citem.link == item.link);
+      const tomodify = oldindex >= 0;
+      const olditem = tomodify ? this.cachedfeed.items[oldindex] : undefined;
+      item.fetchdate = olditem?.fetchdate || (now + index * 10000); // できるだけ順番を復元
+
+      const newjson = JSON.stringify(item);
       const oldjson = JSON.stringify({
         ...olditem,
         date: olditem?.date.getTime(),
       });
-      item.fetchdate = olditem?.fetchdate || (now + index * 10000); // できるだけ順番を復元
-      const newjson = JSON.stringify(item);
 
       if (newjson != oldjson) {
         const cacheditem: CachedItem = {
           ...item,
           date: new Date(item.date),
         };
-        if (oldindexplusone) {
+        if (tomodify) {
           console.log(`modified: ${newjson}`);
-          this.cachedfeed!.items[oldindexplusone - 1] = cacheditem;
+          this.cachedfeed!.items[oldindex] = cacheditem;
         } else {
           this.cachedfeed!.items.unshift(cacheditem);
         }
@@ -308,14 +311,16 @@ export class SHM {
   // 前回の fetch から ttl 分以上経ってたら fetch して kv と cachedfeed を更新
   // cachedfeed から response にする
   handler = async (req: Request) => {
-    await this.waitforcache();
-    if (!this.cachedfeed) {
+    try {
+      await this.waitforcache(this.opts.initsecs);
+    } catch {
       console.log("accessed before initialized");
       return new Response(`try again in ${this.opts.initsecs} seconds`, {
         status: 503,
         headers: { "Retry-After": `${this.opts.initsecs}` },
       });
     }
+    assert(this.cachedfeed);
 
     try {
       const ttlms = this.opts.ttl! * 60 * 1000; // ミリ秒
@@ -356,18 +361,19 @@ export class SHM {
   };
 
   // 起動直後のキャッシュ待ち (initsecs 秒まで待つ)
-  waitforcache = () => {
-    let patience = this.opts.initsecs;
-    const checkcache = (resolve: (_?: unknown) => void) => {
-      if (this.cachedfeed || patience < 1) {
-        resolve();
-      } else {
-        patience--;
-        setTimeout(() => checkcache(resolve), 1000);
-      }
-    };
-    return new Promise(checkcache);
-  };
+  waitforcache = (timeout: number) =>
+    new Promise((resolve, reject) =>
+      (function checkcache(shm, patience, resolve, reject) {
+        if (shm.cachedfeed) resolve(shm.cachedfeed);
+        else if (patience < 1) reject("timeout");
+        else {
+          setTimeout(
+            () => checkcache(shm, patience - 1, resolve, reject),
+            1000,
+          );
+        }
+      })(this, timeout, resolve, reject)
+    );
 }
 
 type CachedItem = Item & {
