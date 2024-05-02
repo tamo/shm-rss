@@ -306,8 +306,12 @@ export class SHM {
     return "".concat(...htmlparts);
   };
 
-  // 前回の fetch から ttl 分以上経ってたら fetch して kv と cachedfeed を更新
   // cachedfeed から response にする
+  // その前に、前回の fetch から ttl 分以上経ってたら fetch して cachedfeed を更新する
+  // ただし前回の fetch 時刻 (lastfetch) を毎回 Kv に保存しているわけではない
+  // (記事更新のときだけ)
+  // なので instance が再起動した場合には lastfetch が古くて、
+  // ttl 分も経っていないのに fetch してしまう (が、特に問題はない)
   handler = async (req: Request) => {
     try {
       await this.waitforcache(this.opts.initsecs);
