@@ -106,7 +106,7 @@ export class SHM {
     const parent = elem.parentElement;
     if (!parent) return new Error("no parent");
     if (parent.tagName == "H2") { // その中にまた a.NU がある
-      return { title: "", link: "", date: 0 };
+      return { title: "", link: "", date: 0, fetchdate: 0 };
     }
 
     const ititle = elem.nextElementSibling?.textContent;
@@ -126,6 +126,7 @@ export class SHM {
       link: ihref,
       date: Date.parse(idate),
       description: this.parent2desc(parent, ibars),
+      fetchdate: 0, // あとで処理
     };
   };
 
@@ -202,7 +203,7 @@ export class SHM {
       )
       : undefined;
 
-    const feed: SHMFeed = new Feed({
+    const feed = new Feed({
       id: this.opts.link!,
       link: this.opts.link!,
       copyright: this.opts.copyright!,
@@ -221,7 +222,7 @@ export class SHM {
           },
         }
         : {}),
-    });
+    }) as SHMFeed;
     feed.lastfetch = oldfeed?.lastfetch ?? 0;
 
     const olditems: CachedItem[] = oldfeed?.items
@@ -326,44 +327,36 @@ export class SHM {
 
     try {
       const ttlms = this.opts.ttl! * 60 * 1000; // ミリ秒
-      if (Date.now() - this.cachedfeed.lastfetch! > ttlms) {
+      if (Date.now() - this.cachedfeed.lastfetch > ttlms) {
         console.log(`fetch: ${new Date().toISOString()}`);
         await fetch(this.opts.link!)
           .then((res) => res.text())
           .then((html) => this.html2cache(html));
         console.log(`fetched: ${new Date().toISOString()}`);
         if (import.meta.main) {
-          this.cache2kv(); // 待つ必要ない
-        } else {
-          await this.cache2kv(); // テストだと重複して Bad resource
+          this.cache2kv(); // 通常の deploy では間隔があるので待たない
+        } else { // けどテストだと重複して Bad resource エラーになるので
+          await this.cache2kv(); // テストのときだけ await にする
         }
+      }
+      switch (new URL(req.url).pathname) {
+        case this.opts.htmlpath:
+          return new Response(this.html(), {
+            headers: { "Content-Type": "text/html; charset=utf-8" },
+          });
+        case this.opts.jsonpath:
+          return new Response(this.json(), {
+            headers: { "Content-Type": "application/feed+json" },
+          });
+        default:
+          return new Response(this.rss(), {
+            headers: { "Content-Type": "application/rss+xml; charset=utf-8" },
+          });
       }
     } catch (error) {
       console.log(error);
+      return new Response("error", { status: 500 });
     }
-
-    if (this.cachedfeed.lastfetch) {
-      try {
-        switch (new URL(req.url).pathname) {
-          case this.opts.htmlpath:
-            return new Response(this.html(), {
-              headers: { "Content-Type": "text/html; charset=utf-8" },
-            });
-          case this.opts.jsonpath:
-            return new Response(this.json(), {
-              headers: { "Content-Type": "application/feed+json" },
-            });
-          default:
-            return new Response(this.rss(), {
-              headers: { "Content-Type": "application/rss+xml; charset=utf-8" },
-            });
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
-    return new Response("error", { status: 500 });
   };
 
   // 起動直後のキャッシュ待ち (initsecs 秒まで待つ)
@@ -383,7 +376,7 @@ export class SHM {
 }
 
 type CachedItem = Item & {
-  fetchdate?: number; // 記事の順番のため
+  fetchdate: number; // 記事の順番のため
 };
 type KvItem = Omit<CachedItem, "date"> & {
   date: number; // Feed の Item では Date なので注意
@@ -396,7 +389,7 @@ type SHMOptions = Partial<FeedOptions> & {
 };
 type SHMFeed = Feed & {
   items: CachedItem[];
-  lastfetch?: number;
+  lastfetch: number;
 };
 type FeedJsonItem = {
   // content_html: string;
