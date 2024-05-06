@@ -1,10 +1,13 @@
 // https://github.com/tamo/shm-rss/blob/main/shm.rb を Deno に移植してみた
 // このファイル内容を https://dash.deno.com/ の Playground に置けば使える
 
-import { DOMParser, type Element } from "jsr:@b-fuze/deno-dom@0.1";
+import {
+  DOMParser,
+  type Element,
+  HTMLDocument,
+} from "jsr:@b-fuze/deno-dom@0.1";
 import { Feed, type FeedOptions, type Item } from "npm:feed";
 import { compress, decompress } from "https://deno.land/x/brotli@0.1.7/mod.ts";
-import { assert } from "jsr:@std/assert";
 
 const refresh = false; // デバッグ用: 実行前に kv を全部消す
 
@@ -15,7 +18,6 @@ export class SHM {
     feed: "", // "https://shm-rss.deno.dev/", // validator を黙らせる
     ttl: 60,
     storedays: 31,
-    initsecs: 10,
     htmlpath: "/html",
     jsonpath: undefined,
   };
@@ -24,7 +26,7 @@ export class SHM {
     if (partialopts) {
       this.opts = { ...this.opts, ...partialopts };
     }
-    this.kv2feed().then(() => console.log("initialized"));
+    this.cachedfeed = this.newfeed();
   }
 
   myname = "shm";
@@ -32,17 +34,12 @@ export class SHM {
   failmsg = "(HTML のパースに失敗しました)";
 
   html2cache = (html: string) => {
-    assert(this.cachedfeed);
     const document = new DOMParser().parseFromString(html, "text/html")!;
-    const lastmoddate = new Date(
-      document.querySelector("p.INDENT-2EM small")!
-        .textContent!
-        .match(/Last modified: ((.*)\n.*\))/)?.[1]!,
-    );
+    const lastmoddate = this.doclastmod(document)!;
     const now = Date.now();
     this.cachedfeed.lastfetch = now;
 
-    if (lastmoddate.getTime() == this.cachedfeed.options.updated!.getTime()) {
+    if (lastmoddate.getTime() == this.cachedfeed.options.updated?.getTime()) {
       console.log("html2cache: skip same lastmod");
       return;
     }
@@ -74,11 +71,10 @@ export class SHM {
       }
       if (!item.title) return; // 親が H2 の場合、中の a.NU だけ処理
 
-      assert(this.cachedfeed);
       const oldindex = this.cachedfeed.items
         .findIndex((citem) => citem.link == item.link);
-      const tomodify = oldindex >= 0;
-      const olditem = tomodify ? this.cachedfeed.items[oldindex] : undefined;
+      const inserting = oldindex == -1;
+      const olditem = inserting ? undefined : this.cachedfeed.items[oldindex];
       item.fetchdate = olditem?.fetchdate || (now + index * 10000); // できるだけ順番を復元
 
       const newjson = JSON.stringify(item);
@@ -88,19 +84,26 @@ export class SHM {
       });
 
       if (newjson != oldjson) {
-        const cacheditem: CachedItem = {
+        const newitem: CachedItem = {
           ...item,
           date: new Date(item.date),
         };
-        if (tomodify) {
-          console.log(`modified: ${newjson}`);
-          this.cachedfeed!.items[oldindex] = cacheditem;
+        if (inserting) {
+          this.cachedfeed.items.unshift(newitem);
         } else {
-          this.cachedfeed!.items.unshift(cacheditem);
+          console.log(`modified: ${newjson}`);
+          this.cachedfeed.items[oldindex] = newitem;
         }
       }
     });
   };
+
+  private doclastmod = (document?: HTMLDocument) =>
+    document && new Date(
+      document.querySelector("p.INDENT-2EM small")!
+        .textContent
+        .match(/Last modified: ((.*)\n.*\))/)![1],
+    );
 
   private elem2item = (elem: Element): KvItem | Error => {
     const parent = elem.parentElement;
@@ -146,12 +149,10 @@ export class SHM {
     return this.failmsg;
   };
 
-  private cachedfeed?: SHMFeed;
+  private cachedfeed: SHMFeed;
 
   // まとめて圧縮保存
   cache2kv = async () => {
-    if (!this.cachedfeed) return;
-
     const lastmod = (await this.kv.get<number>([this.myname, "lastmod"])).value;
     if (lastmod == this.cachedfeed.options.updated!.getTime()) return;
 
@@ -182,8 +183,7 @@ export class SHM {
     console.log(`cache2kv: ${result.ok}`);
   };
 
-  // cachedfeed を初期化
-  kv2feed = async () => {
+  initcache = async () => {
     const kvs = (await Array.fromAsync(
       this.kv.list<Uint8Array>({ prefix: [this.myname, "all"] }),
     )).filter((kv, index) => kv.key[2] == String(index).padStart(3, "0"));
@@ -200,30 +200,9 @@ export class SHM {
           (key == "updated" || key == "date")
             ? new Date(value as number)
             : value,
-      )
+      ) as SHMFeed
       : undefined;
-
-    const feed = new Feed({
-      id: this.opts.link!,
-      link: this.opts.link!,
-      copyright: this.opts.copyright!,
-      title: oldfeed?.options.title ?? "",
-      description: oldfeed?.options.description,
-      updated: oldfeed?.options.updated ?? new Date(0),
-      ttl: this.opts.ttl,
-      // feed: this.opts.feed,
-      ...(this.opts.feed
-        ? {
-          feedLinks: {
-            rss: this.opts.feed,
-            ...(this.opts.jsonpath
-              ? { json: new URL(this.opts.jsonpath, this.opts.feed).href }
-              : {}),
-          },
-        }
-        : {}),
-    }) as SHMFeed;
-    feed.lastfetch = oldfeed?.lastfetch ?? 0;
+    const feed = this.newfeed(oldfeed);
 
     const olditems: CachedItem[] = oldfeed?.items
       ? Array.from(oldfeed.items)
@@ -239,14 +218,42 @@ export class SHM {
       .forEach((kvitem) => feed.addItem(kvitem));
 
     this.cachedfeed = feed;
+    console.log("initialized");
   };
 
-  rss = () => this.cachedfeed!.rss2();
+  private newfeed = (oldfeed?: SHMFeed) => {
+    const feed = new Feed({
+      id: this.opts.link!,
+      link: this.opts.link!,
+      copyright: this.opts.copyright!,
+      title: oldfeed?.options.title ?? "",
+      description: oldfeed?.options.description,
+      updated: oldfeed?.options.updated,
+      ttl: this.opts.ttl,
+      // feed: this.opts.feed,
+      ...(this.opts.feed
+        ? {
+          feedLinks: {
+            rss: this.opts.feed,
+            ...(this.opts.jsonpath
+              ? { json: new URL(this.opts.jsonpath, this.opts.feed).href }
+              : {}),
+          },
+        }
+        : {}),
+    }) as SHMFeed;
+    feed.lastfetch = oldfeed?.lastfetch ?? 0;
+    return feed;
+  };
 
-  json = () => this.cachedfeed!.json1();
+  getlastmod = () => this.cachedfeed.options.updated;
 
-  html = () => {
-    const json: FeedJson = JSON.parse(this.json());
+  getrss = () => this.cachedfeed.rss2();
+
+  getjson = () => this.cachedfeed.json1();
+
+  gethtml = () => {
+    const json: FeedJson = JSON.parse(this.getjson());
     const htmlparts = [];
     htmlparts.push(`<!doctype html>
 <html lang="ja">
@@ -307,6 +314,8 @@ export class SHM {
     return "".concat(...htmlparts);
   };
 
+  private cachedhtml: string = "";
+
   // cachedfeed から response にする
   // その前に、前回の fetch から ttl 分以上経ってたら fetch して cachedfeed を更新する
   // ただし前回の fetch 時刻 (lastfetch) を毎回 Kv に保存しているわけではない
@@ -314,65 +323,78 @@ export class SHM {
   // なので instance が再起動した場合には lastfetch が古くて、
   // ttl 分も経っていないのに fetch してしまう (が、特に問題はない)
   handler = async (req: Request) => {
-    try {
-      await this.waitforcache(this.opts.initsecs);
-    } catch {
-      console.log("accessed before initialized");
-      return new Response(`try again in ${this.opts.initsecs} seconds`, {
-        status: 503,
-        headers: { "Retry-After": `${this.opts.initsecs}` },
-      });
+    // Kv アクセスを極力減らすためにキャッシュを確認
+    // feedly は実際にこれでほぼゼロコストになった
+    const etags = req.headers.get("if-none-match");
+    if (etags) {
+      const lastmod = this.cachedfeed.options.updated ??
+        // fetch ならまだ安い
+        this.doclastmod(
+          new DOMParser().parseFromString(
+            this.cachedhtml = await fetch(this.opts.link!)
+              .then((res) => res.text()),
+            "text/html",
+          ) ?? undefined,
+        ) ??
+        // どうしようもないときだけ kv から持ってくる
+        await this.initcache()
+          .then(() => this.cachedfeed.options.updated);
+      if (etags.includes(lastmod!.toISOString())) {
+        return new Response(null, { status: 304 });
+      }
     }
-    assert(this.cachedfeed);
 
     try {
-      const ttlms = this.opts.ttl! * 60 * 1000; // ミリ秒
-      if (Date.now() - this.cachedfeed.lastfetch > ttlms) {
-        console.log(`fetch: ${new Date().toISOString()}`);
-        await fetch(this.opts.link!)
-          .then((res) => res.text())
-          .then((html) => this.html2cache(html));
-        console.log(`fetched: ${new Date().toISOString()}`);
+      if (!this.cachedfeed.lastfetch) {
+        await this.initcache();
+      }
+      const savecache = async () => {
         if (import.meta.main) {
           this.cache2kv(); // 通常の deploy では間隔があるので待たない
         } else { // けどテストだと重複して Bad resource エラーになるので
           await this.cache2kv(); // テストのときだけ await にする
         }
+      };
+      if (this.cachedhtml) {
+        this.html2cache(this.cachedhtml);
+        this.cachedhtml = "";
+        await savecache();
+      } else {
+        const ttlms = this.opts.ttl! * 60 * 1000; // ミリ秒
+        if (Date.now() - this.cachedfeed.lastfetch > ttlms) {
+          console.log(`fetch: ${new Date().toISOString()}`);
+          await fetch(this.opts.link!)
+            .then((res) => res.text())
+            .then((html) => this.html2cache(html));
+          console.log(`fetched: ${new Date().toISOString()}`);
+          await savecache();
+        }
       }
+      const etag = {
+        "ETag": `W/"${this.cachedfeed.options.updated?.toISOString()}"`,
+      };
       switch (new URL(req.url).pathname) {
         case this.opts.htmlpath:
-          return new Response(this.html(), {
-            headers: { "Content-Type": "text/html; charset=utf-8" },
+          return new Response(this.gethtml(), {
+            headers: { ...etag, "Content-Type": "text/html; charset=utf-8" },
           });
         case this.opts.jsonpath:
-          return new Response(this.json(), {
-            headers: { "Content-Type": "application/feed+json" },
+          return new Response(this.getjson(), {
+            headers: { ...etag, "Content-Type": "application/feed+json" },
           });
         default:
-          return new Response(this.rss(), {
-            headers: { "Content-Type": "application/rss+xml; charset=utf-8" },
+          return new Response(this.getrss(), {
+            headers: {
+              ...etag,
+              "Content-Type": "application/rss+xml; charset=utf-8",
+            },
           });
       }
     } catch (error) {
       console.log(error);
-      return new Response("error", { status: 500 });
+      return new Response(null, { status: 500 });
     }
   };
-
-  // 起動直後のキャッシュ待ち (initsecs 秒まで待つ)
-  waitforcache = (timeout: number) =>
-    new Promise((resolve, reject) =>
-      (function checkcache(shm, patience, resolve, reject) {
-        if (shm.cachedfeed) resolve(shm.cachedfeed);
-        else if (patience < 1) reject("timeout");
-        else {
-          setTimeout(
-            () => checkcache(shm, patience - 1, resolve, reject),
-            1000,
-          );
-        }
-      })(this, timeout, resolve, reject)
-    );
 }
 
 type CachedItem = Item & {
@@ -383,7 +405,6 @@ type KvItem = Omit<CachedItem, "date"> & {
 };
 type SHMOptions = Partial<FeedOptions> & {
   storedays: number;
-  initsecs: number;
   htmlpath?: string;
   jsonpath?: string;
 };

@@ -10,16 +10,19 @@ Deno.test(
     await snaptester({
       local: {
         date: "2024-04-14",
+        lastmod: "2024-04-12T11:10:50.000Z",
         log: [
           "initialized",
           "no title",
           '<a class="NU" href="https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240412_">■</a>',
           "cache2kv: true",
+          "initialized",
         ],
       },
       srv: [
         {
           date: "2024-04-17", // update
+          lastmod: "2024-04-17T10:47:18.000Z",
           log: [
             "fetch: 2024-04-17T00:00:00.000Z",
             'modified: {"title":"Toward greater transparency: Adopting the CWE standard for Microsoft CVEs","link":"https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240411__msrc","date":1712793600000,"description":"<p>\\n      <a class=\\"NU\\" href=\\"https://www.st.ryukoku.ac.jp/~kjm/security/memo/2024/04.html#20240411__msrc\\">》</a>\\n<a name=\\"20240411__msrc\\" href=\\"https://msrc.microsoft.com/blog/2024/04/toward-greater-transparency-adopting-the-cwe-standard-for-microsoft-cves/\\">Toward greater transparency: Adopting the CWE standard for Microsoft CVEs</a>\\n      (MSRC, 4/8)\\n      </p>\\n      <p>\\n      　2024.04.16 追記: <a href=\\"https://forest.watch.impress.co.jp/docs/news/1584488.html\\">Microsoft、セキュリティレポートに「CWE」標準を採用、脆弱性のタイプを分類して表示</a>\\n      (窓の杜, 4/16)\\n      </p>\\n\\n\\n  ","fetchdate":1713053260000}',
@@ -30,13 +33,14 @@ Deno.test(
         },
         {
           date: "2024-04-18", // without update
+          lastmod: "2024-04-17T10:47:18.000Z",
           log: [
             "fetch: 2024-04-18T00:00:00.000Z",
             "html2cache: skip same lastmod",
             "fetched: 2024-04-18T00:00:00.000Z",
           ],
         },
-        { date: "2024-04-18", log: [] },
+        { date: "2024-04-18", lastmod: "2024-04-17T10:47:18.000Z", log: [] },
       ],
     }, t),
 );
@@ -45,12 +49,24 @@ Deno.test(
   "2024-04-17 snapshot (needs --unstable-kv)",
   async (t) =>
     await snaptester({
-      local: { date: "2024-04-17", log: ["initialized", "cache2kv: true"] },
-      srv: [{ date: "2024-04-17", log: [] }],
+      local: {
+        date: "2024-04-17",
+        lastmod: "2024-04-17T10:47:18.000Z",
+        log: [
+          "initialized",
+          "cache2kv: true",
+          "initialized",
+        ],
+      },
+      srv: [{
+        date: "2024-04-17",
+        lastmod: "2024-04-17T10:47:18.000Z",
+        log: [],
+      }],
     }, t),
 );
 
-type Snapshot = { date: string; log: string[] };
+type Snapshot = { date: string; lastmod: string; log: string[] };
 type Snapshots = { local: Snapshot; srv: Snapshot[] };
 
 async function snaptester(s: Snapshots, t: Deno.TestContext) {
@@ -71,26 +87,27 @@ async function snaptester(s: Snapshots, t: Deno.TestContext) {
   }
   const denokv = await Deno.openKv(kvpath);
   const shm = new SHM(denokv);
-  await shm.waitforcache(shm.opts.initsecs);
+  await shm.initcache();
 
   await t.step(`${s.local.date} html2cache`, () => {
     const html = Deno.readTextFileSync(`./testdata/${s.local.date}.html`);
     shm.html2cache(html);
-    const rss = shm.rss();
+    const rss = shm.getrss();
     Deno.writeTextFileSync(`./testdata/${s.local.date}.rss`, rss); // デバッグ用
     const expectedrss = Deno.readTextFileSync(
       `./testdata/${s.local.date}.expected.rss`,
     );
     assertEquals(rss, expectedrss);
+    assertEquals(shm.getlastmod()?.toISOString(), s.local.lastmod);
     Deno.removeSync(`./testdata/${s.local.date}.rss`); // 失敗時には残る
   });
 
   await t.step(`${s.local.date} kv2feed (atom)`, async () => {
     await shm.cache2kv();
     shm.opts.feed = "https://shm-rss.deno.dev/";
-    await shm.kv2feed();
+    await shm.initcache();
 
-    const atom = shm.rss();
+    const atom = shm.getrss();
     Deno.writeTextFileSync(`./testdata/${s.local.date}.atom`, atom); // デバッグ用
     const expectedatom = Deno.readTextFileSync(
       `./testdata/${s.local.date}.expected.atom`,
@@ -124,6 +141,7 @@ async function snaptester(s: Snapshots, t: Deno.TestContext) {
         );
 
         assertEquals(res.status, 200);
+        assertEquals(res.headers.get("etag"), `W/"${srv.lastmod}"`);
         const expectedatom = Deno.readTextFileSync(
           `./testdata/${s.srv[0].date}.expected.atom`,
         );
