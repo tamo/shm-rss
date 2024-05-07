@@ -319,18 +319,15 @@ export class SHM {
   // cachedfeed から response にする
   // その前に、前回の fetch から ttl 分以上経ってたら fetch して cachedfeed を更新する
   // ただし前回の fetch 時刻 (lastfetch) を毎回 Kv に保存しているわけではない
-  // (記事更新のときだけ)
   // なので instance が再起動した場合には lastfetch が古くて、
   // ttl 分も経っていないのに fetch してしまう (が、特に問題はない)
   handler = async (req: Request) => {
     // Kv アクセスを極力減らすためにキャッシュを確認
-    // feedly は実際にこれでほぼゼロコストになった
     const etags = req.headers.get("if-none-match");
     if (etags) {
-      const lastmod = this.cachedfeed.options.updated ??
-        // fetch ならまだ安い
+      const lastmod = this.cachedfeed.options.updated ?? // 1. キャッシュあり
         this.doclastmod(
-          await fetch(this.opts.link!)
+          await fetch(this.opts.link!) // 2. fetch する
             .then((res) => res.text())
             .then((html) =>
               new DOMParser().parseFromString(
@@ -340,8 +337,7 @@ export class SHM {
             )
             .catch(() => undefined),
         ) ??
-        // どうしようもないときだけ kv から持ってくる
-        await this.initcache()
+        await this.initcache() // 3. kv から読む
           .then(() => this.cachedfeed.options.updated);
       if (etags.includes(lastmod!.toISOString())) {
         this.cachedhtml = "";
