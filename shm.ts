@@ -98,12 +98,14 @@ export class SHM {
     });
   };
 
-  private doclastmod = (document?: HTMLDocument) =>
-    document && new Date(
-      document.querySelector("p.INDENT-2EM small")!
-        .textContent
-        .match(/Last modified: ((.*)\n.*\))/)![1],
-    );
+  private doclastmod = (document?: HTMLDocument) => {
+    if (!document) return;
+    const dstr = document.querySelector("p.INDENT-2EM small")
+      ?.textContent
+      .match(/Last modified: ((.*)\n.*\))/)?.[1];
+    if (!dstr) return;
+    return new Date(dstr);
+  };
 
   private elem2item = (elem: Element): KvItem | Error => {
     const parent = elem.parentElement;
@@ -330,16 +332,21 @@ export class SHM {
       const lastmod = this.cachedfeed.options.updated ??
         // fetch ならまだ安い
         this.doclastmod(
-          new DOMParser().parseFromString(
-            this.cachedhtml = await fetch(this.opts.link!)
-              .then((res) => res.text()),
-            "text/html",
-          ) ?? undefined,
+          await fetch(this.opts.link!)
+            .then((res) => res.text())
+            .then((html) =>
+              new DOMParser().parseFromString(
+                this.cachedhtml = html,
+                "text/html",
+              )!
+            )
+            .catch(() => undefined),
         ) ??
         // どうしようもないときだけ kv から持ってくる
         await this.initcache()
           .then(() => this.cachedfeed.options.updated);
       if (etags.includes(lastmod!.toISOString())) {
+        this.cachedhtml = "";
         return new Response(null, { status: 304 });
       }
     }
