@@ -23,9 +23,7 @@ export class SHM {
   };
 
   constructor(public kv: Deno.Kv, partialopts?: Partial<SHMOptions>) {
-    if (partialopts) {
-      this.opts = { ...this.opts, ...partialopts };
-    }
+    this.opts = { ...this.opts, ...partialopts };
     this.cachedfeed = this.newfeed();
   }
 
