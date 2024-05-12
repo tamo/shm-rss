@@ -1,12 +1,8 @@
 // https://github.com/tamo/shm-rss/blob/main/shm.rb を Deno に移植してみた
 // このファイル内容を https://dash.deno.com/ の Playground に置けば使える
 
-import {
-  DOMParser,
-  type Element,
-  HTMLDocument,
-} from "jsr:@b-fuze/deno-dom@0.1";
-import { Feed, type FeedOptions, type Item } from "npm:feed";
+import { DOMParser, Element, HTMLDocument } from "jsr:@b-fuze/deno-dom@0.1";
+import { Feed, FeedOptions, Item } from "npm:feed";
 import { compress, decompress } from "https://deno.land/x/brotli@0.1.7/mod.ts";
 
 const refresh = false; // デバッグ用: 実行前に kv を全部消す
@@ -398,34 +394,34 @@ export class SHM {
   };
 }
 
-type CachedItem = Item & {
+interface CachedItem extends Item {
   fetchdate: number; // 記事の順番のため
-};
-type KvItem = Omit<CachedItem, "date"> & {
+}
+interface KvItem extends Omit<CachedItem, "date"> {
   date: number; // Feed の Item では Date なので注意
-};
-type SHMOptions = Partial<FeedOptions> & {
+}
+interface SHMOptions extends Partial<FeedOptions> {
   storedays: number;
   htmlpath?: string;
   jsonpath?: string;
-};
-type SHMFeed = Feed & {
+}
+interface SHMFeed extends Feed {
   items: CachedItem[];
   lastfetch: number;
-};
-type FeedJsonItem = {
+}
+interface FeedJsonItem {
   // content_html: string;
   url: string;
   title: string;
   summary: string;
   date_modified: string;
-};
-type FeedJson = {
+}
+interface FeedJson {
   title: string;
   home_page_url: string;
   description: string;
   items: FeedJsonItem[];
-};
+}
 
 // Deno Deploy 環境 (DENO_DEPLOYMENT_ID がある) ではその Kv を使用し、
 // ローカル環境では
