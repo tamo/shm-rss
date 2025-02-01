@@ -64,9 +64,9 @@ jobs:
           echo "founddiff=true" >> ${GITHUB_ENV}
 
       - if: env.founddiff == 'true'
-        uses: actions/configure-pages@v4
+        uses: actions/configure-pages@v5
       - if: env.founddiff == 'true'
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v3
       - if: env.founddiff == 'true'
         id: deployment
-        uses: actions/deploy-pages@v3
+        uses: actions/deploy-pages@v4
