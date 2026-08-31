@@ -2,12 +2,12 @@
 
 ## [Deno 版](https://github.com/tamo/shm-rss/blob/main/shm.ts)
 
-https://shm-rss.deno.dev/ に生成しています。
+https://shm-rss.tamo.deno.net/ に生成しています。
 
 こちらは Deno 環境の TypeScript です。
-Deno Deploy の Playground にコピペするだけで使えます。
+Deno Deploy の Playground にコピペして kv を attach するだけで使えます。
 
-問題発生時の切り分け用に https://shm-rss.deno.dev/html というプレビュー的 HTML もあります。
+問題発生時の切り分け用に https://shm-rss.tamo.deno.net/html というプレビュー的 HTML もあります。
 
 ## [Ruby 版](https://github.com/tamo/shm-rss/blob/main/shm.rb)
 
