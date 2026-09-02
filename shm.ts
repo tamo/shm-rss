@@ -2,7 +2,7 @@
 // このファイル内容を https://dash.deno.com/ の Playground に置けば使える
 
 import { DOMParser, Element, HTMLDocument } from "jsr:@b-fuze/deno-dom@0.1";
-import { Feed, FeedOptions, Item } from "npm:feed";
+import { Feed, FeedOptions, Item } from "npm:feed@6.0";
 import { compress, decompress } from "https://deno.land/x/brotli@0.1.7/mod.ts";
 
 const refresh = false; // デバッグ用: 実行前に kv を全部消す
@@ -292,13 +292,13 @@ export class SHM {
 
     json.items.forEach((i) =>
       htmlparts.push(`
-    <details ${(i.summary == this.failmsg) ? "open=true" : ""}>
+    <details ${(i.content_html == this.failmsg) ? "open=true" : ""}>
       <summary>${i.title}</summary>
       <div class="date">
         <a href="${i.url}">${i.date_modified}</a>
       </div>
       <blockquote class="description">
-        ${i.summary}
+        ${i.content_html}
       </blockquote>
     </details>`)
     );
@@ -410,10 +410,10 @@ interface SHMFeed extends Feed {
   lastfetch: number;
 }
 interface FeedJsonItem {
-  // content_html: string;
+  content_html: string;
   url: string;
   title: string;
-  summary: string;
+  // summary: string;
   date_modified: string;
 }
 interface FeedJson {

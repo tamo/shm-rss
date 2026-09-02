@@ -1,6 +1,6 @@
 import { SHM } from "./shm.ts";
-import { assertEquals } from "jsr:@std/assert";
-import FakeTimers from "npm:@sinonjs/fake-timers";
+import { assertEquals } from "jsr:@std/assert@1.0";
+import FakeTimers from "npm:@sinonjs/fake-timers@15.4";
 
 const faketimer = FakeTimers.install();
 
@@ -83,7 +83,7 @@ async function snaptester(s: Snapshots, t: Deno.TestContext) {
   try {
     Deno.removeSync(kvpath);
   } catch (e) {
-    if (e.name != "NotFound") throw e;
+    if (e instanceof Error && e.name != "NotFound") throw e;
   }
   const denokv = await Deno.openKv(kvpath);
   const shm = new SHM(denokv);
