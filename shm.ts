@@ -11,7 +11,7 @@ export class SHM {
   opts: SHMOptions = {
     link: "https://www.st.ryukoku.ac.jp/~kjm/security/memo/",
     copyright: "https://www.st.ryukoku.ac.jp/~kjm/security/memo/desc.html",
-    feed: "", // "https://shm-rss.deno.dev/", // validator を黙らせる
+    feed: "", // "https://shm-rss.tamo.deno.net/", // validator を黙らせる
     ttl: 60,
     storedays: 31,
     htmlpath: "/html",
@@ -135,7 +135,7 @@ export class SHM {
       if (p.parentElement?.tagName == "LI") {
         return p.parentElement.innerHTML;
       }
-    } else if (bars == 1 && p.tagName == "H3") { // 「いろいろ」とか「追記" 
+    } else if (bars == 1 && p.tagName == "H3") { // 「いろいろ」とか「追記」とか
       const nextElement = p.nextElementSibling;
       if (nextElement?.tagName == "DIV" && nextElement.className == "BODY") {
         return nextElement.innerHTML;
@@ -251,16 +251,12 @@ export class SHM {
   gethtml = () => {
     // Generate preview HTML directly from the cached feed (raw data)
     const feed = this.cachedfeed;
-    const title = feed.options.title ?? "";
-    const home = feed.options.link ?? this.opts.link!;
-    const description = feed.options.description ?? "";
-
     const htmlparts: string[] = [];
     htmlparts.push(`<!doctype html>
 <html lang="ja">
   <head>
     <meta charset="utf-8">
-    <title>Previewing RSS of ${title}</title>
+    <title>Previewing RSS of ${feed.options.title}</title>
     ${
       this.opts.feed
         ? '<link rel="alternate" type="application/rss+xml" href="' +
@@ -283,7 +279,7 @@ export class SHM {
   <body id="body">
     <h1>Previewing ${
       this.opts.feed ? '<a href="' + this.opts.feed + '">RSS</a>' : "RSS"
-    } of <a href="${home}">${title}</a></h1>
+    } of <a href="${feed.options.link}">${feed.options.title}</a></h1>
     ${
       this.opts.feed
         ? '<h2><a href="' + this.opts.feed + '">Get the RSS</a></h2>'
@@ -291,21 +287,26 @@ export class SHM {
     }
     <hr>
     <h3>description</h3>
-    <blockquote id="channel_description">${description}</blockquote>
+    <blockquote id="channel_description">${feed.options.description}</blockquote>
     <p><a href="https://github.com/tamo/shm-rss/">RSS 生成プロジェクトはこちら</a></p>
     <hr>`);
 
     (feed.items ?? []).forEach((i) => {
-      const content_html = (i as any).description ?? (i as any).content ?? this.failmsg;
-      const url = i.link ?? "#";
-      const ititle = i.title ?? "";
-      const date_modified = i.date ? i.date.toISOString() : "";
-      const openAttr = (content_html == this.failmsg) ? "open=true" : "";
-
-      htmlparts.push(`\n    <details ${openAttr}>\n      <summary>${ititle}</summary>\n      <div class="date">\n        <a href="${url}">${date_modified}</a>\n      </div>\n      <blockquote class="description">\n        ${content_html}\n      </blockquote>\n    </details>`);
+      htmlparts.push(`
+    <details ${(i.description == this.failmsg) ? "open=true" : ""}>
+      <summary>${i.title}</summary>
+      <div class="date">
+        <a href="${i.link}">${i.date.toISOString()}</a>
+      </div>
+      <blockquote class="description">
+        ${i.description}
+      </blockquote>
+    </details>`);
     });
 
-    htmlparts.push(`\n  </body>\n</html>`);
+    htmlparts.push(`
+  </body>
+</html>`);
 
     return htmlparts.join("");
   };
